@@ -151,3 +151,88 @@ subjects:
   - kind: ServiceAccount
     name: vick-stream-processor
     namespace: vick-system
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wso2sp-worker
+  namespace: vick-system
+  labels:
+    app: wso2sp-worker
+    node: wso2sp-worker
+    pattern: wso2sp-pattern-distributed
+spec:
+  ports:
+    # ports that this service should serve on
+    -
+      port: 9091
+      name: http2
+      protocol: TCP
+    -
+      port: 9092
+      name: http
+      protocol: TCP
+    -
+      port: 9411
+      name: zipkin
+      protocol: TCP
+    -
+      port: 9443
+      name: https-mcgw-upload
+      protocol: TCP
+    -
+      port: 9090
+      name: http-mcgw-upload
+      protocol: TCP
+    -
+      port: 7611
+      name: tcp-thrift
+      protocol: TCP
+    -
+      port: 7711
+      name: tcp-ssl-thrift
+      protocol: TCP
+    -
+      port: 9611
+      name: tcp-binary
+      protocol: TCP
+    -
+      port: 9711
+      name: tcp-ssl-binary
+      protocol: TCP
+    -
+      port: 7443
+      name: http-global-gw
+      protocol: TCP
+    -
+      port: 9123
+      name: http-observability-api
+      protocol: TCP
+
+  # label keys and values that must match in order to receive traffic for this service
+  selector:
+    app: wso2sp-worker
+    node: wso2sp-worker
+    pattern: wso2sp-pattern-distributed
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: wso2sp-worker-ingress
+  namespace: vick-system
+  labels:
+      node: wso2sp-worker
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
+spec:
+  rules:
+  - host: wso2sp-observability-api
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: wso2sp-worker
+          servicePort: 9123
