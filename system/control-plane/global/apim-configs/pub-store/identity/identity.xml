@@ -267,7 +267,7 @@
             <TokenValidator
                 class="org.wso2.carbon.identity.oauth2.validators.DefaultOAuth2TokenValidator" type="bearer"/>
             <TokenValidator
-                class="org.wso2.vick.auth.jwt.VickSignedJWTValidator" type="jwt"/>
+                class="io.cellery.security.extensions.jwt.CellerySignedJWTValidator" type="jwt"/>
         </TokenValidators>
         <!-- Scope validators list. The validators registered here wil be executed during token validation. -->
         <ScopeValidators>
@@ -354,7 +354,7 @@
                 Default value for IDTokenIssuerID, is OAuth2TokenEPUrl.
                 If that doesn't satisfy uncomment the following config and explicitly configure the value
             -->
-            <IDTokenIssuerID>https://idp.vick.wso2.com</IDTokenIssuerID>
+            <IDTokenIssuerID>https://idp.cellery.io</IDTokenIssuerID>
             <IDTokenCustomClaimsCallBackHandler>org.wso2.carbon.identity.openidconnect.SAMLAssertionClaimsCallback</IDTokenCustomClaimsCallBackHandler>
             <IDTokenExpiration>3600</IDTokenExpiration>
             <UserInfoJWTSignatureAlgorithm>SHA256withRSA</UserInfoJWTSignatureAlgorithm>
@@ -837,7 +837,7 @@
             http-method="all" secured="true"/>
         <Resource context="(.*)/api/identity/oauth2/uma/permission/v1.0/(.*)"
             http-method="all" secured="true"/>
-        <Resource context="(.*)/api/identity/vick-auth/(.*)" http-method="all" secured="true"/>
+        <Resource context="(.*)/api/identity/cellery-cellery/(.*)" http-method="all" secured="true"/>
     </ResourceAccessControl>
     <ClientAppAuthentication>
         <Application
@@ -875,9 +875,9 @@
         <AsyncSequenceExecutorPoolSize>5</AsyncSequenceExecutorPoolSize>
     </AdaptiveAuth>
 
-    <Vick>
+    <Cellery>
         <STS>
-            <Issuer>https://sts.vick.wso2.com</Issuer>
+            <Issuer>https://sts.cellery.io</Issuer>
         </STS>
-    </Vick>
+    </Cellery>
 </Server>
