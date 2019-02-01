@@ -21,36 +21,36 @@
 
     <parent>
         <groupId>io.cellery.distribution.docker</groupId>
-        <artifactId>io.cellery.distribution.docker</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <artifactId>io.cellery.distribution.dockerfiles</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>io.cellery.distribution.docker.global-apim</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <name>Cellery Control Plane - Dockerfiles - API Manager</name>
-    <description>Dockerfiles for Control Plane API Manager</description>
+    <version>0.1.0-SNAPSHOT</version>
+    <name>Cellery Distribution - Dockerfiles - API Manager</name>
+    <description>Docker files for Cellery Control Plane API Manager</description>
     <packaging>pom</packaging>
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.vick</groupId>
-            <artifactId>org.wso2.vick.auth.extensions</artifactId>
+            <groupId>io.cellery.security</groupId>
+            <artifactId>io.cellery.security.extensions</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.vick</groupId>
-            <artifactId>org.wso2.vick.auth.sts.core</artifactId>
+            <groupId>io.cellery.security</groupId>
+            <artifactId>io.cellery.security.sts.endpoint.core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.vick</groupId>
-            <artifactId>org.wso2.vick.auth.sts.endpoint</artifactId>
+            <groupId>io.cellery.security</groupId>
+            <artifactId>io.cellery.security.token.endpoint</artifactId>
             <type>war</type>
         </dependency>
 
         <!-- Tracing Dependencies starts here -->
         <dependency>
-            <groupId>org.wso2.vick</groupId>
-            <artifactId>org.wso2.vick.tracing.synapse.handler</artifactId>
+            <groupId>io.cellery.observability</groupId>
+            <artifactId>io.cellery.observability.tracing.synapse.handler</artifactId>
         </dependency>
         <dependency>
             <groupId>io.opentracing</groupId>
@@ -112,8 +112,8 @@
                             <includeScope>runtime</includeScope>
                             <outputDirectory>${project.build.directory}/files/dropins</outputDirectory>
                             <excludeArtifactIds>
-                                org.wso2.vick.auth.sts.endpoint, org.wso2.vick.auth.sts.core,
-                                org.wso2.vick.auth.extensions, opentracing-api, opentracing-util, zipkin, brave,
+                                io.cellery.security.sts.endpoint.core, io.cellery.security.token.endpoint,
+                                io.cellery.security.extensions, opentracing-api, opentracing-util, zipkin, brave,
                                 brave-opentracing, zipkin-reporter, zipkin-sender-urlconnection, zipkin-sender-okhttp3,
                                 okhttp, okio
                             </excludeArtifactIds>
@@ -131,7 +131,7 @@
                             <includeScope>runtime</includeScope>
                             <outputDirectory>${project.build.directory}/files/lib/</outputDirectory>
                             <excludeArtifactIds>
-                                org.wso2.vick.auth.sts.endpoint, org.wso2.vick.tracing.synapse.handler
+                                io.cellery.security.token.endpoint, io.cellery.observability.tracing.synapse.handler
                             </excludeArtifactIds>
                             <excludeTransitive>true</excludeTransitive>
                         </configuration>
@@ -145,13 +145,13 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.vick</groupId>
-                                    <artifactId>org.wso2.vick.auth.sts.endpoint</artifactId>
-                                    <version>${vick.version}</version>
+                                    <groupId>io.cellery.security</groupId>
+                                    <artifactId>io.cellery.security.token.endpoint</artifactId>
+                                    <version>${cellery.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/files/webapps/</outputDirectory>
-                                    <destFileName>api#identity#vick-auth#v1.0.war</destFileName>
+                                    <destFileName>api#identity#cellery-auth#v1.0.war</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

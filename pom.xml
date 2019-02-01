@@ -25,9 +25,9 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.cellery.distribution</groupId>
-    <artifactId>io.cellery.distribution</artifactId>
-    <name>Cellery - Global Plane</name>
-    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>io.cellery.distribution.parent</artifactId>
+    <name>Cellery - Distribution</name>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -170,163 +170,163 @@
 
             <!-- APIM docker image dependencies -->
             <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.auth.extensions</artifactId>
-                <version>${vick.version}</version>
+                <groupId>io.cellery.security</groupId>
+                <artifactId>io.cellery.security.extensions</artifactId>
+                <version>${cellery.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.auth.sts.core</artifactId>
-                <version>${vick.version}</version>
+                <groupId>io.cellery.security</groupId>
+                <artifactId>io.cellery.security.sts.endpoint.core</artifactId>
+                <version>${cellery.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.auth.sts.endpoint</artifactId>
-                <version>${vick.version}</version>
+                <groupId>io.cellery.security</groupId>
+                <artifactId>io.cellery.security.token.endpoint</artifactId>
+                <version>${cellery.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.tracing.synapse.handler</artifactId>
-                <version>${vick.version}</version>
+                <groupId>io.cellery.observability</groupId>
+                <artifactId>io.cellery.observability.tracing.synapse.handler</artifactId>
+                <version>${cellery.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.auth.sts.endpoint</artifactId>
-                <version>${vick.version}</version>
+                <groupId>io.cellery.security</groupId>
+                <artifactId>io.cellery.security.token.endpoint</artifactId>
+                <version>${cellery.version}</version>
                 <type>war</type>
             </dependency>
             <!-- End of APIM docker image dependencies -->
 
             <!-- SP Worker docker images dependencies -->
-            <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.telemetry.receiver</artifactId>
-                <version>${vick.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.grpc</groupId>
-                <artifactId>grpc-protobuf-lite</artifactId>
-                <version>${grpc.protobuf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.opencensus</groupId>
-                <artifactId>opencensus-api</artifactId>
-                <version>${opencensus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.opencensus</groupId>
-                <artifactId>opencensus-contrib-grpc-metrics</artifactId>
-                <version>${opencensus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.tracing.receiver</artifactId>
-                <version>${vick.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.protobuf.wso2</groupId>
-                <artifactId>protobuf-wso2</artifactId>
-                <version>${protobuf.wso2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.extension.siddhi.io.http</groupId>
-                <artifactId>siddhi-io-http</artifactId>
-                <version>${siddhi.io.http.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.extension.siddhi.store.rdbms</groupId>
-                <artifactId>siddhi-store-rdbms</artifactId>
-                <version>${siddhi.store.rdbms.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.observability.api</artifactId>
-                <version>${vick.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.observability.model.generator</artifactId>
-                <version>${vick.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.vick</groupId>
-                <artifactId>org.wso2.vick.observability.k8s.api.server.client</artifactId>
-                <version>${vick.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.kubernetes</groupId>
-                <artifactId>client-java</artifactId>
-                <version>${k8s.client-java.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.kubernetes</groupId>
-                <artifactId>client-java-api</artifactId>
-                <version>${k8s.client-java.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.kubernetes</groupId>
-                <artifactId>client-java-proto</artifactId>
-                <version>${k8s.client-java.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.squareup.okhttp</groupId>
-                <artifactId>okhttp-ws</artifactId>
-                <version>${com.squareup.okhttp}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.squareup.okhttp</groupId>
-                <artifactId>okhttp</artifactId>
-                <version>${com.squareup.okhttp}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.squareup.okhttp</groupId>
-                <artifactId>logging-interceptor</artifactId>
-                <version>${com.squareup.okhttp}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.microsoft.azure</groupId>
-                <artifactId>adal4j</artifactId>
-                <version>${adal4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-codec</groupId>
-                <artifactId>commons-codec</artifactId>
-                <version>${commons.codec.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-compress</artifactId>
-                <version>${commons.compress.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>joda-time</groupId>
-                <artifactId>joda-time</artifactId>
-                <version>${joda.time.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcpkix-jdk15on</artifactId>
-                <version>${bouncy.castle.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-ext-jdk15on</artifactId>
-                <version>${bouncy.castle.version}</version>
-            </dependency>
-            <!-- End of SP Worker docker images dependencies -->
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.vick</groupId>-->
+                <!--<artifactId>org.wso2.vick.telemetry.receiver</artifactId>-->
+                <!--<version>${vick.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>io.grpc</groupId>-->
+                <!--<artifactId>grpc-protobuf-lite</artifactId>-->
+                <!--<version>${grpc.protobuf.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>io.opencensus</groupId>-->
+                <!--<artifactId>opencensus-api</artifactId>-->
+                <!--<version>${opencensus.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>io.opencensus</groupId>-->
+                <!--<artifactId>opencensus-contrib-grpc-metrics</artifactId>-->
+                <!--<version>${opencensus.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.vick</groupId>-->
+                <!--<artifactId>org.wso2.vick.tracing.receiver</artifactId>-->
+                <!--<version>${vick.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>com.google.protobuf.wso2</groupId>-->
+                <!--<artifactId>protobuf-wso2</artifactId>-->
+                <!--<version>${protobuf.wso2.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.extension.siddhi.io.http</groupId>-->
+                <!--<artifactId>siddhi-io-http</artifactId>-->
+                <!--<version>${siddhi.io.http.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.extension.siddhi.store.rdbms</groupId>-->
+                <!--<artifactId>siddhi-store-rdbms</artifactId>-->
+                <!--<version>${siddhi.store.rdbms.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.vick</groupId>-->
+                <!--<artifactId>org.wso2.vick.observability.api</artifactId>-->
+                <!--<version>${vick.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.vick</groupId>-->
+                <!--<artifactId>org.wso2.vick.observability.model.generator</artifactId>-->
+                <!--<version>${vick.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.vick</groupId>-->
+                <!--<artifactId>org.wso2.vick.observability.k8s.api.server.client</artifactId>-->
+                <!--<version>${vick.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>io.kubernetes</groupId>-->
+                <!--<artifactId>client-java</artifactId>-->
+                <!--<version>${k8s.client-java.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>io.kubernetes</groupId>-->
+                <!--<artifactId>client-java-api</artifactId>-->
+                <!--<version>${k8s.client-java.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>io.kubernetes</groupId>-->
+                <!--<artifactId>client-java-proto</artifactId>-->
+                <!--<version>${k8s.client-java.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>com.squareup.okhttp</groupId>-->
+                <!--<artifactId>okhttp-ws</artifactId>-->
+                <!--<version>${com.squareup.okhttp}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>com.squareup.okhttp</groupId>-->
+                <!--<artifactId>okhttp</artifactId>-->
+                <!--<version>${com.squareup.okhttp}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>com.squareup.okhttp</groupId>-->
+                <!--<artifactId>logging-interceptor</artifactId>-->
+                <!--<version>${com.squareup.okhttp}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>com.google.guava</groupId>-->
+                <!--<artifactId>guava</artifactId>-->
+                <!--<version>${guava.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>com.microsoft.azure</groupId>-->
+                <!--<artifactId>adal4j</artifactId>-->
+                <!--<version>${adal4j.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>commons-codec</groupId>-->
+                <!--<artifactId>commons-codec</artifactId>-->
+                <!--<version>${commons.codec.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.apache.commons</groupId>-->
+                <!--<artifactId>commons-compress</artifactId>-->
+                <!--<version>${commons.compress.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>joda-time</groupId>-->
+                <!--<artifactId>joda-time</artifactId>-->
+                <!--<version>${joda.time.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.bouncycastle</groupId>-->
+                <!--<artifactId>bcpkix-jdk15on</artifactId>-->
+                <!--<version>${bouncy.castle.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.bouncycastle</groupId>-->
+                <!--<artifactId>bcprov-ext-jdk15on</artifactId>-->
+                <!--<version>${bouncy.castle.version}</version>-->
+            <!--</dependency>-->
+            <!--&lt;!&ndash; End of SP Worker docker images dependencies &ndash;&gt;-->
 
-            <!-- Observability API dependencies -->
-            <dependency>
-                <groupId>org.wso2.msf4j</groupId>
-                <artifactId>msf4j-core</artifactId>
-                <version>${msf4j.version}</version>
-            </dependency>
-            <!-- End of Observability API dependencies -->
+            <!--&lt;!&ndash; Observability API dependencies &ndash;&gt;-->
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.msf4j</groupId>-->
+                <!--<artifactId>msf4j-core</artifactId>-->
+                <!--<version>${msf4j.version}</version>-->
+            <!--</dependency>-->
+            <!--&lt;!&ndash; End of Observability API dependencies &ndash;&gt;-->
         </dependencies>
     </dependencyManagement>
 
@@ -358,7 +358,7 @@
         <commons.lang.version>3.7</commons.lang.version>
         <commons.io.version>2.6</commons.io.version>
         <protobuf.wso2.version>3.6.1.wso2v1</protobuf.wso2.version>
-        <vick.version>${project.version}</vick.version>
+        <cellery.version>${project.version}</cellery.version>
         <msf4j.version>2.6.4</msf4j.version>
         <guave.version>20.0</guave.version>
         <kubernetes.client.version>3.0.0</kubernetes.client.version>
@@ -398,6 +398,6 @@
         <siddhi.store.rdbms.version>4.0.49</siddhi.store.rdbms.version>
 
         <!-- Docker Repository Name -->
-        <docker.repo.name>wso2vick</docker.repo.name>
+        <docker.repo.name>celleryio</docker.repo.name>
     </properties>
 </project>
