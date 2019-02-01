@@ -20,15 +20,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <groupId>org.wso2.vick</groupId>
-        <artifactId>org.wso2.vick.global.plane.dockerfiles</artifactId>
+        <groupId>io.cellery.distribution.docker</groupId>
+        <artifactId>io.cellery.distribution.docker</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.vick.global.plane.dockerfiles.am</artifactId>
-    <name>WSO2 VICK - Dockerfiles - API Manager</name>
-    <description>Dockerfiles for WSO2 VICK API Manager</description>
+    <artifactId>io.cellery.distribution.docker.global-apim</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>Cellery Control Plane - Dockerfiles - API Manager</name>
+    <description>Dockerfiles for Control Plane API Manager</description>
     <packaging>pom</packaging>
 
     <dependencies>

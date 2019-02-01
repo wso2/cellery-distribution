@@ -17,22 +17,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <parent>
-        <groupId>org.wso2</groupId>
-        <artifactId>wso2</artifactId>
-        <version>5</version>
-    </parent>
+    <!--<parent>-->
+        <!--<groupId>io.cellery</groupId>-->
+        <!--<artifactId>cellery</artifactId>-->
+        <!--<version>1</version>-->
+    <!--</parent>-->
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.vick</groupId>
-    <artifactId>org.wso2.vick.global.plane</artifactId>
-    <name>WSO2 VICK - Global Plane</name>
+    <groupId>io.cellery.distribution</groupId>
+    <artifactId>io.cellery.distribution</artifactId>
+    <name>Cellery - Global Plane</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>components</module>
-        <module>docker-files</module>
+        <!--<module>components</module>-->
+        <module>docker</module>
     </modules>
 
     <dependencyManagement>
