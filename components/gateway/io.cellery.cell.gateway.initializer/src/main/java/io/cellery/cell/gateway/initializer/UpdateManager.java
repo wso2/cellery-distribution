@@ -303,7 +303,7 @@ public class UpdateManager {
                         .setContext((cellConfig.getCell() + "/" + api.getContext()).replaceAll("//", "/"));
                 globalApiCreateRequest.setVersion(cellConfig.getVersion());
                 globalApiCreateRequest.setApiDefinition(getAPIDefinition(api, true));
-                globalApiCreateRequest.setEndpointConfig(getGlobalEndpoint());
+                globalApiCreateRequest.setEndpointConfig(getGlobalEndpoint(api));
                 globalApiCreateRequest.setGatewayEnvironments(Constants.Utils.PRODUCTION_AND_SANDBOX);
 
                 // Set some additional properties.
@@ -364,10 +364,11 @@ public class UpdateManager {
      *
      * @return endpoint payload string
      */
-    private static String getGlobalEndpoint() {
+    private static String getGlobalEndpoint(API api) {
         String response = Constants.Utils.EMPTY_STRING;
         ProductionEndpoint productionEndpoint = new ProductionEndpoint();
-        productionEndpoint.setUrl(Constants.Utils.HTTP + cellConfig.getHostname());
+        productionEndpoint.setUrl(Constants.Utils.HTTP + Constants.Utils.ISTIO_INGRESS_URL + "/" 
+            + cellConfig.getCell() + "/" + api.getContext() + "/");
 
         Endpoint endpoint = new Endpoint();
         endpoint.setProductionEndPoint(productionEndpoint);

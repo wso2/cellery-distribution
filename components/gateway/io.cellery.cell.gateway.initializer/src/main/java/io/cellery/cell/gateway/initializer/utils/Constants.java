@@ -87,6 +87,7 @@ public class Constants {
         public static final String GLOBAL = "global" ;
         public static final String SWAGGER_VERSION = "2.0";
         public static final String HTTP = "http://";
+        public static final String ISTIO_INGRESS_URL = "istio-ingressgateway.istio-system";
         public static final int ERROR_EXIT_CODE = 1;
 
         // Rest API constants
