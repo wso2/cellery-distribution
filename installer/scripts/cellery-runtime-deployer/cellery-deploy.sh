@@ -446,6 +446,13 @@ do
 done
 }
 
+function download_extract_celley_k8s_artifacts (){
+local download_path=$1
+wget https://github.com/celleryio/distribution/archive/master.zip  -P ${download_path} -a vick-setup.log
+unzip ${download_path}/master.zip -d ${download_path}
+}
+
+
 function install_nginx_ingress_kubeadm () {
 local download_location=$1
 

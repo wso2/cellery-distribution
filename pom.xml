@@ -31,7 +31,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <!--<module>components</module>-->
+        <module>components</module>
         <module>docker</module>
     </modules>
 
@@ -194,6 +194,11 @@
                 <artifactId>io.cellery.security.token.endpoint</artifactId>
                 <version>${cellery.version}</version>
                 <type>war</type>
+            </dependency>
+            <dependency>
+                <groupId>io.cellery.cell.gateway.initializer</groupId>
+                <artifactId>io.cellery.cell.gateway.initializer</artifactId>
+                <version>${cellery.version}</version>
             </dependency>
             <!-- End of APIM docker image dependencies -->
 
