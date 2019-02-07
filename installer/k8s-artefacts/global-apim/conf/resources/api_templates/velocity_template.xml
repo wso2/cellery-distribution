@@ -237,7 +237,7 @@ $out_sequences.get("$resource.getUriTemplate()").get($uri)
     #end
 </handler>
 #end
-<handler class="org.wso2.vick.auth.api.handler.VickSignedJWTInjectionHandler"/>
+<handler class="io.cellery.security.extensions.api.handler.CellerySignedJWTInjectionHandler"/>
 </handlers>
         #end
         #end

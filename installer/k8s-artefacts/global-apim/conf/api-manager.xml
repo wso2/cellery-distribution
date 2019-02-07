@@ -50,7 +50,7 @@
 
         <!-- This parameter specifies which implementation should be used for generating the Token. JWTGenerator is the
 	     default implementation provided. -->
-        <JWTGeneratorImpl>org.wso2.vick.auth.jwt.VickSignedJWTGenerator</JWTGeneratorImpl>
+        <JWTGeneratorImpl>io.cellery.security.extensions.jwt.CellerySignedJWTGenerator</JWTGeneratorImpl>
 
         <!-- This parameter specifies which implementation should be used for generating the Token. For URL safe JWT
              Token generation the implementation is provided in URLSafeJWTGenerator -->
@@ -240,13 +240,13 @@
         </ConnectionPool-->
         <!-- Specifies the implementation to be used for KeyValidationHandler. Steps for validating a token can be controlled by plugging in a
              custom KeyValidation Handler -->
-        <KeyValidationHandlerClassName>org.wso2.vick.auth.km.VickExtendedKeyValidationHandler</KeyValidationHandlerClassName>
+        <KeyValidationHandlerClassName>io.cellery.security.extensions.km.CelleryExtendedKeyValidationHandler</KeyValidationHandlerClassName>
     </APIKeyValidator>
 
     <!-- Uncomment this section only if you are going to have an instance other than KeyValidator as your KeyManager.
          Unless a ThirdParty KeyManager is used, you don't need to configure this section. -->
     <APIKeyManager>
-        <KeyManagerClientImpl>org.wso2.vick.auth.km.VickExtendedKeyManagerImpl</KeyManagerClientImpl>
+        <KeyManagerClientImpl>io.cellery.security.extensions.km.CelleryExtendedKeyManagerImpl</KeyManagerClientImpl>
         <!--Configuration>
             <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
             <Username>${admin.username}</Username>
@@ -268,7 +268,6 @@
         <!--ScopeWhitelist>
             <Scope>^device_.*</Scope>
             <Scope>openid</Scope>
-			<Scope>^vick_.*</Scope>
         </ScopeWhitelist-->
         <!-- Name of the token API -->
         <TokenEndPointName>/oauth2/token</TokenEndPointName>
