@@ -61,4 +61,4 @@ spec:
       - name: apim-rdbms-persistent-storage
         persistentVolumeClaim:
           claimName: wso2apim-with-analytics-rdbms-volume-claim
-      serviceAccountName: "vicksvc-account"
+      serviceAccountName: "cellerysvc-account"
