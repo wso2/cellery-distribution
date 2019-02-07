@@ -339,7 +339,7 @@ kubectl create configmap apim-security --from-file=${download_location}/distribu
 #Create gateway deployment and the service
 kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/global-apim.yaml -n cellery-system
 #Wait till the gateway deployment availability
-kubectl wait deployment/gateway --for condition=available --timeout=6000s -n cellery-system
+kubectl wait deployment.apps/gateway --for condition=available --timeout=6000s -n cellery-system
 }
 
 #function deploy_global_pubstore () {
@@ -358,7 +358,7 @@ kubectl create configmap sp-worker-siddhi --from-file=${download_location}/sp-wo
 kubectl create configmap sp-worker-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/sp/conf -n cellery-system
 #kubectl create configmap sp-worker-bin --from-file=${download_location}/sp-worker/bin -n cellery-system
 #Create SP worker deployment
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/sp/sp-worker-deployment.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/sp/sp-worker.yaml -n cellery-system
 #kubectl apply -f ${download_location}/vick-sp-worker-service.yaml -n cellery-system
 #Create SP dashboard configmaps
 #kubectl create configmap sp-dashboard-conf --from-file=${download_location}/status-dashboard/conf -n cellery-system
