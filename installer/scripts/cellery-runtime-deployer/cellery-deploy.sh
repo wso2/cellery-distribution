@@ -17,13 +17,13 @@
 #
 # ------------------------------------------------------------------------
 
-# How to deploy VICK with kubeadm K8s provider.
-# cat vick-setup-all-in-one.sh | bash -s -- <k8s Provier>
-# cat vick-setup-all-in-one.sh | bash -s -- kubeadm
+# How to deploy Cellery with kubeadm K8s provider.
+# cat cellery-deploy.sh | bash -s -- <k8s Provier>
+# cat cellery-deploy.sh | bash -s -- kubeadm
 #
 # How to deploy VICK with GCP K8s provider.
-# cat vick-setup-all-in-one.sh | bash -s -- <k8s Provier> <GCP Project ID> <GCP Compute Zone>
-# Eg. cat vick-setup-all-in-one.sh | bash -s -- GCP proj-vick us-west1-c
+# cat cellery-deploy.sh | bash -s -- <k8s Provier> <GCP Project ID> <GCP Compute Zone>
+# Eg. cat cellery-deploy.sh | bash -s -- GCP proj-cellery us-west1-c
 #
 # User can override the addition configs via cellery.env
 #
@@ -167,7 +167,7 @@ local download_location=$1
 
 for param in "${!nfs_config_params[@]}"
 do
-    sed -i "s|$param|${nfs_config_params[$param]}|g" ${download_location}/vick-apim-artifacts-persistent-volumes.yaml
+    sed -i "s|$param|${nfs_config_params[$param]}|g" ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/artifacts-persistent-volumes.yaml
 done
 }
 
@@ -228,13 +228,13 @@ sudo mkdir -p /mnt/mysql
 #Change the folder ownership to mysql server user.
 sudo chown 999:999 /mnt/mysql
 
-kubectl create configmap mysql-dbscripts --from-file=${download_location}/mysql/dbscripts/ -n vick-system
-kubectl apply -f ${download_location}/mysql-persistent-volumes-local.yaml -n vick-system
-kubectl apply -f ${download_location}/mysql-persistent-volume-claim.yaml -n vick-system
-kubectl apply -f ${download_location}/mysql-deployment.yaml -n vick-system
+kubectl create configmap mysql-dbscripts --from-file=${download_location}/distribution-master/installer/k8s-artefacts/mysql/dbscripts/ -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql-persistent-volumes-local.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql-persistent-volume-claim.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql-deployment.yaml -n cellery-system
 #Wait till the mysql deployment availability
-kubectl wait deployment/wso2apim-with-analytics-mysql-deployment --for condition=available --timeout=6000s -n vick-system
-kubectl apply -f ${download_location}/mysql-service.yaml -n vick-system
+kubectl wait deployment/wso2apim-with-analytics-mysql-deployment --for condition=available --timeout=6000s -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql-service.yaml -n cellery-system
 }
 
 function deploy_mysql_server_gcp () {
@@ -290,7 +290,7 @@ local download_location=$1
 
 for param in "${!config_params[@]}"
 do
-    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/mysql/dbscripts/init.sql
+    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-master/installer/k8s-artefacts/mysql/dbscripts/init.sql
 done
 }
 
@@ -319,75 +319,73 @@ if [ $iaas == "kubeadm" ] || [ $iaas == "k8s" ]; then
     sudo mkdir -p /mnt/apim_repository_deployment_server
     sudo chown 802:802 /mnt/apim_repository_deployment_server
     #Create apim local volumes and volume claims
-    kubectl apply -f ${download_location}/vick-apim-persistent-volumes-local.yaml -n vick-system
-    kubectl apply -f ${download_location}/vick-apim-persistent-volume-claim-local.yaml -n vick-system
+    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/persistent-volumes-local.yaml -n cellery-system
+    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/persistent-volume-claim-local.yaml -n cellery-system
 elif [ $iaas == "GCP" ]; then
     #Create apim NFS volumes and volume claims
-    kubectl apply -f ${download_location}/vick-apim-artifacts-persistent-volumes.yaml -n vick-system
-    kubectl apply -f ${download_location}/vick-apim-artifacts-persistent-volume-claim.yaml -n vick-system
+    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/artifacts-persistent-volumes.yaml -n cellery-system
+    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/artifacts-persistent-volume-claim.yaml -n cellery-system
 fi
 
 #Create the gw config maps
-kubectl create configmap gw-conf --from-file=${download_location}/apim-configs/gw -n vick-system
-kubectl create configmap gw-conf-datasources --from-file=${download_location}/apim-configs/gw/datasources/ -n vick-system
+kubectl create configmap gw-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf -n cellery-system
+kubectl create configmap gw-conf-datasources --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/config/datasources/ -n cellery-system
 #Create KM config maps
-kubectl create configmap conf-identity --from-file=${download_location}/apim-configs/gw/identity -n vick-system
-kubectl create configmap apim-template --from-file=${download_location}/apim-configs/gw/resources/api_templates -n vick-system
-kubectl create configmap apim-tomcat --from-file=${download_location}/apim-configs/gw/tomcat -n vick-system
-kubectl create configmap apim-security --from-file=${download_location}/apim-configs/gw/security -n vick-system
+kubectl create configmap conf-identity --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/identity -n cellery-system
+kubectl create configmap apim-template --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/resources/api_templates -n cellery-system
+kubectl create configmap apim-tomcat --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/tomcat -n cellery-system
+kubectl create configmap apim-security --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/security -n cellery-system
 
 #Create gateway deployment and the service
-kubectl apply -f ${download_location}/vick-apim-gw.yaml -n vick-system
- #Wait till the gateway deployment availability
-kubectl wait deployment/gateway --for condition=available --timeout=6000s -n vick-system
-#Create gateway ingress
-kubectl apply -f ${download_location}/vick-apim-gw-ingress.yaml -n vick-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/global-apim.yaml -n cellery-system
+#Wait till the gateway deployment availability
+kubectl wait deployment/gateway --for condition=available --timeout=6000s -n cellery-system
 }
 
-function deploy_global_pubstore () {
-    local download_location=$1
-
-#Create pubstore ingress
-#pubstore ingress is pointed to gatway service. In the future pubstore ingress will be pointed to pubstore service.
-kubectl apply -f ${download_location}/vick-apim-pub-store-ingress.yaml -n vick-system
-}
+#function deploy_global_pubstore () {
+#    local download_location=$1
+#
+##Create pubstore ingress
+##pubstore ingress is pointed to gatway service. In the future pubstore ingress will be pointed to pubstore service.
+#kubectl apply -f ${download_location}/vick-apim-pub-store-ingress.yaml -n cellery-system
+#}
 
 function deploy_sp_dashboard_worker () {
 local download_location=$1
 
 #Create SP worker configmaps
-kubectl create configmap sp-worker-siddhi --from-file=${download_location}/sp-worker/siddhi -n vick-system
-kubectl create configmap sp-worker-conf --from-file=${download_location}/sp-worker/conf -n vick-system
-#kubectl create configmap sp-worker-bin --from-file=${download_location}/sp-worker/bin -n vick-system
+kubectl create configmap sp-worker-siddhi --from-file=${download_location}/sp-worker/siddhi -n cellery-system
+kubectl create configmap sp-worker-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/sp/conf -n cellery-system
+#kubectl create configmap sp-worker-bin --from-file=${download_location}/sp-worker/bin -n cellery-system
 #Create SP worker deployment
-kubectl apply -f ${download_location}/vick-sp-worker-deployment.yaml -n vick-system
-kubectl apply -f ${download_location}/vick-sp-worker-service.yaml -n vick-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/sp/sp-worker-deployment.yaml -n cellery-system
+#kubectl apply -f ${download_location}/vick-sp-worker-service.yaml -n cellery-system
 #Create SP dashboard configmaps
-#kubectl create configmap sp-dashboard-conf --from-file=${download_location}/status-dashboard/conf -n vick-system
-#kubectl create configmap sp-worker-bin --from-file=sp-worker/bin -n vick-system
+#kubectl create configmap sp-dashboard-conf --from-file=${download_location}/status-dashboard/conf -n cellery-system
+#kubectl create configmap sp-worker-bin --from-file=sp-worker/bin -n cellery-system
 #Create observability portal deployment, service and ingress.
-kubectl create configmap observability-portal-config --from-file=${download_location}/node-server/config -n vick-system
-kubectl apply -f ${download_location}/vick-observability-portal.yaml -n vick-system
-kubectl apply -f ${download_location}/vick-sp-worker-ingress.yaml -n vick-system
+kubectl create configmap observability-portal-config --from-file=${download_location}/node-server/config -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/portal/observability-portal.yaml -n cellery-system
+#kubectl apply -f ${download_location}/vick-sp-worker-ingress.yaml -n cellery-system
 
 # Create K8s Metrics Config-maps
-kubectl create configmap k8s-metrics-prometheus-conf --from-file=${download_location}/k8s-metrics/prometheus/config -n vick-system
-kubectl create configmap k8s-metrics-grafana-conf --from-file=${download_location}/k8s-metrics/grafana/config -n vick-system
-kubectl create configmap k8s-metrics-grafana-datasources --from-file=${download_location}/k8s-metrics/grafana/datasources -n vick-system
-kubectl create configmap k8s-metrics-grafana-dashboards --from-file=${download_location}/k8s-metrics/grafana/dashboards -n vick-system
-kubectl create configmap k8s-metrics-grafana-dashboards-default --from-file=${download_location}/k8s-metrics/grafana/dashboards/default -n vick-system
+kubectl create configmap k8s-metrics-prometheus-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/prometheus/config -n cellery-system
+kubectl create configmap k8s-metrics-grafana-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/config -n cellery-system
+kubectl create configmap k8s-metrics-grafana-datasources --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/datasources -n cellery-system
+kubectl create configmap k8s-metrics-grafana-dashboards --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/dashboards -n cellery-system
+kubectl create configmap k8s-metrics-grafana-dashboards-default --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/dashboards/default -n cellery-system
 
 #Create K8s Metrics deployment, service and ingress.
-kubectl apply -f ${download_location}/k8s-metrics-prometheus.yaml -n vick-system
-kubectl apply -f ${download_location}/k8s-metrics-grafana.yaml -n vick-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/prometheus/k8s-metrics-prometheus.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/k8s-metrics-grafana.yaml -n cellery-system
 }
 
 function init_control_plane () {
 local download_location=$1
 local iaas=$2
 
-#Setup VICK namespace, create service account and the docker registry credentials
-kubectl apply -f ${download_location}/vick-ns-init.yaml
+#Setup Celley namespace, create service account and the docker registry credentials
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/ns-init.yaml
 
 if [ $iaas == "kubeadm" ]; then
     HOST_NAME=$(hostname | tr '[:upper:]' '[:lower:]')
@@ -395,7 +393,7 @@ if [ $iaas == "kubeadm" ]; then
     kubectl label nodes $HOST_NAME disk=local
     #Create credentials for docker.wso2.com
     #kubectl create secret docker-registry wso2creds --docker-server=docker.wso2.com --docker-username=$DOCKER_REG_USER \
-    # --docker-password=$DOCKER_REG_PASSWD --docker-email=$DOCKER_REG_USER_EMAIL -n vick-system
+    # --docker-password=$DOCKER_REG_PASSWD --docker-email=$DOCKER_REG_USER_EMAIL -n cellery-system
 fi
 }
 
@@ -406,7 +404,7 @@ local istio_version=$2
 ISTIO_HOME=${download_location}/istio-${istio_version}
 wget https://github.com/istio/istio/releases/download/${istio_version}/istio-${istio_version}-linux.tar.gz -P ${download_location}
 tar -xzf ${download_location}/istio-${istio_version}-linux.tar.gz -C ${download_location}
-export PATH=$ISTIO_HOME/bin:$PATH
+#export PATH=$ISTIO_HOME/bin:$PATH
 kubectl apply -f $ISTIO_HOME/install/kubernetes/helm/istio/templates/crds.yaml
 kubectl apply -f ${download_location}/istio-demo-vick.yaml
 kubectl wait deployment/istio-pilot --for condition=available --timeout=6000s -n istio-system
@@ -448,7 +446,8 @@ done
 
 function download_extract_celley_k8s_artifacts (){
 local download_path=$1
-wget https://github.com/celleryio/distribution/archive/master.zip  -P ${download_path} -a vick-setup.log
+local distribution_url=$2
+wget $distribution_url  -P ${download_path} -a cellery-setup.log
 unzip ${download_path}/master.zip -d ${download_path}
 }
 
@@ -477,8 +476,9 @@ fi
 #Initialize the IaaS specific configurations.
 if [[ -n ${IAAS/[ ]*\n/} ]]; then
     iaas=$IAAS
-    download_path=${DOWNLOAD_PATH:-tmp-wso2}
-    git_base_url=${GIT_BASE_URL:-https://raw.githubusercontent.com/wso2/product-vick/master}
+    download_path=${DOWNLOAD_PATH:-tmp-cellery}
+    git_base_url=${GIT_BASE_URL:-https://https://github.com/celleryio/distribution}
+    distribution_url=${GIT_DISTRIBUTION_URL:-https://github.com/celleryio/distribution/archive/master.zip}
     istio_version=${ISTIO_VERSION:-1.0.2}
     if [ $iaas == "kubeadm" ]; then
         k8s_version=${K8S_VERSION:-1.11.3-00}
@@ -607,6 +607,13 @@ declare -A config_params
 declare -A nfs_config_params
 #-----------------------------------------------------------------------------------------------------------------------
 
+#Create temporary folder to download Cellery artifacts
+create_artifact_folder $download_path
+
+echo "🕷️ Downloading VICK artifacts to ${download_path}"
+download_extract_celley_k8s_artifacts $download_path $distribution_url
+download_vick_artifacts $istio_base_url $download_path "${istio_yaml[@]}"
+
 
 #Install K8s
 if [[ -n ${iaas/[ ]*\n/} ]]; then
@@ -639,19 +646,15 @@ else
     echo "Installing VICK into an existing k8s cluster"
 fi
 
-#Create temporary foldr to download vick artifacts
-create_artifact_folder $download_path
 
-echo "🕷️ Downloading VICK artifacts to ${download_path}"
-
-download_vick_artifacts $control_plane_base_url $download_path "${control_plane_yaml[@]}"
-download_vick_artifacts $control_plane_configs_base_url $download_path "${control_plane_configs[@]}"
-download_vick_artifacts $control_plane_observabilityui_base_url $download_path "${control_plane_observabilityui_configs[@]}"
-download_vick_artifacts $crd_base_url  $download_path "${crd_yaml[@]}"
-download_vick_artifacts $istio_base_url $download_path "${istio_yaml[@]}"
+#download_vick_artifacts $control_plane_base_url $download_path "${control_plane_yaml[@]}"
+#download_vick_artifacts $control_plane_configs_base_url $download_path "${control_plane_configs[@]}"
+#download_vick_artifacts $control_plane_observabilityui_base_url $download_path "${control_plane_observabilityui_configs[@]}"
+#download_vick_artifacts $crd_base_url  $download_path "${crd_yaml[@]}"
+#download_vick_artifacts $istio_base_url $download_path "${istio_yaml[@]}"
 
 #Init control plane
-echo "🔧 Creating vick-system namespace and the service account"
+echo "🔧 Creating cellery-system namespace and the service account"
 
 init_control_plane $download_path $iaas
 
@@ -707,7 +710,7 @@ echo "ℹ️ Start to Deploying the VICK control plane"
 echo "🔧 Deploying the control plane API Manager"
 
 deploy_global_gw $download_path $iaas
-deploy_global_pubstore $download_path
+#deploy_global_pubstore $download_path
 
 echo "🔧Deploying Stream Processor"
 

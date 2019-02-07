@@ -198,3 +198,26 @@ spec:
         backend:
           serviceName: gateway
           servicePort: 8280
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: pub-store-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
+spec:
+  tls:
+  - hosts:
+    - wso2-apim
+  rules:
+  - host: wso2-apim
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: gateway
+          servicePort: 9443
