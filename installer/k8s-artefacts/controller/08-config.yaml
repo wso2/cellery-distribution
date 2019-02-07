@@ -11,8 +11,8 @@ data:
             "grantType": "password refresh_token",
             "saasApp": true
         },
-        "apimBaseUrl": "https://gateway.vick-system:9443",
-        "tokenEndpoint": "https://gateway.vick-system:8243/token",
+        "apimBaseUrl": "https://gateway.cellery-system:9443",
+        "tokenEndpoint": "https://gateway.cellery-system:8243/token",
         "trustStore": {
             "location": "lib/platform/bre/security/ballerinaTruststore.p12",
             "password": "ballerina"
@@ -40,7 +40,7 @@ data:
     verifyHostname=true
 
     [jwtTokenConfig]
-    issuer="https://sts.vick.wso2.com"
+    issuer="https://sts.cellery.io"
     audience="@env:{CELL_NAME}"
     certificateAlias="wso2apim"
     trustStore.path="${ballerina.home}/bre/security/ballerinaTruststore.p12"
@@ -58,7 +58,7 @@ data:
     [analytics]
     enable=false
     uploadingTimeSpanInMillis=30000
-    uploadingEndpoint="http://wso2sp-worker.vick-system:9090/analytics/v1.0/usage/upload-file"
+    uploadingEndpoint="http://wso2sp-worker.cellery-system:9090/analytics/v1.0/usage/upload-file"
     rotatingPeriod=30000
     task.uploadFiles=false
     username="admin"
@@ -67,17 +67,23 @@ data:
     [b7a.observability.tracing]
     enabled=false
 
-  cell-gateway-init-image: wso2vick/cell-gateway-init
-  cell-gateway-image: wso2vick/cell-gateway
+  cell-gateway-init-image: celleryio/cell-gateway-init
+  cell-gateway-image: celleryio/cell-gateway
   cell-sts-config: |
     {
-        "endpoint": "https://gateway.vick-system:9443/api/identity/vick-auth/v1.0/sts/token",
+        "endpoint": "https://gateway.cellery-system:9443/api/identity/cellery-auth/v1.0/sts/token",
         "username": "admin",
         "password": "admin",
-        "globalJWKS" : "https://gateway.vick-system:9443/oauth2/jwks"
+        "globalJWKS" : "https://gateway.cellery-system:9443/oauth2/jwks"
     }
-  cell-sts-image: wso2vick/cell-sts
+  opa-default-policy: |
+      package sample
+
+      default deny = false
+      default allow = true
+  cell-sts-image: celleryio/cell-sts
+  cell-sts-opa-image: openpolicyagent/opa:0.10.3
 kind: ConfigMap
 metadata:
-  name: vick-config
-  namespace: vick-system
+  name: cellery-config
+  namespace: cellery-system

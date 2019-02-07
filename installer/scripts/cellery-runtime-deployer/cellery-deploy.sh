@@ -416,7 +416,15 @@ function deploy_cellery_crds () {
 local download_location=$1
 
 #Install Cellery crds
-kubectl apply -f ${download_location}/vick.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/01-cluster-role.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/02-service-account.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/03-cluster-role-binding.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/04-crd-cell.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/05-crd-gateway.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/06-crd-token-service.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/07-crd-service.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/08-config.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/09-controller.yaml
 }
 
 function create_artifact_folder () {
@@ -429,7 +437,7 @@ fi
 mkdir ${tmp_folder}
 }
 
-function download_vick_artifacts () {
+function download_cellery_artifacts () {
 local base_url=$1
 local download_path=$2
 local yaml_list=("$@")
@@ -440,7 +448,7 @@ do
   if [[ $file_path =~ / ]]; then
     dir_name=${file_path%/*}
   fi
-  wget "$base_url/$file_path" -P "$download_path/$dir_name" -a vick-setup.log
+  wget "$base_url/$file_path" -P "$download_path/$dir_name" -a cellery-setup.log
 done
 }
 
@@ -456,16 +464,16 @@ function install_nginx_ingress_kubeadm () {
 local download_location=$1
 
 #Install nginx-ingress for control plane ingress
-kubectl apply -f ${download_location}/mandatory.yaml
-kubectl apply -f ${download_location}/service-nodeport.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/mandatory.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/service-nodeport.yaml
 }
 
 function install_nginx_ingress_gcp () {
 local download_location=$1
 
 #Install nginx-ingress for control plane ingress
-kubectl apply -f ${download_location}/mandatory.yaml
-kubectl apply -f ${download_location}/cloud-generic.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/mandatory.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/cloud-generic.yaml
 }
 
 function read_configs_envs () {
@@ -706,7 +714,7 @@ fi
 
 update_control_plane_datasources $download_path
 
-echo "ℹ️ Start to Deploying the VICK control plane"
+echo "ℹ️ Start to Deploying the Cellery control plane"
 echo "🔧 Deploying the control plane API Manager"
 
 deploy_global_gw $download_path $iaas
@@ -720,9 +728,9 @@ echo "🔧 Deploying Istio version $istio_version"
 
 deploy_istio $download_path $istio_version
 
-echo "🔧 Deploying VICK CRDs"
+echo "🔧 Deploying Cellery CRDs"
 
-deploy_vick_crds $download_path
+deploy_cellery_crds $download_path
 
 echo "🔧 Deploying ingress-nginx"
 
@@ -732,5 +740,5 @@ elif [ $iaas == "GCP" ]; then
     install_nginx_ingress_gcp $download_path
 fi
 
-echo "ℹ️ VICK installation is finished."
+echo "ℹ️ Cellery installation is finished."
 echo "-=🎉=-"
