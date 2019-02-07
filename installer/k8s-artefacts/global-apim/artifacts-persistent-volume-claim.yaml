@@ -16,7 +16,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: apim-repository-deployment-server-pvc
-  namespace: vick-system
+  namespace: cellery-system
 spec:
   accessModes:
     - ReadWriteMany

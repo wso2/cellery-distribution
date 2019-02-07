@@ -510,15 +510,15 @@ wso2.datasources:
           validationTimeout: 30000
           isAutoCommit: false
 
-    - name: VICK_OBSERVABILITY_DB
+    - name: CELLERY_OBSERVABILITY_DB
       description: The datasource used for HTTP Analytics dashboard
       jndiConfig:
-        name: jdbc/VICK_OBSERVABILITY_DB
+        name: jdbc/CELLERY_OBSERVABILITY_DB
         useJndiReference: false
       definition:
         type: RDBMS
         configuration:
-          jdbcUrl: 'jdbc:mysql://MYSQL_DATABASE_HOST:3306/VICK_OBSERVABILITY_DB?autoReconnect=true&useSSL=false'
+          jdbcUrl: 'jdbc:mysql://MYSQL_DATABASE_HOST:3306/CELLERY_OBSERVABILITY_DB?autoReconnect=true&useSSL=false'
           username: DATABASE_USERNAME
           password: DATABASE_PASSWORD
           driverClassName: com.mysql.jdbc.Driver

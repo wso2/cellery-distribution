@@ -520,7 +520,7 @@ data:
     #
     # Deprecated: mixer is using EDS
     mixerCheckServer: istio-policy.istio-system.svc.cluster.local:9091
-    mixerReportServer: wso2sp-worker.vick-system.svc.cluster.local:9091
+    mixerReportServer: wso2sp-worker.cellery-system.svc.cluster.local:9091
 
     # Unix Domain Socket through which envoy communicates with NodeAgent SDS to get
     # key/cert for mTLS. Use secret-mount files instead of SDS if set to empty. 
@@ -572,7 +572,7 @@ data:
       concurrency: 0
       #
       # Zipkin trace collector
-      zipkinAddress: wso2sp-worker.vick-system:9411
+      zipkinAddress: wso2sp-worker.cellery-system:9411
       #
       # Statsd metrics collector converts statsd metrics into Prometheus metrics.
       statsdUdpAddress: istio-statsd-prom-bridge.istio-system:9125
@@ -2947,7 +2947,7 @@ spec:
           - --serviceCluster
           - istio-egressgateway
           - --zipkinAddress
-          - wso2sp-worker.vick-system:9411
+          - wso2sp-worker.cellery-system:9411
           - --statsdUdpAddress
           - istio-statsd-prom-bridge:9125
           - --proxyAdminPort
@@ -3089,7 +3089,7 @@ spec:
           - --serviceCluster
           - istio-ingressgateway
           - --zipkinAddress
-          - wso2sp-worker.vick-system:9411
+          - wso2sp-worker.cellery-system:9411
           - --statsdUdpAddress
           - istio-statsd-prom-bridge:9125
           - --proxyAdminPort
@@ -3342,7 +3342,7 @@ spec:
           - unix:///sock/mixer.socket
           - --configStoreURL=k8s://
           - --configDefaultNamespace=istio-system
-          - --trace_zipkin_url=http://wso2sp-worker.vick-system:9411/api/v1/spans
+          - --trace_zipkin_url=http://wso2sp-worker.cellery-system:9411/api/v1/spans
         resources:
           requests:
             cpu: 10m
@@ -3439,7 +3439,7 @@ spec:
           - unix:///sock/mixer.socket
           - --configStoreURL=k8s://
           - --configDefaultNamespace=istio-system
-          - --trace_zipkin_url=http://wso2sp-worker.vick-system:9411/api/v1/spans
+          - --trace_zipkin_url=http://wso2sp-worker.cellery-system:9411/api/v1/spans
         resources:
           requests:
             cpu: 10m

@@ -228,4 +228,4 @@ scrape_configs:
   - job_name: grafana
     static_configs:
       - targets:
-          - k8s-metrics-grafana.vick-system:80
+          - k8s-metrics-grafana.cellery-system:80
