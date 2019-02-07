@@ -17,5 +17,5 @@
   -->
 
 <handlers>
-    <handler name="TracingSynapseHandler" class="org.wso2.vick.tracing.synapse.handler.TracingSynapseHandler"/>
+    <handler name="TracingSynapseHandler" class="io.cellery.observability.tracing.synapse.handler.TracingSynapseHandler"/>
 </handlers>
