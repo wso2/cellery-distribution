@@ -385,7 +385,7 @@ local download_location=$1
 local iaas=$2
 
 #Setup Celley namespace, create service account and the docker registry credentials
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/ns-init.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/ns-init.yaml
 
 if [ $iaas == "kubeadm" ]; then
     HOST_NAME=$(hostname | tr '[:upper:]' '[:lower:]')
@@ -406,16 +406,16 @@ wget https://github.com/istio/istio/releases/download/${istio_version}/istio-${i
 tar -xzf ${download_location}/istio-${istio_version}-linux.tar.gz -C ${download_location}
 #export PATH=$ISTIO_HOME/bin:$PATH
 kubectl apply -f $ISTIO_HOME/install/kubernetes/helm/istio/templates/crds.yaml
-kubectl apply -f ${download_location}/istio-demo-vick.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/istio-demo-cellery.yaml
 kubectl wait deployment/istio-pilot --for condition=available --timeout=6000s -n istio-system
 #Enabling Istio injection
 kubectl label namespace default istio-injection=enabled
 }
 
-function deploy_vick_crds () {
+function deploy_cellery_crds () {
 local download_location=$1
 
-#Install VICK crds
+#Install Cellery crds
 kubectl apply -f ${download_location}/vick.yaml
 }
 
