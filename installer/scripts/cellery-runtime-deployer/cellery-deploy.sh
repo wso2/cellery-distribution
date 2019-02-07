@@ -229,12 +229,12 @@ sudo mkdir -p /mnt/mysql
 sudo chown 999:999 /mnt/mysql
 
 kubectl create configmap mysql-dbscripts --from-file=${download_location}/distribution-master/installer/k8s-artefacts/mysql/dbscripts/ -n cellery-system
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql-persistent-volumes-local.yaml -n cellery-system
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql-persistent-volume-claim.yaml -n cellery-system
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql-deployment.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql/mysql-persistent-volumes-local.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql/mysql-persistent-volume-claim.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql/mysql-deployment.yaml -n cellery-system
 #Wait till the mysql deployment availability
 kubectl wait deployment/wso2apim-with-analytics-mysql-deployment --for condition=available --timeout=6000s -n cellery-system
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql-service.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql/mysql-service.yaml -n cellery-system
 }
 
 function deploy_mysql_server_gcp () {
@@ -319,11 +319,11 @@ if [ $iaas == "kubeadm" ] || [ $iaas == "k8s" ]; then
     sudo mkdir -p /mnt/apim_repository_deployment_server
     sudo chown 802:802 /mnt/apim_repository_deployment_server
     #Create apim local volumes and volume claims
-    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/persistent-volumes-local.yaml -n cellery-system
+    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/persistent-volume-local.yaml -n cellery-system
     kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/persistent-volume-claim-local.yaml -n cellery-system
 elif [ $iaas == "GCP" ]; then
     #Create apim NFS volumes and volume claims
-    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/artifacts-persistent-volumes.yaml -n cellery-system
+    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/artifacts-persistent-volume.yaml -n cellery-system
     kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/artifacts-persistent-volume-claim.yaml -n cellery-system
 fi
 
