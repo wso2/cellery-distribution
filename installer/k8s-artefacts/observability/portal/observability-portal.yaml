@@ -15,22 +15,22 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: vick-observability-portal
-  namespace: vick-system
+  name: cellery-observability-portal
+  namespace: cellery-system
   labels:
-    app: vick-observability-portal
-    node: vick-observability-portal
+    app: cellery-observability-portal
+    node: cellery-observability-portal
 spec:
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: vick-observability-portal
-        node: vick-observability-portal
+        app: cellery-observability-portal
+        node: cellery-observability-portal
     spec:
       containers:
-      - image: wso2vick/observability-portal
+      - image: celleryio/observability-portal
         name: observability-portal
         imagePullPolicy: Always
         env:
@@ -58,7 +58,7 @@ spec:
           periodSeconds: 20
       imagePullSecrets:
             - name: wso2creds
-      serviceAccountName: "vicksvc-account"
+      serviceAccountName: "cellerysvc-account"
       volumes:
       - name: observability-portal-config
         configMap:
@@ -67,10 +67,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: vick-observability-portal
-  namespace: vick-system
+  name: cellery-observability-portal
+  namespace: cellery-system
   labels:
-    node: vick-observability-portal
+    node: cellery-observability-portal
 spec:
   ports:
     # ports that this service should serve on
@@ -81,15 +81,15 @@ spec:
 
   # label keys and values that must match in order to receive traffic for this service
   selector:
-    node: vick-observability-portal
+    node: cellery-observability-portal
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: vick-observability-portal-dashboard-ingress
-  namespace: vick-system
+  name: cellery-observability-portal-dashboard-ingress
+  namespace: cellery-system
   labels:
-      node: vick-observability-portal
+      node: cellery-observability-portal
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/affinity: "cookie"
@@ -97,10 +97,10 @@ metadata:
     nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
 spec:
   rules:
-  - host: vick-dashboard
+  - host: cellery-dashboard
     http:
       paths:
       - path: /
         backend:
-          serviceName: vick-observability-portal
+          serviceName: cellery-observability-portal
           servicePort: 3000

@@ -21,7 +21,7 @@
 # cat cellery-deploy.sh | bash -s -- <k8s Provier>
 # cat cellery-deploy.sh | bash -s -- kubeadm
 #
-# How to deploy VICK with GCP K8s provider.
+# How to deploy Cellery with GCP K8s provider.
 # cat cellery-deploy.sh | bash -s -- <k8s Provier> <GCP Project ID> <GCP Compute Zone>
 # Eg. cat cellery-deploy.sh | bash -s -- GCP proj-cellery us-west1-c
 #
@@ -605,11 +605,11 @@ control_plane_observabilityui_base_url="${git_base_url}/system/control-plane/glo
 control_plane_observabilityui_configs=(
 "node-server/config/portal.json"
 )
-crd_base_url="${git_base_url}/build/target"
-crd_yaml=("vick.yaml")
+#crd_base_url="${git_base_url}/build/target"
+#crd_yaml=("vick.yaml")
 
-istio_base_url="${git_base_url}/system/scripts/kubeadm"
-istio_yaml=("istio-demo-vick.yaml")
+#istio_base_url="${git_base_url}/system/scripts/kubeadm"
+#istio_yaml=("istio-demo-vick.yaml")
 
 declare -A config_params
 declare -A nfs_config_params
@@ -618,9 +618,9 @@ declare -A nfs_config_params
 #Create temporary folder to download Cellery artifacts
 create_artifact_folder $download_path
 
-echo "🕷️ Downloading VICK artifacts to ${download_path}"
+echo "🕷️ Downloading Cellery artifacts to ${download_path}"
 download_extract_celley_k8s_artifacts $download_path $distribution_url
-download_vick_artifacts $istio_base_url $download_path "${istio_yaml[@]}"
+#download_cellery_artifacts $istio_base_url $download_path "${istio_yaml[@]}"
 
 
 #Install K8s
@@ -651,7 +651,7 @@ if [[ -n ${iaas/[ ]*\n/} ]]; then
         exit 0
     fi
 else
-    echo "Installing VICK into an existing k8s cluster"
+    echo "Installing Cellery into an existing k8s cluster"
 fi
 
 
@@ -694,7 +694,7 @@ if [ $install_mysql == "y" ]; then
         #Update the sql
         update_control_plance_sql $download_path
         deploy_mysql_server_gcp $download_path \
-                                "vick-mysql-$((1 + RANDOM % 1000))" \
+                                "cellery-mysql-$((1 + RANDOM % 1000))" \
                                 $gcp_compute_zone \
                                 $gcp_sql_tire
     elif [ $iaas == "kubeadm" ]; then

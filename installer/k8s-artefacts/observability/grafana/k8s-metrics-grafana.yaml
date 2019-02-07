@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: k8s-metrics-grafana
-  namespace: vick-system
+  namespace: cellery-system
   labels:
     app: k8s-metrics-grafana
 spec:
@@ -45,7 +45,7 @@ spec:
               mountPath: "/etc/grafana/provisioning/dashboards"
             - name: k8s-metrics-grafana-dashboards-default
               mountPath: "/etc/grafana/provisioning/dashboards/default"
-      serviceAccountName: vicksvc-account
+      serviceAccountName: cellerysvc-account
       volumes:
         - name: k8s-metrics-grafana-conf
           configMap:
@@ -64,7 +64,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: k8s-metrics-grafana
-  namespace: vick-system
+  namespace: cellery-system
   labels:
     app: k8s-metrics-grafana
 spec:
@@ -79,9 +79,9 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: k8s-metrics-grafana-ingress
-  namespace: vick-system
+  namespace: cellery-system
   labels:
-    node: vick-observability-portal
+    node: cellery-observability-portal
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/affinity: "cookie"
