@@ -627,7 +627,6 @@ echo "🕷️ Downloading Cellery artifacts to ${download_path}"
 download_extract_celley_k8s_artifacts $download_path $distribution_url "distribution_master.zip"
 download_extract_celley_k8s_artifacts $download_path $mesh_observability_url "observability_master.zip"
 #download_cellery_artifacts $istio_base_url $download_path "${istio_yaml[@]}"
-exit 0
 
 #Install K8s
 if [[ -n ${iaas/[ ]*\n/} ]]; then
