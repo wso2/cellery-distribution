@@ -456,9 +456,6 @@ function download_extract_celley_k8s_artifacts (){
 local download_path=$1
 local distribution_url=$2
 local file_name=$3
-echo $download_path
-echo $distribution_url
-echo $file_name
 wget ${distribution_url} -O ${download_path}/${file_name} -a cellery-setup.log
 unzip ${download_path}/${file_name} -d ${download_path}
 }
