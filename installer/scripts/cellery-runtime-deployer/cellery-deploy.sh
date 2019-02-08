@@ -354,7 +354,7 @@ function deploy_sp_dashboard_worker () {
 local download_location=$1
 
 #Create SP worker configmaps
-kubectl create configmap sp-worker-siddhi --from-file=${download_location}/sp-worker/siddhi -n cellery-system
+kubectl create configmap sp-worker-siddhi --from-file=${download_location}mesh-observability-master/components/global/core/io.cellery.observability.siddhi.apps/src/main/siddhi -n cellery-system
 kubectl create configmap sp-worker-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/sp/conf -n cellery-system
 #kubectl create configmap sp-worker-bin --from-file=${download_location}/sp-worker/bin -n cellery-system
 #Create SP worker deployment
@@ -364,7 +364,7 @@ kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefact
 #kubectl create configmap sp-dashboard-conf --from-file=${download_location}/status-dashboard/conf -n cellery-system
 #kubectl create configmap sp-worker-bin --from-file=sp-worker/bin -n cellery-system
 #Create observability portal deployment, service and ingress.
-kubectl create configmap observability-portal-config --from-file=${download_location}/node-server/config -n cellery-system
+kubectl create configmap observability-portal-config --from-file=${download_location}/mesh-observability-master/components/global/portal/io.cellery.observability.ui/node-server/config -n cellery-system
 kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/portal/observability-portal.yaml -n cellery-system
 #kubectl apply -f ${download_location}/vick-sp-worker-ingress.yaml -n cellery-system
 
@@ -455,8 +455,12 @@ done
 function download_extract_celley_k8s_artifacts (){
 local download_path=$1
 local distribution_url=$2
-wget $distribution_url  -P ${download_path} -a cellery-setup.log
-unzip ${download_path}/master.zip -d ${download_path}
+local file_name=$3
+echo $download_path
+echo $distribution_url
+echo $file_name
+wget ${distribution_url} -O ${download_path}/${file_name} -a cellery-setup.log
+unzip ${download_path}/${file_name} -d ${download_path}
 }
 
 
@@ -487,6 +491,7 @@ if [[ -n ${IAAS/[ ]*\n/} ]]; then
     download_path=${DOWNLOAD_PATH:-tmp-cellery}
     git_base_url=${GIT_BASE_URL:-https://https://github.com/celleryio/distribution}
     distribution_url=${GIT_DISTRIBUTION_URL:-https://github.com/celleryio/distribution/archive/master.zip}
+    mesh_observability_url=${GIT_MESH_OBSERVABILITY_URL:-https://github.com/cellery-io/mesh-observability/archive/master.zip}
     istio_version=${ISTIO_VERSION:-1.0.2}
     if [ $iaas == "kubeadm" ]; then
         k8s_version=${K8S_VERSION:-1.11.3-00}
@@ -619,9 +624,10 @@ declare -A nfs_config_params
 create_artifact_folder $download_path
 
 echo "🕷️ Downloading Cellery artifacts to ${download_path}"
-download_extract_celley_k8s_artifacts $download_path $distribution_url
+download_extract_celley_k8s_artifacts $download_path $distribution_url "distribution_master.zip"
+download_extract_celley_k8s_artifacts $download_path $mesh_observability_url "observability_master.zip"
 #download_cellery_artifacts $istio_base_url $download_path "${istio_yaml[@]}"
-
+exit 0
 
 #Install K8s
 if [[ -n ${iaas/[ ]*\n/} ]]; then
