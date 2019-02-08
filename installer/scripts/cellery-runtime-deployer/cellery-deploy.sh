@@ -354,7 +354,7 @@ function deploy_sp_dashboard_worker () {
 local download_location=$1
 
 #Create SP worker configmaps
-kubectl create configmap sp-worker-siddhi --from-file=${download_location}mesh-observability-master/components/global/core/io.cellery.observability.siddhi.apps/src/main/siddhi -n cellery-system
+kubectl create configmap sp-worker-siddhi --from-file=${download_location}/mesh-observability-master/components/global/core/io.cellery.observability.siddhi.apps/src/main/siddhi -n cellery-system
 kubectl create configmap sp-worker-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/sp/conf -n cellery-system
 #kubectl create configmap sp-worker-bin --from-file=${download_location}/sp-worker/bin -n cellery-system
 #Create SP worker deployment
