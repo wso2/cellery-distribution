@@ -27,6 +27,6 @@ FROM ubuntu:18.04
 
 RUN apt update -y
 RUN apt install openjdk-8-jdk -y
-ENV JAVA_HOME="/usr/lib/jvm/open-jdk"
+ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
 
 ENTRYPOINT ["/target/bin/gateway", "-e", "b7a.log.level=DEBUG"]
