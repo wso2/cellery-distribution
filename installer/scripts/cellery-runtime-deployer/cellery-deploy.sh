@@ -404,9 +404,15 @@ local istio_version=$2
 ISTIO_HOME=${download_location}/istio-${istio_version}
 wget https://github.com/istio/istio/releases/download/${istio_version}/istio-${istio_version}-linux.tar.gz -P ${download_location}
 tar -xzf ${download_location}/istio-${istio_version}-linux.tar.gz -C ${download_location}
-#export PATH=$ISTIO_HOME/bin:$PATH
 kubectl apply -f $ISTIO_HOME/install/kubernetes/helm/istio/templates/crds.yaml
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/istio-demo-cellery.yaml
+
+read -p "⛏️ Do you want to  enable mTLS in the service mesh [y/N]: " enable_mtls < /dev/tty
+if [ $enable_mtls == "y" ]; then
+    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/istio-demo-cellery.yaml
+else
+    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/istio-demo-cellery-auth.yaml
+fi
+
 kubectl wait deployment/istio-pilot --for condition=available --timeout=6000s -n istio-system
 #Enabling Istio injection
 kubectl label namespace default istio-injection=enabled

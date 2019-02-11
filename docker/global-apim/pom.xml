@@ -46,10 +46,10 @@
             <artifactId>io.cellery.security.token.endpoint</artifactId>
             <type>war</type>
         </dependency>
-        <dependency>
-            <groupId>io.cellery.cell.gateway.initializer</groupId>
-            <artifactId>io.cellery.cell.gateway.initializer</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>io.cellery.cell.gateway.initializer</groupId>-->
+            <!--<artifactId>io.cellery.cell.gateway.initializer</artifactId>-->
+        <!--</dependency>-->
 
         <!-- Tracing Dependencies starts here -->
         <dependency>
@@ -117,7 +117,7 @@
                             <outputDirectory>${project.build.directory}/files/dropins</outputDirectory>
                             <excludeArtifactIds>
                                 io.cellery.security.sts.endpoint.core, io.cellery.security.token.endpoint,
-                                io.cellery.security.extensions, io.cellery.cell.gateway.initializer, opentracing-api,
+                                io.cellery.security.extensions, opentracing-api,
                                 opentracing-util, zipkin, brave, brave-opentracing, zipkin-reporter,
                                 zipkin-sender-urlconnection, zipkin-sender-okhttp3, okhttp, okio
                             </excludeArtifactIds>
