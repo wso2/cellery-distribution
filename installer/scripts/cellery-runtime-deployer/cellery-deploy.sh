@@ -409,6 +409,7 @@ kubectl apply -f $ISTIO_HOME/install/kubernetes/helm/istio/templates/crds.yaml
 read -p "⛏️ Do you want to  enable mTLS in the service mesh [y/N]: " enable_mtls < /dev/tty
 if [ $enable_mtls == "y" ]; then
     kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/istio-demo-cellery.yaml
+    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/istio-gateway.yaml
 else
     kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/istio-demo-cellery-auth.yaml
 fi
