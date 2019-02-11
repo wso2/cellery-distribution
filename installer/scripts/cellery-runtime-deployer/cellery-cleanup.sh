@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-#cat vick-cleanup.sh |bash -s -- kubeadm
+#cat cellery-cleanup.sh | bash -s -- kubeadm
+#curl https://raw.githubusercontent.com/cellery-io/distribution/master/installer/scripts/cellery-runtime-deployer/cellery-cleanup.sh | bash -s -- kubeadm
 
 iaas=$1
 
