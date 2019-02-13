@@ -167,7 +167,7 @@ local download_location=$1
 
 for param in "${!nfs_config_params[@]}"
 do
-    sed -i "s|$param|${nfs_config_params[$param]}|g" ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/artifacts-persistent-volumes.yaml
+    sed -i "s|$param|${nfs_config_params[$param]}|g" ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/artifacts-persistent-volume.yaml
 done
 }
 
@@ -245,7 +245,7 @@ local gcp_sql_tire=$4
 local service_account
 local mysql_server_ip
 
-gcloud -q sql instances create ${sql_instance_name} --tier=${gcp_sql_tire} --gce-zone=${gcp_compute_zone}
+gcloud -q sql instances create ${sql_instance_name} --tier=${gcp_sql_tire} --zone=${gcp_compute_zone}
 service_account=$(gcloud beta sql instances describe ${sql_instance_name} --format flattened | awk '/serviceAccountEmailAddress/ {print $2}')
 #TODO remove after the key length fix
 gcloud -q sql instances patch ${sql_instance_name} --authorized-networks=0.0.0.0/0 --database-flags character_set_server=latin1
@@ -255,7 +255,7 @@ echo "⚙️ Setting MySQL server root user password."
 gcloud sql users set-password root --instance=${sql_instance_name} --prompt-for-password --host=%
 #Wait till the credential update sync.
 sleep 30
-cat ${download_location}/mysql/dbscripts/init.sql | gcloud sql connect ${sql_instance_name} --user=root
+cat ${download_location}/distribution-master/installer/k8s-artefacts/mysql/dbscripts/init.sql | gcloud sql connect ${sql_instance_name} --user=root
 
 mysql_server_ip=$(gcloud beta sql instances describe ${sql_instance_name}  --format flattened | awk '/.ipAddress/ {print $2}')
 config_params["MYSQL_DATABASE_HOST"]=$mysql_server_ip
@@ -501,9 +501,9 @@ if [[ -n ${IAAS/[ ]*\n/} ]]; then
         k8s_version=${K8S_VERSION:-1.11.3-00}
         flannel_version=${FLANNEL_VERSION:-0.10.0}
     elif [ $iaas == "GCP" ]; then
-        k8s_version=${K8S_VERSION:-1.11.2-gke.26}
-        gcp_project=${GCP_PROJECT:-myc-ellery}
-        gcp_compute_region=${GCP_COMPUTE_REGION:-us-west1}
+        k8s_version=${K8S_VERSION:-1.11.6-gke.2}
+        #gcp_project=${GCP_PROJECT:-myc-ellery}
+        #gcp_compute_region=${GCP_COMPUTE_REGION:-us-west1}
         gcp_compute_zone=${GCP_COMPUTE_ZONE:-us-west1-c}
         gcp_k8s_cluster_name=${GCP_K8S_CLUSTER_NAME:-cellery-k8s}
         #GCP_K8S_CLUSTER_VERSION=latest
