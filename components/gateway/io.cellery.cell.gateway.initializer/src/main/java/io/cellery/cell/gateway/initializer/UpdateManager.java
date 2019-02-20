@@ -15,10 +15,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package io.cellery.cell.gateway.initializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cellery.cell.gateway.initializer.beans.controller.APIMConfig;
+import io.swagger.models.Info;
+import io.swagger.models.Operation;
+import io.swagger.models.Path;
+import io.swagger.models.Response;
+import io.swagger.models.Swagger;
+import io.swagger.util.Json;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +37,12 @@ import io.cellery.cell.gateway.initializer.beans.request.ApiCreateRequest;
 import io.cellery.cell.gateway.initializer.beans.controller.ApiDefinition;
 import io.cellery.cell.gateway.initializer.beans.controller.Cell;
 import io.cellery.cell.gateway.initializer.beans.request.Endpoint;
-import io.cellery.cell.gateway.initializer.beans.request.Label;
 import io.cellery.cell.gateway.initializer.beans.request.Method;
 import io.cellery.cell.gateway.initializer.beans.request.Parameter;
 import io.cellery.cell.gateway.initializer.beans.request.PathDefinition;
 import io.cellery.cell.gateway.initializer.beans.request.PathsMapping;
 import io.cellery.cell.gateway.initializer.beans.request.ProductionEndpoint;
 import io.cellery.cell.gateway.initializer.beans.controller.RestConfig;
-import io.cellery.cell.gateway.initializer.beans.request.SandboxEndpoint;
 import io.cellery.cell.gateway.initializer.exceptions.APIException;
 import io.cellery.cell.gateway.initializer.internals.ConfigManager;
 import io.cellery.cell.gateway.initializer.utils.RequestProcessor;
@@ -48,9 +54,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -63,12 +71,9 @@ import java.util.zip.ZipInputStream;
  */
 public class UpdateManager {
 
-    private static String clientId;
-    private static String clientSecret;
-    private static RestConfig restConfig;
     private static Cell cellConfig;
-    private static String apiToken;
-    private static String apiVersion;
+    private static RestConfig restConfig;
+    private static APIMConfig apimConfig;
     private static final Logger log = LoggerFactory.getLogger(UpdateManager.class);
 
     public static void main(String[] args) {
@@ -76,21 +81,14 @@ public class UpdateManager {
             // Encode username password to base64
             restConfig = ConfigManager.getRestConfiguration();
             cellConfig = ConfigManager.getCellConfiguration();
-            String username = restConfig.getUsername();
-            String password = restConfig.getPassword();
-            byte[] message = (username + ":" + password).getBytes(StandardCharsets.UTF_8);
-            String userAuth = Base64.getEncoder().encodeToString(message);
+            apimConfig = ConfigManager.getAPIMConfiguration();
 
-            apiVersion = restConfig.getApiVersion();
-            generateClientIDSecret(userAuth);
-            generateAccessToken();
-            createLabel();
-            List apiIds = createAPIs();
-            publishAPIs(apiIds);
-
-            log.info("API creation is completed successfully..");
-
+            List apiIds = createGlobalAPIs();
+            publishGlobalAPIs(apiIds);
+            generateApiConfigJson();
+            log.info("Global API creation is completed successfully..");
             // Run microgateway setup command.
+
             microgatewaySetup();
             microgatewayBuild();
             unzipTargetFile();
@@ -110,122 +108,29 @@ public class UpdateManager {
     }
 
     /**
-     * Generate Client ID and Client Secret.
-     *
-     * @param authHeader Authorization Header
-     * @throws APIException Throw an exception if any error occurred.
-     */
-    private static void generateClientIDSecret(String authHeader) throws APIException {
-        if (log.isDebugEnabled()) {
-            log.debug("Calling the dynamic client registration endpoint...");
-        }
-        RequestProcessor requestProcessor = new RequestProcessor();
-        String apimBaseURL = restConfig.getApimBaseUrl();
-        String applicationResponse = requestProcessor
-                .doPost(apimBaseURL + Constants.Utils.PATH_CLIENT_REGISTRATION + apiVersion +
-                                Constants.Utils.PATH_REGISTER, Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
-                        Constants.Utils.CONTENT_TYPE_APPLICATION_JSON, Constants.Utils.BASIC + authHeader,
-                        restConfig.getRegisterPayload().toJSONString());
-
-        if (applicationResponse != null) {
-            JSONObject jsonObj = new JSONObject(applicationResponse);
-            clientId = jsonObj.getString(Constants.Utils.CLIENT_ID);
-            clientSecret = jsonObj.getString(Constants.Utils.CLIENT_SECRET);
-        }
-    }
-
-    /**
-     * Generate access tokens required to invoke RESTful APIs
-     *
-     * @throws APIException throw API Exception if an error occurred while generating an access token.
-     */
-    private static void generateAccessToken() throws APIException {
-        if (log.isDebugEnabled()) {
-            log.debug("Calling token endpoint to generate access tokens...");
-        }
-
-        String tokenPayload = Constants.Utils.TOKEN_PAYLOAD.replace("$USER", restConfig.getUsername())
-                .replace("$PASS", restConfig.getPassword());
-        apiToken = getToken(tokenPayload);
-    }
-
-    /**
-     * Invoke Rest API to get token
-     *
-     * @param tokenPayload Post payload
-     * @return access token
-     * @throws APIException throw API Exception if an error occurred
-     */
-    private static String getToken(String tokenPayload) throws APIException {
-        RequestProcessor requestProcessor = new RequestProcessor();
-        String auth = getBase64EncodedClientIdAndSecret();
-        String apiCreateTokenResponse = requestProcessor
-                .doPost(restConfig.getTokenEndpoint(), Constants.Utils.CONTENT_TYPE_APPLICATION_URL_ENCODED,
-                        Constants.Utils.CONTENT_TYPE_APPLICATION_JSON, Constants.Utils.BASIC + auth, tokenPayload);
-
-        if (apiCreateTokenResponse != null) {
-            JSONObject jsonObj = new JSONObject(apiCreateTokenResponse);
-            return jsonObj.getString(Constants.Utils.ACCESS_TOKEN);
-        } else {
-            throw new APIException(
-                    "Error while generating the access token from token endpoint: " + restConfig.getTokenEndpoint());
-        }
-    }
-
-    /**
-     * Create microgateway label.
-     *
-     * @throws APIException throw an API Exception if an error occurred while creating a label
-     */
-    private static void createLabel() throws APIException {
-        RequestProcessor requestProcessor = new RequestProcessor();
-        Label label = new Label();
-        label.setName(cellConfig.getCell());
-        label.setAccessUrls(Collections.singletonList(cellConfig.getCell() + "-gateway"));
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        String addLabelTokenResponse;
-        String addLabelPath;
-        try {
-            addLabelPath =
-                    restConfig.getApimBaseUrl() + Constants.Utils.PATH_ADMIN + apiVersion + Constants.Utils.PATH_LABELS;
-            addLabelTokenResponse = requestProcessor.doPost(addLabelPath, Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
-                    Constants.Utils.CONTENT_TYPE_APPLICATION_JSON, Constants.Utils.BEARER + apiToken,
-                    objectMapper.writeValueAsString(label));
-        } catch (JsonProcessingException e) {
-            throw new APIException("Error while serializing the payload: " + label);
-        }
-
-        if (addLabelTokenResponse == null) {
-            throw new APIException("Error while creating the label. Url: " + addLabelPath);
-        }
-    }
-
-    /**
-     * Create APIs.
+     * Create Global APIs.
      *
      * @return created API Ids.
      * @throws APIException throw API Exception if an error occurred while creating APIs.
      */
-    private static List createAPIs() throws APIException {
+    private static List createGlobalAPIs() throws APIException {
         if (log.isDebugEnabled()) {
             log.debug("Creating APIs in Global API Manager...");
         }
 
-        JSONArray apiPayloads = createApiPayloads();
+        JSONArray apiPayloads = createGlobalApiPayloads();
         List<String> apiIDs = new ArrayList<>();
-
         for (int i = 0; i < apiPayloads.length(); i++) {
             RequestProcessor requestProcessor = new RequestProcessor();
             ObjectMapper objectMapper = new ObjectMapper();
             String apiCreateResponse;
             String createAPIPath;
             try {
-                createAPIPath = restConfig.getApimBaseUrl() + Constants.Utils.PATH_PUBLISHER + apiVersion +
+                createAPIPath = restConfig.getApimBaseUrl() + Constants.Utils.PATH_PUBLISHER + restConfig.getApiVersion() +
                         Constants.Utils.PATH_APIS;
                 apiCreateResponse = requestProcessor
                         .doPost(createAPIPath, Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
-                                Constants.Utils.CONTENT_TYPE_APPLICATION_JSON, Constants.Utils.BEARER + apiToken,
+                                Constants.Utils.CONTENT_TYPE_APPLICATION_JSON, Constants.Utils.BEARER + apimConfig.getApiToken(),
                                 objectMapper.writeValueAsString(apiPayloads.get(i)));
             } catch (JsonProcessingException e) {
                 throw new APIException("Error while serializing the payload: " + apiPayloads.get(i));
@@ -246,63 +151,24 @@ public class UpdateManager {
     }
 
     /**
-     * Publish APIs in created state.
+     * Create Global API Payloads
      *
-     * @param ids API Id list
-     * @throws APIException Throw API Exception if an error occurred while publishing APIs.
+     * @return JSONArray that contains global API Payloads
+     * @throws APIException throw API Exception if an error occurred while creating APIs.
      */
-    private static void publishAPIs(List ids) throws APIException {
-        if (log.isDebugEnabled()) {
-            log.debug("Publishing created APIs in Global API Manager...");
-        }
-
-        for (Object id : ids) {
-            RequestProcessor requestProcessor = new RequestProcessor();
-            String apiPublishResponse;
-            String apiPublishPath = restConfig.getApimBaseUrl() + Constants.Utils.PATH_PUBLISHER + apiVersion +
-                    Constants.Utils.PATH_LIFECYCLE + "apiId=" + id + "&action=Publish";
-            apiPublishResponse = requestProcessor.doPost(apiPublishPath, Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
-                    Constants.Utils.CONTENT_TYPE_APPLICATION_JSON, Constants.Utils.BEARER + apiToken,
-                    Constants.Utils.EMPTY_STRING);
-
-            if (apiPublishResponse == null) {
-                throw new APIException(
-                        "Error while publishing the global API with URL: " + apiPublishPath);
-            }
-        }
-    }
-
-    private static String getBase64EncodedClientIdAndSecret() {
-        byte[] message = (clientId + ":" + clientSecret).getBytes(StandardCharsets.UTF_8);
-        return Base64.getEncoder().encodeToString(message);
-    }
-
-    private static JSONArray createApiPayloads() throws APIException {
+    private static JSONArray createGlobalApiPayloads() throws APIException {
         JSONArray apiPayloadsArray = new JSONArray();
         API[] apis = cellConfig.getApis();
 
         for (API api : apis) {
-
-            // Create api payload with actual backend
-            ApiCreateRequest apiCreateRequest = new ApiCreateRequest();
-            apiCreateRequest.setName(generateAPIName(api, false));
-            apiCreateRequest.setContext(api.getContext());
-            apiCreateRequest.setVersion(cellConfig.getVersion());
-            apiCreateRequest.setApiDefinition(getAPIDefinition(api, false));
-            apiCreateRequest.setEndpointConfig(getEndpoint(api));
-            Map<String, String> cellLabel = new HashMap<>();
-            cellLabel.put("name", cellConfig.getCell());
-            apiCreateRequest.setLabels(Collections.singletonList(cellLabel));
-            apiPayloadsArray.put(apiCreateRequest);
-
             if (api.isGlobal()) {
                 // Create api payload with gateway backend
                 ApiCreateRequest globalApiCreateRequest = new ApiCreateRequest();
-                        globalApiCreateRequest.setName(generateAPIName(api, true));
+                globalApiCreateRequest.setName(generateAPIName(api));
                 globalApiCreateRequest
                         .setContext((cellConfig.getCell() + "/" + api.getContext()).replaceAll("//", "/"));
                 globalApiCreateRequest.setVersion(cellConfig.getVersion());
-                globalApiCreateRequest.setApiDefinition(getAPIDefinition(api, true));
+                globalApiCreateRequest.setApiDefinition(getAPIDefinition(api));
                 globalApiCreateRequest.setEndpointConfig(getGlobalEndpoint());
                 globalApiCreateRequest.setGatewayEnvironments(Constants.Utils.PRODUCTION_AND_SANDBOX);
 
@@ -317,46 +183,31 @@ public class UpdateManager {
         return apiPayloadsArray;
     }
 
-    private static String generateAPIName(API api, boolean isGlobal) {
-        String apiName;
-        if (isGlobal) {
-            apiName = cellConfig.getCell() + Constants.Utils.UNDERSCORE + Constants.Utils.GLOBAL +
-                    Constants.Utils.UNDERSCORE + cellConfig.getVersion() + Constants.Utils.UNDERSCORE +
-                    api.getContext().replace("/", Constants.Utils.EMPTY_STRING);
-        } else {
-            apiName = cellConfig.getCell() + Constants.Utils.UNDERSCORE + cellConfig.getVersion() +
-                    Constants.Utils.UNDERSCORE +
-                    api.getContext().replace("/", Constants.Utils.EMPTY_STRING);
-        }
-        return apiName.replaceAll("[^a-zA-Z0-9]", "_");
-    }
-
     /**
-     * Create endpoint_config payload required for API creation payload
+     * Publish APIs in created state.
      *
-     * @param api Api details
-     * @return endpoint payload string
+     * @param ids API Id list
+     * @throws APIException Throw API Exception if an error occurred while publishing APIs.
      */
-    private static String getEndpoint(API api) {
-        String response = Constants.Utils.EMPTY_STRING;
-        ProductionEndpoint productionEndpoint = new ProductionEndpoint();
-        productionEndpoint.setUrl(api.getBackend());
-
-        SandboxEndpoint sandboxEndpoint = new SandboxEndpoint();
-        sandboxEndpoint.setUrl(api.getBackend());
-
-        Endpoint endpoint = new Endpoint();
-        endpoint.setProductionEndPoint(productionEndpoint);
-        endpoint.setSandboxEndPoint(sandboxEndpoint);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            response = objectMapper.writeValueAsString(endpoint);
-        } catch (JsonProcessingException e) {
-            log.error("Error occurred while serializing json to string", e);
+    private static void publishGlobalAPIs(List ids) throws APIException {
+        if (log.isDebugEnabled()) {
+            log.debug("Publishing created APIs in Global API Manager...");
         }
-        return response;
+
+        for (Object id : ids) {
+            RequestProcessor requestProcessor = new RequestProcessor();
+            String apiPublishResponse;
+            String apiPublishPath = restConfig.getApimBaseUrl() + Constants.Utils.PATH_PUBLISHER + restConfig.getApiVersion() +
+                    Constants.Utils.PATH_LIFECYCLE + "apiId=" + id + "&action=Publish";
+            apiPublishResponse = requestProcessor.doPost(apiPublishPath, Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
+                    Constants.Utils.CONTENT_TYPE_APPLICATION_JSON, Constants.Utils.BEARER + apimConfig.getApiToken(),
+                    Constants.Utils.EMPTY_STRING);
+
+            if (apiPublishResponse == null) {
+                throw new APIException(
+                        "Error while publishing the global API with URL: " + apiPublishPath);
+            }
+        }
     }
 
     /**
@@ -387,16 +238,13 @@ public class UpdateManager {
      * @param api Api details
      * @return api definition payload string
      */
-    private static String getAPIDefinition(API api, boolean isGlobalAPI) throws APIException {
+    private static String getAPIDefinition(API api) throws APIException {
         PathsMapping apiDefinition = new PathsMapping();
         ApiDefinition[] definitions = api.getDefinitions();
 
         for (ApiDefinition definition : definitions) {
             PathDefinition pathDefinition;
             Method method = new Method();
-            if (!isGlobalAPI) {
-                method.setxAuthType("None");
-            }
             String methodStr = definition.getMethod();
 
             // Append /* to allow query parameters and path parameters
@@ -442,13 +290,7 @@ public class UpdateManager {
     private static void microgatewaySetup() throws IOException, InterruptedException {
         ProcessBuilder processBuilder =
                 new ProcessBuilder(Constants.Utils.MICROGATEWAY_PATH, "setup", cellConfig.getCell(),
-                        "-l", cellConfig.getCell(),
-                        "-u", restConfig.getUsername(),
-                        "-p", restConfig.getPassword(),
-                        "-s", restConfig.getApimBaseUrl(),
-                        "-t", restConfig.getTrustStore().get("location").toString(),
-                        "-w", restConfig.getTrustStore().get("password").toString(),
-                        "--insecure");
+                        "-ms", Constants.Utils.API_CONFIG_PATH);
 
         Process process = processBuilder.start();
         BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -485,9 +327,10 @@ public class UpdateManager {
     /**
      * Unzip microgateway target file.
      */
-    private static void unzipTargetFile() throws IOException, InterruptedException {
+    private static void unzipTargetFile() throws IOException {
         String targetZipName = "micro-gw-" + cellConfig.getCell() + ".zip";
         String targetZipFilePath = Constants.Utils.HOME_PATH + cellConfig.getCell() + "/target/" + targetZipName;
+        System.out.println(targetZipFilePath);
 
         //create output directory is not exists
         File targetFolder = new File(Constants.Utils.UNZIP_FILE_PATH);
@@ -536,5 +379,179 @@ public class UpdateManager {
         file.setExecutable(true, false);
 
         log.info("Moved the unzipped folder to mount location successfully..");
+    }
+
+    /**
+     * Writes API details in to API Config File
+     *
+     * @param api API being written
+     */
+    private static void writeToMicroGWConfig(API api) {
+        JSONArray apiConfigArray = getApiConfig();
+        JSONObject apiConfig = new JSONObject();
+        apiConfig.put("swaggerPath", Constants.Utils.SWAGGER_FOLDER + removeSpecialChars(api.getBackend() + api.getContext()) + ".json");
+        apiConfig.put("endpoint", api.getBackend());
+        apiConfig.put("defaultAPI", "true");
+        apiConfigArray.put(apiConfig);
+        writeToAFile(Constants.Utils.API_CONFIG_PATH, apiConfigArray.toString());
+    }
+
+    /**
+     * Gets API Config file from the disk
+     *
+     * @return Apiconfig JSONArray
+     */
+    private static JSONArray getApiConfig() {
+        JSONArray apiConfigArray = null;
+        try {
+            String jsonContent = new String(Files.readAllBytes(Paths.get(Constants.Utils.API_CONFIG_PATH)));
+            apiConfigArray = new JSONArray(jsonContent);
+        } catch (NoSuchFileException e) {
+            createEmptyJSONArray();
+            apiConfigArray = getApiConfig();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return apiConfigArray;
+    }
+
+    /**
+     * Writes to a File
+     *
+     * @param path    path of the file
+     * @param content Content that should be written
+     */
+    private static void writeToAFile(String path, String content) {
+        try {
+            java.nio.file.Path pathToFile = Paths.get(path);
+            Files.createDirectories(pathToFile.getParent());
+            Files.write(pathToFile, content.getBytes(), StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Creates an empty JSON Array and writes to the API Config File
+     */
+    private static void createEmptyJSONArray() {
+        JSONArray emptyArr = new JSONArray();
+        writeToAFile(Constants.Utils.API_CONFIG_PATH, emptyArr.toString());
+    }
+
+    /**
+     * Generates API Config that is required by Micro-GW
+     */
+    private static void generateApiConfigJson() {
+        API[] apis = cellConfig.getApis();
+        for (API api : apis) {
+            createSwagger(api);
+            writeToMicroGWConfig(api);
+        }
+    }
+
+    /**
+     * Creates Swagger file for the API given by controller
+     *
+     * @param api API sent by controller
+     */
+    private static void createSwagger(API api) {
+        Swagger swagger = new Swagger();
+        swagger.setInfo(createSwaggerInfo(api));
+        swagger.basePath("/" + api.getContext());
+        swagger.setPaths(createAPIResources(api));
+        String swaggerString = Json.pretty(swagger);
+        writeSwagger(swaggerString, removeSpecialChars(api.getBackend() + api.getContext()));
+    }
+
+    /**
+     * Creates Swagger Info
+     *
+     * @param api API sent by controller
+     * @return Swagger Info
+     */
+    private static Info createSwaggerInfo(API api) {
+        Info info = new Info();
+        info.setVersion(cellConfig.getVersion());
+        info.setTitle(generateAPIName(api));
+        return info;
+    }
+
+    /**
+     * Creates API Resources inside a Component
+     *
+     * @param api API sent by controller
+     * @return Swagger Path Map
+     */
+    private static Map<String, Path> createAPIResources(API api) {
+        Map<String, Path> pathMap = new HashMap<>();
+        for (ApiDefinition definition : api.getDefinitions()) {
+            Path path = new Path();
+            Operation op = new Operation();
+
+            Map<String, Response> resMap = new HashMap<>();
+            Response res = new Response();
+            res.setDescription("Successful");
+
+            resMap.put("200", res);
+            op.setResponses(resMap);
+
+            disableMicroGWAuth(op);
+            switch (definition.getMethod().toLowerCase()) {
+                case Constants.JsonParamNames.GET:
+                    path.setGet(op);
+                    break;
+                case Constants.JsonParamNames.POST:
+                    path.setPost(op);
+                    break;
+                default:
+                    log.error("HTTP Method not implemented");
+            }
+            pathMap.put(definition.getPath(), path);
+        }
+        return pathMap;
+    }
+
+    /**
+     * Adds X-auth to swagger to disable Micro-GW authentication
+     *
+     * @param operation Swagger operation
+     */
+    private static void disableMicroGWAuth(Operation operation) {
+        operation.setVendorExtension(Constants.JsonParamNames.X_AUTH_TYPE, Constants.JsonParamNames.NONE);
+    }
+
+    /**
+     * Generates API name for global API
+     *
+     * @param api API sent by controller
+     * @return API name
+     */
+    private static String generateAPIName(API api) {
+        String apiName = cellConfig.getCell() + Constants.Utils.UNDERSCORE + Constants.Utils.GLOBAL +
+                Constants.Utils.UNDERSCORE + cellConfig.getVersion() + Constants.Utils.UNDERSCORE +
+                api.getContext().replace("/", Constants.Utils.EMPTY_STRING);
+        return apiName.replaceAll("[^a-zA-Z0-9]", "_");
+    }
+
+    /**
+     * Writes Swagger String to a File
+     *
+     * @param swagger Swagger String
+     * @param name    Path of the destination file
+     */
+    private static void writeSwagger(String swagger, String name) {
+        String path = Constants.Utils.SWAGGER_FOLDER + name + ".json";
+        writeToAFile(path, swagger);
+    }
+
+    /**
+     * Removes special characters from a given string
+     *
+     * @param string String with special characters
+     * @return String without special Characters
+     */
+    private static String removeSpecialChars(String string) {
+        return string.replaceAll("[^a-zA-Z0-9]", "");
     }
 }

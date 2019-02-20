@@ -69,10 +69,23 @@
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>2.11.1</version>
         </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>${swagger.models.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-parser</artifactId>
+            <version>${swagger.parser.version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <properties>
         <httpclient.version>4.5.4</httpclient.version>
+        <swagger.models.version>1.5.16</swagger.models.version>
+        <swagger.parser.version>1.0.34</swagger.parser.version>
     </properties>
 
     <build>
