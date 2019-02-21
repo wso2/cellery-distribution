@@ -109,8 +109,8 @@ public class Constants {
         public static final String HOME_PATH = "/";
         public static final String UNZIP_FILE_PATH = "/unzip";
         public static final String MOUNT_FILE_PATH = "/target";
-        public static final String API_CONFIG_PATH = MOUNT_FILE_PATH + "/apiconfig.json";
-        public static final String SWAGGER_FOLDER = MOUNT_FILE_PATH +"/swagger/";
+        public static final String API_CONFIG_PATH = "/apiconfig.json";
+        public static final String SWAGGER_FOLDER = "/swagger/";
 
         // Token constants
         public static final String CLIENT_ID = "clientId";
