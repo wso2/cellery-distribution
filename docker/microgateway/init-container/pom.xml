@@ -20,13 +20,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <groupId>io.cellery.distribution.docker.microgateway</groupId>
-        <artifactId>io.cellery.distribution.docker.microgateway.parent</artifactId>
+        <groupId>io.cellery.distribution</groupId>
+        <artifactId>io.cellery.distribution.docker.microgateway</artifactId>
         <version>0.1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>io.cellery.distribution.docker.microgateway-init-container</artifactId>
+    <artifactId>io.cellery.distribution.docker.microgateway.init</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <name>Cellery Distribution - Dockerfiles - API Manager</name>
     <description>Docker files for Cellery Control Plane API Manager</description>
@@ -47,7 +48,7 @@
             <!--<type>war</type>-->
         <!--</dependency>-->
         <dependency>
-            <groupId>io.cellery.cell.gateway.initializer</groupId>
+            <groupId>io.cellery.distribution</groupId>
             <artifactId>io.cellery.cell.gateway.initializer</artifactId>
         </dependency>
 
