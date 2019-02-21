@@ -87,14 +87,12 @@ public class UpdateManager {
             generateApiConfigJson();
             log.info("Global API creation is completed successfully..");
             // Run microgateway setup command.
-
             microgatewaySetup();
             log.info("Microgateway setup success");
             microgatewayBuild();
             log.info("Microgateway build success");
             unzipTargetFile();
             moveUnzippedFolderToMountLocation();
-
             log.info("Init container configuration is completed successfully..");
         } catch (APIException e) {
             log.error("Error occurred while creating APIs in Global API manager. " + e.getMessage(), e);
