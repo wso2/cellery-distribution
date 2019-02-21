@@ -81,7 +81,6 @@ public class UpdateManager {
             // Encode username password to base64
             restConfig = ConfigManager.getRestConfiguration();
             cellConfig = ConfigManager.getCellConfiguration();
-            apimConfig = ConfigManager.getAPIMConfiguration();
 
             List apiIds = createGlobalAPIs();
             publishGlobalAPIs(apiIds);
@@ -90,7 +89,9 @@ public class UpdateManager {
             // Run microgateway setup command.
 
             microgatewaySetup();
+            log.info("Microgateway setup success");
             microgatewayBuild();
+            log.info("Microgateway build success");
             unzipTargetFile();
             moveUnzippedFolderToMountLocation();
 
@@ -126,6 +127,7 @@ public class UpdateManager {
             String apiCreateResponse;
             String createAPIPath;
             try {
+                apimConfig = ConfigManager.getAPIMConfiguration();
                 createAPIPath = restConfig.getApimBaseUrl() + Constants.Utils.PATH_PUBLISHER + restConfig.getApiVersion() +
                         Constants.Utils.PATH_APIS;
                 apiCreateResponse = requestProcessor
@@ -391,7 +393,7 @@ public class UpdateManager {
         JSONObject apiConfig = new JSONObject();
         apiConfig.put("swaggerPath", Constants.Utils.SWAGGER_FOLDER + removeSpecialChars(api.getBackend() + api.getContext()) + ".json");
         apiConfig.put("endpoint", api.getBackend());
-        apiConfig.put("defaultAPI", "true");
+        apiConfig.put("defaultAPI", true);
         apiConfigArray.put(apiConfig);
         writeToAFile(Constants.Utils.API_CONFIG_PATH, apiConfigArray.toString());
     }
