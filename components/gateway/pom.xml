@@ -18,15 +18,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <groupId>io.cellery.distribution.components</groupId>
-        <artifactId>io.cellery.distribution.componentesroot</artifactId>
+        <groupId>io.cellery.distribution</groupId>
+        <artifactId>io.cellery.distribution.components</artifactId>
         <version>0.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.cellery.distribution.components.gateway</groupId>
-    <artifactId>io.cellery.distribution.componentes.gateway</artifactId>
+    <artifactId>io.cellery.distribution.components.gateway</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <name>Cellery - Distribution - Control Plance Gateway</name>
     <description>Control Plance Gateway</description>
