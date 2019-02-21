@@ -401,10 +401,8 @@ function deploy_istio () {
 local download_location=$1
 local istio_version=$2
 
-ISTIO_HOME=${download_location}/istio-${istio_version}
-wget https://github.com/istio/istio/releases/download/${istio_version}/istio-${istio_version}-linux.tar.gz -P ${download_location}
-tar -xzf ${download_location}/istio-${istio_version}-linux.tar.gz -C ${download_location}
-kubectl apply -f $ISTIO_HOME/install/kubernetes/helm/istio/templates/crds.yaml
+#copy crds to
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/istio-crds.yaml
 
 read -p "⛏️ Do you want to  enable mTLS in the service mesh [y/N]: " enable_mtls < /dev/tty
 if [ $enable_mtls == "y" ]; then
