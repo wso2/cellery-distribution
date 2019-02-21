@@ -29,4 +29,4 @@ RUN apt update -y
 RUN apt install openjdk-8-jdk -y
 ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
 
-ENTRYPOINT ["/target/bin/gateway", "-e", "b7a.log.level=DEBUG"]
+ENTRYPOINT ["/target/bin/gateway", "-e", "b7a.log.level=DEBUG", "-e", "listenerConfig.httpPort=8080"]

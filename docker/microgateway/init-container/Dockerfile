@@ -20,7 +20,7 @@ FROM celleryio/cell-gateway-base
 
 ## copy java, microgateway and init.sh file to docker image
 #COPY ./files/jdk1.8.0_* /java
-#COPY ./files/wso2am-micro-gw-2.6.0 /wso2am-micro-gw-2.6.0
+#COPY ./files/wso2am-micro-gw-2.6.1-feature-multi-swagger /wso2am-micro-gw-2.6.1-feature-multi-swagger
 COPY ./target/files/io.cellery.cell.gateway.initializer-0.1.0-SNAPSHOT.jar /
 
 # set environment variables

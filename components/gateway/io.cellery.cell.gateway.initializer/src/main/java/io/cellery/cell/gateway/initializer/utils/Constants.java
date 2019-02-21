@@ -105,7 +105,7 @@ public class Constants {
         // Config map file paths
         public static final String CELL_CONFIGURATION_FILE_PATH = "/etc/config/api.json";
         public static final String REST_CONFIGURATION_FILE_PATH = "/etc/config/gw.json";
-        public static final String MICROGATEWAY_PATH = "/wso2am-micro-gw-2.6.0/bin/micro-gw";
+        public static final String MICROGATEWAY_PATH = "/wso2am-micro-gw-2.6.1-feature-multi-swagger/bin/micro-gw";
         public static final String HOME_PATH = "/";
         public static final String UNZIP_FILE_PATH = "/unzip";
         public static final String MOUNT_FILE_PATH = "/target";

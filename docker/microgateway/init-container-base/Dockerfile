@@ -21,7 +21,7 @@ FROM ubuntu:18.04
 
 # copy java, microgateway and init.sh file to docker image
 COPY ./files/jdk1.8.0_* /java
-COPY ./files/wso2am-micro-gw-2.6.0 /wso2am-micro-gw-2.6.0
+COPY ./files/wso2am-micro-gw-2.6.1-feature-multi-swagger /wso2am-micro-gw-2.6.1-feature-multi-swagger
 
 # set environment variables
 ENV JAVA_HOME=/java
