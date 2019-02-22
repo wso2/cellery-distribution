@@ -342,14 +342,6 @@ kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefact
 kubectl wait deployment.apps/gateway --for condition=available --timeout=6000s -n cellery-system
 }
 
-#function deploy_global_pubstore () {
-#    local download_location=$1
-#
-##Create pubstore ingress
-##pubstore ingress is pointed to gatway service. In the future pubstore ingress will be pointed to pubstore service.
-#kubectl apply -f ${download_location}/vick-apim-pub-store-ingress.yaml -n cellery-system
-#}
-
 function deploy_sp_dashboard_worker () {
 local download_location=$1
 
@@ -359,14 +351,12 @@ kubectl create configmap sp-worker-conf --from-file=${download_location}/distrib
 #kubectl create configmap sp-worker-bin --from-file=${download_location}/sp-worker/bin -n cellery-system
 #Create SP worker deployment
 kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/sp/sp-worker.yaml -n cellery-system
-#kubectl apply -f ${download_location}/vick-sp-worker-service.yaml -n cellery-system
 #Create SP dashboard configmaps
 #kubectl create configmap sp-dashboard-conf --from-file=${download_location}/status-dashboard/conf -n cellery-system
 #kubectl create configmap sp-worker-bin --from-file=sp-worker/bin -n cellery-system
 #Create observability portal deployment, service and ingress.
 kubectl create configmap observability-portal-config --from-file=${download_location}/mesh-observability-master/components/global/portal/io.cellery.observability.ui/node-server/config -n cellery-system
 kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/portal/observability-portal.yaml -n cellery-system
-#kubectl apply -f ${download_location}/vick-sp-worker-ingress.yaml -n cellery-system
 
 # Create K8s Metrics Config-maps
 kubectl create configmap k8s-metrics-prometheus-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/prometheus/config -n cellery-system
@@ -491,8 +481,8 @@ fi
 if [[ -n ${IAAS/[ ]*\n/} ]]; then
     iaas=$IAAS
     download_path=${DOWNLOAD_PATH:-tmp-cellery}
-    git_base_url=${GIT_BASE_URL:-https://https://github.com/celleryio/distribution}
-    distribution_url=${GIT_DISTRIBUTION_URL:-https://github.com/celleryio/distribution/archive/master.zip}
+    git_base_url=${GIT_BASE_URL:-https://github.com/cellery-io/distribution}
+    distribution_url=${GIT_DISTRIBUTION_URL:-https://github.com/cellery-io/distribution/archive/master.zip}
     mesh_observability_url=${GIT_MESH_OBSERVABILITY_URL:-https://github.com/cellery-io/mesh-observability/archive/master.zip}
     istio_version=${ISTIO_VERSION:-1.0.2}
     if [ $iaas == "kubeadm" ]; then
@@ -533,90 +523,6 @@ fi
 
 #Read IaaS configurations via environment variables.
 read_configs_envs
-
-#k8s_version="1.11.3-00"
-#istio_version="1.0.2"
-#download_path="tmp-wso2"
-#git_base_url="https://raw.githubusercontent.com/wso2/product-vick/master"
-
-control_plane_base_url="${git_base_url}/system/control-plane/global/k8s-artifacts"
-control_plane_yaml=(
-    "mysql-deployment.yaml"
-    "mysql-persistent-volume-claim.yaml"
-    "mysql-persistent-volumes-local.yaml"
-    "mysql-persistent-volumes.yaml"
-    "mysql-service.yaml"
-    "nfs-deployment.yaml"
-    "nfs-persistent-volume-claim.yaml"
-    "nfs-persistent-volumes-local.yaml"
-    "nfs-server-service.yaml"
-    "vick-apim-gw-ingress.yaml"
-    "vick-apim-gw.yaml"
-    "vick-apim-persistent-volume-claim-local.yaml"
-    "vick-apim-persistent-volume-claim.yaml"
-    "vick-apim-persistent-volumes-local.yaml"
-    "vick-apim-persistent-volumes.yaml"
-    "vick-apim-pub-store-ingress.yaml"
-    "vick-apim-pub-store.yaml"
-    "vick-ns-init.yaml"
-    "vick-observability-portal.yaml"
-    "vick-sp-persistent-volumes.yaml"
-    "vick-sp-worker-deployment.yaml"
-    "vick-sp-worker-service.yaml"
-    "vick-sp-worker-ingress.yaml"
-    "vick-apim-artifacts-persistent-volumes.yaml"
-    "vick-apim-artifacts-persistent-volume-claim.yaml"
-    "k8s-metrics-prometheus.yaml"
-    "k8s-metrics-grafana.yaml"
-    "mandatory.yaml"
-    "service-nodeport.yaml"
-    "cloud-generic.yaml"
-)
-
-control_plane_configs_base_url="${git_base_url}/system/control-plane/global"
-control_plane_configs=(
-    "apim-configs/gw/datasources/master-datasources.xml"
-    "apim-configs/gw/user-mgt.xml"
-    "apim-configs/gw/identity/identity.xml"
-    "apim-configs/gw/tomcat/catalina-server.xml"
-    "apim-configs/gw/carbon.xml"
-    "apim-configs/gw/security/Owasp.CsrfGuard.Carbon.properties"
-    "apim-configs/gw/registry.xml"
-    "apim-configs/gw/resources/api_templates/velocity_template.xml"
-    "apim-configs/gw/api-manager.xml"
-    "apim-configs/gw/synapse-handlers.xml"
-    "apim-configs/gw/log4j.properties"
-    "apim-configs/pub-store/datasources/master-datasources.xml"
-    "apim-configs/pub-store/user-mgt.xml"
-    "apim-configs/pub-store/identity/identity.xml"
-    "apim-configs/pub-store/carbon.xml"
-    "apim-configs/pub-store/registry.xml"
-    "apim-configs/pub-store/resources/api_templates/velocity_template.xml"
-    "apim-configs/pub-store/api-manager.xml"
-    "apim-configs/pub-store/log4j.properties"
-    "sp-worker/siddhi/tracing-app.siddhi"
-    "sp-worker/siddhi/istio-telemetry-app.siddhi"
-    "sp-worker/siddhi/k8s-telemetry-app.siddhi"
-    "sp-worker/siddhi/telemetry-app.siddhi"
-    "sp-worker/conf/deployment.yaml"
-    "mysql/dbscripts/init.sql"
-    "k8s-metrics/prometheus/config/prometheus.yaml"
-    "k8s-metrics/grafana/config/grafana.ini"
-    "k8s-metrics/grafana/datasources/prometheus.yaml"
-    "k8s-metrics/grafana/dashboards/dashboardproviders.yaml"
-    "k8s-metrics/grafana/dashboards/default/node-metrics.json"
-    "k8s-metrics/grafana/dashboards/default/pod-metrics.json"
-)
-
-control_plane_observabilityui_base_url="${git_base_url}/system/control-plane/global/components/observability/org.wso2.vick.observability.ui"
-control_plane_observabilityui_configs=(
-"node-server/config/portal.json"
-)
-#crd_base_url="${git_base_url}/build/target"
-#crd_yaml=("vick.yaml")
-
-#istio_base_url="${git_base_url}/system/scripts/kubeadm"
-#istio_yaml=("istio-demo-vick.yaml")
 
 declare -A config_params
 declare -A nfs_config_params
@@ -660,13 +566,6 @@ if [[ -n ${iaas/[ ]*\n/} ]]; then
 else
     echo "Installing Cellery into an existing k8s cluster"
 fi
-
-
-#download_vick_artifacts $control_plane_base_url $download_path "${control_plane_yaml[@]}"
-#download_vick_artifacts $control_plane_configs_base_url $download_path "${control_plane_configs[@]}"
-#download_vick_artifacts $control_plane_observabilityui_base_url $download_path "${control_plane_observabilityui_configs[@]}"
-#download_vick_artifacts $crd_base_url  $download_path "${crd_yaml[@]}"
-#download_vick_artifacts $istio_base_url $download_path "${istio_yaml[@]}"
 
 #Init control plane
 echo "🔧 Creating cellery-system namespace and the service account"
