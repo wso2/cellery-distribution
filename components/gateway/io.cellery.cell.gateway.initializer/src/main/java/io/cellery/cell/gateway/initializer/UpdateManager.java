@@ -249,10 +249,16 @@ public class UpdateManager {
             PathDefinition pathDefinition;
             Method method = new Method();
             String methodStr = definition.getMethod();
+            String path = definition.getPath().replaceAll("/$", Constants.Utils.EMPTY_STRING);
 
-            // Append /* to allow query parameters and path parameters
-            String allowQueryPath = definition.getPath().replaceAll("/$", Constants.Utils.EMPTY_STRING) +
-                    Constants.Utils.ALLOW_QUERY_PATTERN;
+            String allowQueryPath;
+            if (path.endsWith(Constants.Utils.WILDCARD_PATTERN)) {
+                // Avoid adding query pattern if path is a wildcard
+                allowQueryPath = Constants.Utils.WILDCARD_PATTERN;
+            } else {
+                // Append /* to allow query parameters and path parameters
+                allowQueryPath = path + Constants.Utils.ALLOW_QUERY_PATTERN;
+            }
 
             // If already contain a key, update path definition.
             if (apiDefinition.getPaths().containsKey(allowQueryPath)) {
