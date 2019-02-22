@@ -77,12 +77,13 @@ data:
         "globalJWKS" : "https://gateway.cellery-system:9443/oauth2/jwks",
         "enableSignatureValidation" : "true",
         "enableIssuerValidation" : "true",
-        "enableAudienceValidation" : "true"
+        "enableAudienceValidation" : "true",
+        "enableAuthorization" : "true",
+        "OPAQueryPrefix" : "data/cellery/io"
     }
   opa-default-policy: |
-      package sample
+      package cellery.io
 
-      default deny = false
       default allow = true
   cell-sts-image: celleryio/cell-sts
   cell-sts-opa-image: openpolicyagent/opa:0.10.3
