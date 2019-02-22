@@ -526,7 +526,6 @@ read_configs_envs
 
 declare -A config_params
 declare -A nfs_config_params
-#-----------------------------------------------------------------------------------------------------------------------
 
 #Create temporary folder to download Cellery artifacts
 create_artifact_folder $download_path
@@ -567,84 +566,86 @@ else
     echo "Installing Cellery into an existing k8s cluster"
 fi
 
-#Init control plane
+#Create cellery-system namespace and the cellery service account
 echo "🔧 Creating cellery-system namespace and the service account"
-
 init_control_plane $download_path $iaas
 
-#Deploy/Configure NFS APIM artifact
- if [ $iaas == "GCP" ]; then
-    read -p "⛏️ Do you want to deploy a NFS server [Y/n]: " install_nfs < /dev/tty
-    if [[ -z ${install_nfs/[ ]*\n/} ]]; then
-        install_nfs="Y"
-    fi
-
-    if [ $install_nfs == "n" ]; then
-         read_nfs_connection
-    else
-        create_nfs_share_gcp "data" $gcp_compute_zone
-    fi
-    update_apim_nfs_volumes $download_path
-fi
-
-#Deploy/configure MySQL / APIM datasources
-read -p "⛏️ Do you want to deploy MySQL server [y/N]: " install_mysql < /dev/tty
-if [[ -z ${install_mysql/[ ]*\n/} ]]; then
-        install_mysql="N"
-    fi
-if [ $install_mysql == "y" ]; then
-
-    if [ $iaas == "GCP" ]; then
-        #Read db user / passwd
-        read_control_plane_datasources_configs
-        #Update the sql
-        update_control_plance_sql $download_path
-        deploy_mysql_server_gcp $download_path \
-                                "cellery-mysql-$((1 + RANDOM % 1000))" \
-                                $gcp_compute_zone \
-                                $gcp_sql_tire
-    elif [ $iaas == "kubeadm" ]; then
-        read_control_plane_datasources_configs
-        #update the sql file
-        update_control_plance_sql $download_path
-        deploy_mysql_server $download_path
-    else
-        echo "🔧 Deploy MySQL server into the existing K8s clusters"
-        read_control_plane_datasources_configs
-        update_control_plance_sql $download_path
-        deploy_mysql_server $download_path
-    fi
-else
-    read_control_plane_datasources_configs
-fi
-
-update_control_plane_datasources $download_path
-
-echo "ℹ️ Start to Deploying the Cellery control plane"
-echo "🔧 Deploying the control plane API Manager"
-
-deploy_global_gw $download_path $iaas
-#deploy_global_pubstore $download_path
-
-echo "🔧Deploying Stream Processor"
-
-deploy_sp_dashboard_worker $download_path $iaas
-
+#Deploy Cellery Data plane
 echo "🔧 Deploying Istio version $istio_version"
-
 deploy_istio $download_path $istio_version
 
 echo "🔧 Deploying Cellery CRDs"
-
 deploy_cellery_crds $download_path
 
-echo "🔧 Deploying ingress-nginx"
+read -p "⛏️ Do you want to deploy Cellery control plane [y/N]: " install_control_plane < /dev/tty
 
-if [ $iaas == "kubeadm" ]; then
-    install_nginx_ingress_kubeadm $download_path
-elif [ $iaas == "GCP" ]; then
-    install_nginx_ingress_gcp $download_path
+if [ $install_control_plane == "y" ]; then
+
+    #Deploy/Configure NFS APIM artifact
+     if [ $iaas == "GCP" ]; then
+        read -p "⛏️ Do you want to deploy a NFS server [Y/n]: " install_nfs < /dev/tty
+        if [[ -z ${install_nfs/[ ]*\n/} ]]; then
+            install_nfs="Y"
+        fi
+
+        if [ $install_nfs == "n" ]; then
+             read_nfs_connection
+        else
+            create_nfs_share_gcp "data" $gcp_compute_zone
+        fi
+        update_apim_nfs_volumes $download_path
+    fi
+
+    #Deploy/configure MySQL / APIM datasources
+    read -p "⛏️ Do you want to deploy MySQL server [y/N]: " install_mysql < /dev/tty
+    if [[ -z ${install_mysql/[ ]*\n/} ]]; then
+            install_mysql="N"
+        fi
+    if [ $install_mysql == "y" ]; then
+
+        if [ $iaas == "GCP" ]; then
+            #Read db user / passwd
+            read_control_plane_datasources_configs
+            #Update the sql
+            update_control_plance_sql $download_path
+            deploy_mysql_server_gcp $download_path \
+                                    "cellery-mysql-$((1 + RANDOM % 1000))" \
+                                    $gcp_compute_zone \
+                                    $gcp_sql_tire
+        elif [ $iaas == "kubeadm" ]; then
+            read_control_plane_datasources_configs
+            #update the sql file
+            update_control_plance_sql $download_path
+            deploy_mysql_server $download_path
+        else
+            echo "🔧 Deploy MySQL server into the existing K8s clusters"
+            read_control_plane_datasources_configs
+            update_control_plance_sql $download_path
+            deploy_mysql_server $download_path
+        fi
+    else
+        read_control_plane_datasources_configs
+    fi
+
+    update_control_plane_datasources $download_path
+
+
+    echo "ℹ️ Start to Deploying the Cellery control plane"
+    echo "🔧 Deploying the control plane API Manager"
+
+    deploy_global_gw $download_path $iaas
+    #deploy_global_pubstore $download_path
+
+    echo "🔧Deploying Stream Processor"
+    deploy_sp_dashboard_worker $download_path $iaas
+
+    echo "🔧 Deploying ingress-nginx"
+
+    if [ $iaas == "kubeadm" ]; then
+        install_nginx_ingress_kubeadm $download_path
+    elif [ $iaas == "GCP" ]; then
+        install_nginx_ingress_gcp $download_path
+    fi
 fi
-
 echo "ℹ️ Cellery installation is finished."
 echo "-=🎉=-"
