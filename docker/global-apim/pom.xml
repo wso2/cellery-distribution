@@ -148,7 +148,7 @@
                                 <artifactItem>
                                     <groupId>io.cellery.security</groupId>
                                     <artifactId>io.cellery.security.token.endpoint</artifactId>
-                                    <version>${project.version}</version>
+                                    <version>${cellery.mesh.security.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/files/webapps/</outputDirectory>
