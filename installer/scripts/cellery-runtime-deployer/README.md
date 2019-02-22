@@ -1,10 +1,11 @@
-# How to install Cellery using cellery-deploy.sh script.
+# How to install Cellery runtime using cellery-deploy.sh script.
 
-Cellery all in one setup script helps to deploy Cellery into different providers such as vanilla k8s, GCP and OpenShift. User needs to pass the desired k8s provider to the script as 
-given in the example.
+Cellery all in one setup script helps to deploy Cellery into different providers such as vanilla k8s, GCP and OpenShift. 
+User needs to pass the desired k8s provider to the script as given in the example to install the Cellery runtime.
 
-If the user selects kubeadm as the k8s provider, installer script will deploy k8s on the Linux. When GCP k8s provider selected, the script creates a k8s cluster, MySQL instance and a NFS 
-file share in the GCP platform. 
+If the user selects kubeadm as the k8s provider, installer script will deploy k8s on the Linux box. When the GCP k8s 
+provider selected, the script creates a k8s cluster, MySQL instance and a NFS file share in the GCP platform and deploy 
+the . 
 
 
 ### Deploy Cellery with kubeadm K8s provider.
