@@ -40,7 +40,8 @@
                             <goal>build</goal>
                         </goals>
                         <configuration>
-                            <repository>celleryio/cell-gateway-base</repository>
+                            <repository>${docker.repo.name}/cell-gateway-base</repository>
+                            <tag>${docker.image.tag}</tag>
                         </configuration>
                     </execution>
                 </executions>

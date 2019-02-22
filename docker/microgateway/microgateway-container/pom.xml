@@ -49,6 +49,7 @@
                         <!--</goals>-->
                         <!--<configuration>-->
                             <!--<repository>${docker.repo.name}/cell-gateway</repository>-->
+                            <!--<tag>${docker.image.tag}</tag>-->
                         <!--</configuration>-->
                     <!--</execution>-->
                 <!--</executions>-->

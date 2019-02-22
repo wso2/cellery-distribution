@@ -152,7 +152,7 @@
                                 <artifactItem>
                                     <groupId>io.cellery.security</groupId>
                                     <artifactId>io.cellery.security.token.endpoint</artifactId>
-                                    <version>${cellery.version}</version>
+                                    <version>${project.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/files/webapps/</outputDirectory>
@@ -177,6 +177,7 @@
                         <!--</goals>-->
                         <!--<configuration>-->
                             <!--<repository>${docker.repo.name}/wso2am</repository>-->
+                            <!--<tag>${docker.image.tag}</tag>-->
                         <!--</configuration>-->
                     <!--</execution>-->
                 <!--</executions>-->
