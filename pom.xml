@@ -208,6 +208,30 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
+        <repository>
+            <id>cellery.mesh.security.repo</id>
+            <name>Security Staging Repository</name>
+            <url>https://maven.wso2.org/nexus/content/repositories/iocellerysecurity-1002/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>cellery.mesh.observability.repo</id>
+            <name>Observability Staging Repository</name>
+            <url>https://maven.wso2.org/nexus/content/repositories/iocelleryobservability-1002/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
     </repositories>
 
     <pluginRepositories>
