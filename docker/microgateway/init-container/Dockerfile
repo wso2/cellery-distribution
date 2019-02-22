@@ -21,7 +21,7 @@ FROM celleryio/cell-gateway-base
 ## copy java, microgateway and init.sh file to docker image
 #COPY ./files/jdk1.8.0_* /java
 #COPY ./files/wso2am-micro-gw-2.6.1-feature-multi-swagger /wso2am-micro-gw-2.6.1-feature-multi-swagger
-COPY ./target/files/io.cellery.cell.gateway.initializer-0.1.0-SNAPSHOT.jar /
+COPY ./target/files/io.cellery.cell.gateway.initializer-*.jar /
 
 # set environment variables
 #ENV JAVA_HOME=/java
@@ -30,4 +30,4 @@ COPY ./target/files/io.cellery.cell.gateway.initializer-0.1.0-SNAPSHOT.jar /
 # install required packages
 #RUN apt-get update && apt-get install -y zip
 
-CMD java -jar /io.cellery.cell.gateway.initializer-0.1.0-SNAPSHOT.jar
+CMD java -jar /io.cellery.cell.gateway.initializer-*.jar
