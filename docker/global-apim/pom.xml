@@ -47,10 +47,6 @@
             <artifactId>io.cellery.security.token.endpoint</artifactId>
             <type>war</type>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>io.cellery.distribution</groupId>-->
-            <!--<artifactId>io.cellery.cell.gateway.initializer</artifactId>-->
-        <!--</dependency>-->
 
         <!-- Tracing Dependencies starts here -->
         <dependency>
