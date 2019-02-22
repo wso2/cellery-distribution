@@ -34,70 +34,10 @@
     <packaging>pom</packaging>
 
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>io.cellery.security</groupId>-->
-            <!--<artifactId>io.cellery.security.extensions</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.cellery.security</groupId>-->
-            <!--<artifactId>io.cellery.security.sts.endpoint.core</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.cellery.security</groupId>-->
-            <!--<artifactId>io.cellery.security.token.endpoint</artifactId>-->
-            <!--<type>war</type>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>io.cellery.distribution</groupId>
             <artifactId>io.cellery.cell.gateway.initializer</artifactId>
         </dependency>
-
-        <!--&lt;!&ndash; Tracing Dependencies starts here &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>io.cellery.observability</groupId>-->
-            <!--<artifactId>io.cellery.observability.tracing.synapse.handler</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.opentracing</groupId>-->
-            <!--<artifactId>opentracing-api</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.opentracing</groupId>-->
-            <!--<artifactId>opentracing-util</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.zipkin.brave</groupId>-->
-            <!--<artifactId>brave</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.opentracing.brave</groupId>-->
-            <!--<artifactId>brave-opentracing</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.zipkin.zipkin2</groupId>-->
-            <!--<artifactId>zipkin</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.zipkin.reporter2</groupId>-->
-            <!--<artifactId>zipkin-reporter</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.zipkin.reporter2</groupId>-->
-            <!--<artifactId>zipkin-sender-urlconnection</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.zipkin.reporter2</groupId>-->
-            <!--<artifactId>zipkin-sender-okhttp3</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>com.squareup.okhttp3</groupId>-->
-            <!--<artifactId>okhttp</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>com.squareup.okio</groupId>-->
-            <!--<artifactId>okio</artifactId>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; Tracing Dependencies ends here &ndash;&gt;-->
     </dependencies>
 
     <build>
@@ -116,51 +56,9 @@
                             <overWriteReleases>false</overWriteReleases>
                             <includeScope>runtime</includeScope>
                             <outputDirectory>${project.build.directory}/files</outputDirectory>
-                            <!--<excludeArtifactIds>-->
-                                <!--io.cellery.security.sts.endpoint.core, io.cellery.security.token.endpoint,-->
-                                <!--io.cellery.security.extensions, io.cellery.cell.gateway.initializer, opentracing-api,-->
-                                <!--opentracing-util, zipkin, brave, brave-opentracing, zipkin-reporter,-->
-                                <!--zipkin-sender-urlconnection, zipkin-sender-okhttp3, okhttp, okio-->
-                            <!--</excludeArtifactIds>-->
                             <excludeTransitive>true</excludeTransitive>
                         </configuration>
                     </execution>
-                    <!--<execution>-->
-                        <!--<id>copy-non-osgi-libs</id>-->
-                        <!--<phase>initialize</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>copy-dependencies</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<overWriteReleases>false</overWriteReleases>-->
-                            <!--<includeScope>runtime</includeScope>-->
-                            <!--<outputDirectory>${project.build.directory}/files/lib/</outputDirectory>-->
-                            <!--<excludeArtifactIds>-->
-                                <!--io.cellery.security.token.endpoint, io.cellery.observability.tracing.synapse.handler-->
-                            <!--</excludeArtifactIds>-->
-                            <!--<excludeTransitive>true</excludeTransitive>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                    <!--<execution>-->
-                        <!--<id>copy-sts-web-app</id>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>copy</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<artifactItems>-->
-                                <!--<artifactItem>-->
-                                    <!--<groupId>io.cellery.security</groupId>-->
-                                    <!--<artifactId>io.cellery.security.token.endpoint</artifactId>-->
-                                    <!--<version>${project.version}</version>-->
-                                    <!--<type>war</type>-->
-                                    <!--<overWrite>true</overWrite>-->
-                                    <!--<outputDirectory>${project.build.directory}/files/webapps/</outputDirectory>-->
-                                    <!--<destFileName>api#identity#cellery-auth#v1.0.war</destFileName>-->
-                                <!--</artifactItem>-->
-                            <!--</artifactItems>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
                 </executions>
             </plugin>
 
