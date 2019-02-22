@@ -98,7 +98,7 @@ public class Constants {
         public static final String BASIC = "Basic ";
         public static final String BODY = "body";
         public static final String ALLOW_QUERY_PATTERN = "/*";
-
+        public static final String WILDCARD_PATTERN = "/*";
         public static final String TOKEN_PAYLOAD = "grant_type=password&username=$USER&password=$PASS" +
                 "&scope=apim:api_create apim:api_publish apim:label_manage";
 
