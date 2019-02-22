@@ -26,7 +26,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.cellery.distribution</groupId>
     <artifactId>io.cellery.distribution.parent</artifactId>
-    <name>Cellery - Distribution</name>
+    <name>Cellery Distribution</name>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 

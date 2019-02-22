@@ -27,7 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>io.cellery.distribution.components.gateway</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <name>Cellery - Distribution - Control Plance Gateway</name>
+    <name>Cellery Distribution - Control Plance Gateway</name>
     <description>Control Plance Gateway</description>
     <packaging>pom</packaging>
 
