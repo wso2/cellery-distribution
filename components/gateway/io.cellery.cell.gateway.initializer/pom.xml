@@ -31,6 +31,7 @@
 
     <artifactId>io.cellery.cell.gateway.initializer</artifactId>
     <version>0.1.0-SNAPSHOT</version>
+    <name>Cellery Distribution - Components - Gateway - Cell Gateway Initializer</name>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -82,12 +83,6 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <httpclient.version>4.5.4</httpclient.version>
-        <swagger.models.version>1.5.16</swagger.models.version>
-        <swagger.parser.version>1.0.34</swagger.parser.version>
-    </properties>
-
     <build>
         <!--<finalName>cellery-global-api-initializer</finalName>-->
         <plugins>
@@ -124,4 +119,12 @@
             </plugin>
         </plugins>
     </build>
+
+    <properties>
+        <httpclient.version>4.5.4</httpclient.version>
+        <swagger.models.version>1.5.16</swagger.models.version>
+        <swagger.parser.version>1.0.34</swagger.parser.version>
+
+        <mavan.findbugsplugin.exclude.file>spotbugs-exclude.xml</mavan.findbugsplugin.exclude.file>
+    </properties>
 </project>

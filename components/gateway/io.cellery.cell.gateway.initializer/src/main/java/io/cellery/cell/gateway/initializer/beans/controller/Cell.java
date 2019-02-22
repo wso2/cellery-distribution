@@ -21,6 +21,8 @@ package io.cellery.cell.gateway.initializer.beans.controller;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.cellery.cell.gateway.initializer.utils.Constants;
 
+import java.util.List;
+
 /**
  * Class to represent Cell
  */
@@ -33,7 +35,7 @@ public class Cell {
     private String version;
 
     @JsonProperty(Constants.JsonParamNames.APIS)
-    private API[] apis;
+    private List<API> apis;
 
     @JsonProperty(Constants.JsonParamNames.HOSTNAME)
     private String hostname;
@@ -54,11 +56,11 @@ public class Cell {
         this.version = version;
     }
 
-    public API[] getApis() {
+    public List<API> getApis() {
         return apis;
     }
 
-    public void setApis(API[] apis) {
+    public void setApis(List<API> apis) {
         this.apis = apis;
     }
 

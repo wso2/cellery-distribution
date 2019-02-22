@@ -19,8 +19,8 @@
 package io.cellery.cell.gateway.initializer.beans.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.json.simple.JSONObject;
 import io.cellery.cell.gateway.initializer.utils.Constants;
+import org.json.simple.JSONObject;
 
 /**
  * Rest configuration object.

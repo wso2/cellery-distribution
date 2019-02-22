@@ -18,20 +18,7 @@
 
 package io.cellery.cell.gateway.initializer.utils;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.cellery.cell.gateway.initializer.exceptions.APIException;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -41,7 +28,19 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import io.cellery.cell.gateway.initializer.exceptions.APIException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * Utility methods for HTTP request processors
@@ -58,26 +57,12 @@ public class RequestProcessor {
             }
             SSLContext sslContext = SSLContext.getInstance("SSL");
 
-            sslContext.init(null, new TrustManager[] { new X509TrustManager() {
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                }
-
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
-            } }, new SecureRandom());
+            X509TrustManager x509TrustManager = new TrustAllTrustManager();
+            sslContext.init(null, new TrustManager[] {x509TrustManager}, new SecureRandom());
 
             SSLConnectionSocketFactory sslsocketFactory =
                     new SSLConnectionSocketFactory(sslContext, new String[] { "TLSv1.2" }, null,
-                            new HostnameVerifier() {
-                                @Override
-                                public boolean verify(String s, SSLSession sslSession) {
-                                    return true;
-                                }
-                            });
+                            (s, sslSession) -> true);
 
             httpClient = HttpClients.custom().setSSLSocketFactory(sslsocketFactory).build();
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
@@ -186,47 +171,69 @@ public class RequestProcessor {
      * @return boolean to validate response
      */
     private boolean responseValidate(int statusCode, String response) throws IOException {
+        boolean isValid = false;
         switch (statusCode) {
             case HttpURLConnection.HTTP_OK:
-                return true;
+                isValid = true;
+                break;
             case HttpURLConnection.HTTP_CREATED:
-                return true;
+                isValid = true;
+                break;
             case HttpURLConnection.HTTP_ACCEPTED:
-                return true;
+                isValid = true;
+                break;
             case HttpURLConnection.HTTP_BAD_REQUEST:
                 if (response != null && !Constants.Utils.EMPTY_STRING.equals(response)) {
                     if (response.contains(Constants.Utils.DIFFERENT_CONTEXT_ERROR) ||
                         response.contains(Constants.Utils.DUPLICATE_CONTEXT_ERROR)) {
                         // skip the error when trying to add the same api with different context.
-                        return true;
+                        isValid = true;
                     }
-                } else {
-                    return false;
                 }
+                break;
             case HttpURLConnection.HTTP_UNAUTHORIZED:
-                return false;
+                isValid = false;
+                break;
             case HttpURLConnection.HTTP_NOT_FOUND:
-                return false;
+                isValid = false;
+                break;
             case HttpURLConnection.HTTP_CONFLICT:
                 if (response != null && !Constants.Utils.EMPTY_STRING.equals(response)) {
                     if (response.contains(Constants.Utils.DUPLICATE_API_ERROR)) {
                         // skip the error when trying to add the same api.
-                        return true;
+                        isValid = true;
                     }
-                } else {
-                    return false;
                 }
+                break;
             case HttpURLConnection.HTTP_INTERNAL_ERROR:
                 if (response != null && !Constants.Utils.EMPTY_STRING.equals(response)) {
                     if (response.contains(Constants.Utils.DUPLICATE_LABEL_ERROR)) {
                         // skip the error when trying to add the same label.
-                        return true;
+                        isValid = true;
                     }
-                } else {
-                    return false;
                 }
+                break;
             default:
-                return false;
+                isValid = false;
+        }
+        return isValid;
+    }
+
+    /**
+     * Trust Manager which trusts all certificates.
+     */
+    public static class TrustAllTrustManager implements X509TrustManager {
+        @Override
+        public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
         }
     }
 }

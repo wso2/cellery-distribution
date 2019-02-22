@@ -84,8 +84,8 @@ public class Constants {
         public static final String CONTENT_TYPE_APPLICATION_URL_ENCODED = "application/x-www-form-urlencoded";
         public static final String PRODUCTION_AND_SANDBOX = "Production and Sandbox";
         public static final String EMPTY_STRING = "";
-        public static final String UNDERSCORE = "_" ;
-        public static final String GLOBAL = "global" ;
+        public static final String UNDERSCORE = "_";
+        public static final String GLOBAL = "global";
         public static final String SWAGGER_VERSION = "2.0";
         public static final String HTTP = "http://";
         public static final int ERROR_EXIT_CODE = 1;
@@ -99,8 +99,8 @@ public class Constants {
         public static final String BODY = "body";
         public static final String ALLOW_QUERY_PATTERN = "/*";
 
-        public static final String TOKEN_PAYLOAD =
-                "grant_type=password&username=$USER&password=$PASS&scope=apim:api_create apim:api_publish apim:label_manage";
+        public static final String TOKEN_PAYLOAD = "grant_type=password&username=$USER&password=$PASS" +
+                "&scope=apim:api_create apim:api_publish apim:label_manage";
 
         // Config map file paths
         public static final String CELL_CONFIGURATION_FILE_PATH = "/etc/config/api.json";

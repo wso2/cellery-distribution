@@ -114,7 +114,7 @@ public class ApiCreateRequest {
     }
 
     public void setDefaultVersion(Boolean isDefaultVersion) {
-        isDefaultVersion = isDefaultVersion;
+        this.isDefaultVersion = isDefaultVersion;
     }
 
     public List getTransport() {

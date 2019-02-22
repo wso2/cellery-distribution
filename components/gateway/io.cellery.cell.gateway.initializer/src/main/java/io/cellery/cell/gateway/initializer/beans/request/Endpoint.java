@@ -53,6 +53,10 @@ public class Endpoint {
         this.endpointType = endpointType;
     }
 
+    public String getEndpointType() {
+        return endpointType;
+    }
+
     public SandboxEndpoint getSandboxEndPoint() {
         return sandboxEndPoint;
     }
