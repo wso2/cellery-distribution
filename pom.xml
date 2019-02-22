@@ -172,33 +172,33 @@
             <dependency>
                 <groupId>io.cellery.security</groupId>
                 <artifactId>io.cellery.security.extensions</artifactId>
-                <version>${cellery.version}</version>
+                <version>${cellery.mesh.security.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.cellery.security</groupId>
                 <artifactId>io.cellery.security.sts.endpoint.core</artifactId>
-                <version>${cellery.version}</version>
+                <version>${cellery.mesh.security.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.cellery.security</groupId>
                 <artifactId>io.cellery.security.token.endpoint</artifactId>
-                <version>${cellery.version}</version>
+                <version>${cellery.mesh.security.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.cellery.observability</groupId>
                 <artifactId>io.cellery.observability.tracing.synapse.handler</artifactId>
-                <version>${cellery.version}</version>
+                <version>${cellery.mesh.obesrvability.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.cellery.security</groupId>
                 <artifactId>io.cellery.security.token.endpoint</artifactId>
-                <version>${cellery.version}</version>
+                <version>${cellery.mesh.security.version}</version>
                 <type>war</type>
             </dependency>
             <dependency>
                 <groupId>io.cellery.distribution</groupId>
                 <artifactId>io.cellery.cell.gateway.initializer</artifactId>
-                <version>${cellery.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <!-- End of APIM docker image dependencies -->
 
@@ -465,11 +465,14 @@
         <maven.checkstyleplugin.version>2.17</maven.checkstyleplugin.version>
         <maven.checkstyle.version>7.8.2</maven.checkstyle.version>
 
+        <!-- Cellery Dependencies -->
+        <cellery.mesh.obesrvability.version>0.1.0-SNAPSHOT</cellery.mesh.obesrvability.version>
+        <cellery.mesh.security.version>0.1.0-SNAPSHOT</cellery.mesh.security.version>
+
         <siddhi.version>4.1.38</siddhi.version>
         <commons.lang.version>3.7</commons.lang.version>
         <commons.io.version>2.6</commons.io.version>
         <protobuf.wso2.version>3.6.1.wso2v1</protobuf.wso2.version>
-        <cellery.version>${project.version}</cellery.version>
         <msf4j.version>2.6.4</msf4j.version>
         <guave.version>20.0</guave.version>
         <kubernetes.client.version>3.0.0</kubernetes.client.version>
@@ -510,5 +513,6 @@
 
         <!-- Docker Repository Name -->
         <docker.repo.name>celleryio</docker.repo.name>
+        <docker.image.tag>latest</docker.image.tag>
     </properties>
 </project>
