@@ -20,14 +20,14 @@ package io.cellery.cell.gateway.initializer.internals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cellery.cell.gateway.initializer.beans.controller.APIMConfig;
-import io.cellery.cell.gateway.initializer.utils.RequestProcessor;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import io.cellery.cell.gateway.initializer.beans.controller.Cell;
 import io.cellery.cell.gateway.initializer.beans.controller.RestConfig;
 import io.cellery.cell.gateway.initializer.exceptions.APIException;
 import io.cellery.cell.gateway.initializer.utils.Constants;
+import io.cellery.cell.gateway.initializer.utils.RequestProcessor;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -240,7 +240,8 @@ public class ConfigManager {
     }
 
     private static String getBase64EncodedClientIdAndSecret() {
-        byte[] message = (apimConfig.getClientId() + ":" + apimConfig.getClientSecret()).getBytes(StandardCharsets.UTF_8);
+        byte[] message = (apimConfig.getClientId() + ":" + apimConfig.getClientSecret())
+                .getBytes(StandardCharsets.UTF_8);
         return Base64.getEncoder().encodeToString(message);
     }
 

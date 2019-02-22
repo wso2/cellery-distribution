@@ -21,6 +21,8 @@ package io.cellery.cell.gateway.initializer.beans.controller;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.cellery.cell.gateway.initializer.utils.Constants;
 
+import java.util.List;
+
 /**
  * Class to represent API.
  */
@@ -30,7 +32,7 @@ public class API {
     private String context;
 
     @JsonProperty(Constants.JsonParamNames.DEFINITION)
-    private ApiDefinition[] definitions;
+    private List<ApiDefinition> definitions;
 
     @JsonProperty(Constants.JsonParamNames.BACKEND)
     private String backend;
@@ -46,11 +48,11 @@ public class API {
         this.context = context;
     }
 
-    public ApiDefinition[] getDefinitions() {
+    public List<ApiDefinition> getDefinitions() {
         return definitions;
     }
 
-    public void setDefinitions(ApiDefinition[] definitions) {
+    public void setDefinitions(List<ApiDefinition> definitions) {
         this.definitions = definitions;
     }
 

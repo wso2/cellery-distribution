@@ -20,7 +20,22 @@ package io.cellery.cell.gateway.initializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cellery.cell.gateway.initializer.beans.controller.API;
 import io.cellery.cell.gateway.initializer.beans.controller.APIMConfig;
+import io.cellery.cell.gateway.initializer.beans.controller.ApiDefinition;
+import io.cellery.cell.gateway.initializer.beans.controller.Cell;
+import io.cellery.cell.gateway.initializer.beans.controller.RestConfig;
+import io.cellery.cell.gateway.initializer.beans.request.ApiCreateRequest;
+import io.cellery.cell.gateway.initializer.beans.request.Endpoint;
+import io.cellery.cell.gateway.initializer.beans.request.Method;
+import io.cellery.cell.gateway.initializer.beans.request.Parameter;
+import io.cellery.cell.gateway.initializer.beans.request.PathDefinition;
+import io.cellery.cell.gateway.initializer.beans.request.PathsMapping;
+import io.cellery.cell.gateway.initializer.beans.request.ProductionEndpoint;
+import io.cellery.cell.gateway.initializer.exceptions.APIException;
+import io.cellery.cell.gateway.initializer.internals.ConfigManager;
+import io.cellery.cell.gateway.initializer.utils.Constants;
+import io.cellery.cell.gateway.initializer.utils.RequestProcessor;
 import io.swagger.models.Info;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
@@ -28,25 +43,10 @@ import io.swagger.models.Response;
 import io.swagger.models.Swagger;
 import io.swagger.util.Json;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import io.cellery.cell.gateway.initializer.beans.controller.API;
-import io.cellery.cell.gateway.initializer.beans.request.ApiCreateRequest;
-import io.cellery.cell.gateway.initializer.beans.controller.ApiDefinition;
-import io.cellery.cell.gateway.initializer.beans.controller.Cell;
-import io.cellery.cell.gateway.initializer.beans.request.Endpoint;
-import io.cellery.cell.gateway.initializer.beans.request.Method;
-import io.cellery.cell.gateway.initializer.beans.request.Parameter;
-import io.cellery.cell.gateway.initializer.beans.request.PathDefinition;
-import io.cellery.cell.gateway.initializer.beans.request.PathsMapping;
-import io.cellery.cell.gateway.initializer.beans.request.ProductionEndpoint;
-import io.cellery.cell.gateway.initializer.beans.controller.RestConfig;
-import io.cellery.cell.gateway.initializer.exceptions.APIException;
-import io.cellery.cell.gateway.initializer.internals.ConfigManager;
-import io.cellery.cell.gateway.initializer.utils.RequestProcessor;
-import io.cellery.cell.gateway.initializer.utils.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -54,6 +54,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
@@ -62,6 +63,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -126,11 +128,12 @@ public class UpdateManager {
             String createAPIPath;
             try {
                 apimConfig = ConfigManager.getAPIMConfiguration();
-                createAPIPath = restConfig.getApimBaseUrl() + Constants.Utils.PATH_PUBLISHER + restConfig.getApiVersion() +
-                        Constants.Utils.PATH_APIS;
+                createAPIPath = restConfig.getApimBaseUrl() + Constants.Utils.PATH_PUBLISHER
+                        + restConfig.getApiVersion() + Constants.Utils.PATH_APIS;
                 apiCreateResponse = requestProcessor
                         .doPost(createAPIPath, Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
-                                Constants.Utils.CONTENT_TYPE_APPLICATION_JSON, Constants.Utils.BEARER + apimConfig.getApiToken(),
+                                Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
+                                Constants.Utils.BEARER + apimConfig.getApiToken(),
                                 objectMapper.writeValueAsString(apiPayloads.get(i)));
             } catch (JsonProcessingException e) {
                 throw new APIException("Error while serializing the payload: " + apiPayloads.get(i));
@@ -158,7 +161,7 @@ public class UpdateManager {
      */
     private static JSONArray createGlobalApiPayloads() throws APIException {
         JSONArray apiPayloadsArray = new JSONArray();
-        API[] apis = cellConfig.getApis();
+        List<API> apis = cellConfig.getApis();
 
         for (API api : apis) {
             if (api.isGlobal()) {
@@ -197,8 +200,8 @@ public class UpdateManager {
         for (Object id : ids) {
             RequestProcessor requestProcessor = new RequestProcessor();
             String apiPublishResponse;
-            String apiPublishPath = restConfig.getApimBaseUrl() + Constants.Utils.PATH_PUBLISHER + restConfig.getApiVersion() +
-                    Constants.Utils.PATH_LIFECYCLE + "apiId=" + id + "&action=Publish";
+            String apiPublishPath = restConfig.getApimBaseUrl() + Constants.Utils.PATH_PUBLISHER
+                    + restConfig.getApiVersion() + Constants.Utils.PATH_LIFECYCLE + "apiId=" + id + "&action=Publish";
             apiPublishResponse = requestProcessor.doPost(apiPublishPath, Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
                     Constants.Utils.CONTENT_TYPE_APPLICATION_JSON, Constants.Utils.BEARER + apimConfig.getApiToken(),
                     Constants.Utils.EMPTY_STRING);
@@ -218,7 +221,7 @@ public class UpdateManager {
     private static String getGlobalEndpoint(API api) {
         String response = Constants.Utils.EMPTY_STRING;
         ProductionEndpoint productionEndpoint = new ProductionEndpoint();
-        productionEndpoint.setUrl(Constants.Utils.HTTP + cellConfig.getHostname()+"/"+api.getContext());
+        productionEndpoint.setUrl(Constants.Utils.HTTP + cellConfig.getHostname() + "/" + api.getContext());
 
         Endpoint endpoint = new Endpoint();
         endpoint.setProductionEndPoint(productionEndpoint);
@@ -240,7 +243,7 @@ public class UpdateManager {
      */
     private static String getAPIDefinition(API api) throws APIException {
         PathsMapping apiDefinition = new PathsMapping();
-        ApiDefinition[] definitions = api.getDefinitions();
+        List<ApiDefinition> definitions = api.getDefinitions();
 
         for (ApiDefinition definition : definitions) {
             PathDefinition pathDefinition;
@@ -293,14 +296,22 @@ public class UpdateManager {
                         "-ms", Constants.Utils.API_CONFIG_PATH);
 
         Process process = processBuilder.start();
-        BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         String line;
-        while ((line = inputReader.readLine()) != null) {
-            log.info(line);
+        try (InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream(),
+                StandardCharsets.UTF_8)) {
+            try (BufferedReader inputReader = new BufferedReader(inputStreamReader)) {
+                while ((line = inputReader.readLine()) != null) {
+                    log.info(line);
+                }
+            }
         }
-        while ((line = errorReader.readLine()) != null) {
-            log.error(line);
+        try (InputStreamReader inputStreamReader = new InputStreamReader(process.getErrorStream(),
+                StandardCharsets.UTF_8)) {
+            try (BufferedReader errorReader = new BufferedReader(inputStreamReader)) {
+                while ((line = errorReader.readLine()) != null) {
+                    log.error(line);
+                }
+            }
         }
         process.waitFor();
     }
@@ -312,14 +323,22 @@ public class UpdateManager {
         ProcessBuilder processBuilder =
                 new ProcessBuilder(Constants.Utils.MICROGATEWAY_PATH, "build", cellConfig.getCell());
         Process process = processBuilder.start();
-        BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         String line;
-        while ((line = inputReader.readLine()) != null) {
-            log.info(line);
+        try (InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream(),
+                StandardCharsets.UTF_8)) {
+            try (BufferedReader inputReader = new BufferedReader(inputStreamReader)) {
+                while ((line = inputReader.readLine()) != null) {
+                    log.info(line);
+                }
+            }
         }
-        while ((line = errorReader.readLine()) != null) {
-            log.error(line);
+        try (InputStreamReader inputStreamReader = new InputStreamReader(process.getErrorStream(),
+                StandardCharsets.UTF_8)) {
+            try (BufferedReader errorReader = new BufferedReader(inputStreamReader)) {
+                while ((line = errorReader.readLine()) != null) {
+                    log.error(line);
+                }
+            }
         }
         process.waitFor();
     }
@@ -330,9 +349,8 @@ public class UpdateManager {
     private static void unzipTargetFile() throws IOException {
         String targetZipName = "micro-gw-" + cellConfig.getCell() + ".zip";
         String targetZipFilePath = Constants.Utils.HOME_PATH + cellConfig.getCell() + "/target/" + targetZipName;
-        System.out.println(targetZipFilePath);
 
-        //create output directory is not exists
+        // Create output directory if not exists
         File targetFolder = new File(Constants.Utils.UNZIP_FILE_PATH);
         if (!targetFolder.exists()) {
             if (!targetFolder.mkdir()) {
@@ -341,27 +359,28 @@ public class UpdateManager {
         }
 
         byte[] buffer = new byte[1024];
-        ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(targetZipFilePath));
-        ZipEntry zipEntry = zipInputStream.getNextEntry();
-        while (zipEntry != null) {
-            String fileName = zipEntry.getName();
-            File newFile = new File(targetFolder + "/" + fileName);
+        try (FileInputStream inputStream = new FileInputStream(targetZipFilePath)) {
+            try (ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
+                ZipEntry zipEntry = zipInputStream.getNextEntry();
+                while (zipEntry != null) {
+                    String fileName = zipEntry.getName();
+                    File newFile = new File(targetFolder + "/" + fileName);
 
-            if (!newFile.getParentFile().exists()) {
-                if (!newFile.getParentFile().mkdirs()) {
-                    log.warn("Failed to create parent folders to create file: " + newFile);
+                    if (!newFile.getParentFile().exists()) {
+                        if (!newFile.getParentFile().mkdirs()) {
+                            log.warn("Failed to create parent folders to create file: " + newFile);
+                        }
+                    }
+                    try (FileOutputStream fileOutputStream = new FileOutputStream(newFile)) {
+                        int len;
+                        while ((len = zipInputStream.read(buffer)) > 0) {
+                            fileOutputStream.write(buffer, 0, len);
+                        }
+                    }
+                    zipEntry = zipInputStream.getNextEntry();
                 }
             }
-            FileOutputStream fileOutputStream = new FileOutputStream(newFile);
-            int len;
-            while ((len = zipInputStream.read(buffer)) > 0) {
-                fileOutputStream.write(buffer, 0, len);
-            }
-            fileOutputStream.close();
-            zipEntry = zipInputStream.getNextEntry();
         }
-        zipInputStream.closeEntry();
-        zipInputStream.close();
 
         log.info("Unzipping microgateway target file is completed successfully..");
     }
@@ -389,7 +408,8 @@ public class UpdateManager {
     private static void writeToMicroGWConfig(API api) {
         JSONArray apiConfigArray = getApiConfig();
         JSONObject apiConfig = new JSONObject();
-        apiConfig.put("swaggerPath", Constants.Utils.SWAGGER_FOLDER + removeSpecialChars(api.getBackend() + api.getContext()) + ".json");
+        apiConfig.put("swaggerPath", Constants.Utils.SWAGGER_FOLDER + removeSpecialChars(api.getBackend()
+                + api.getContext()) + ".json");
         apiConfig.put("endpoint", api.getBackend());
         apiConfig.put("defaultAPI", true);
         apiConfigArray.put(apiConfig);
@@ -404,13 +424,14 @@ public class UpdateManager {
     private static JSONArray getApiConfig() {
         JSONArray apiConfigArray = null;
         try {
-            String jsonContent = new String(Files.readAllBytes(Paths.get(Constants.Utils.API_CONFIG_PATH)));
+            String jsonContent = new String(Files.readAllBytes(Paths.get(Constants.Utils.API_CONFIG_PATH)),
+                    StandardCharsets.UTF_8);
             apiConfigArray = new JSONArray(jsonContent);
         } catch (NoSuchFileException e) {
             createEmptyJSONArray();
             apiConfigArray = getApiConfig();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Failed to read API config", e);
         }
         return apiConfigArray;
     }
@@ -424,10 +445,15 @@ public class UpdateManager {
     private static void writeToAFile(String path, String content) {
         try {
             java.nio.file.Path pathToFile = Paths.get(path);
-            Files.createDirectories(pathToFile.getParent());
-            Files.write(pathToFile, content.getBytes(), StandardOpenOption.CREATE);
+
+            java.nio.file.Path parent = pathToFile.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
+
+            Files.write(pathToFile, content.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Failed to write to file " + path, e);
         }
     }
 
@@ -443,7 +469,7 @@ public class UpdateManager {
      * Generates API Config that is required by Micro-GW
      */
     private static void generateApiConfigJson() {
-        API[] apis = cellConfig.getApis();
+        List<API> apis = cellConfig.getApis();
         for (API api : apis) {
             createSwagger(api);
             writeToMicroGWConfig(api);
@@ -497,7 +523,7 @@ public class UpdateManager {
             op.setResponses(resMap);
 
             disableMicroGWAuth(op);
-            switch (definition.getMethod().toLowerCase()) {
+            switch (definition.getMethod().toLowerCase(Locale.ENGLISH)) {
                 case Constants.JsonParamNames.GET:
                     path.setGet(op);
                     break;

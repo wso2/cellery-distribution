@@ -18,6 +18,9 @@
 
 package io.cellery.cell.gateway.initializer.beans.controller;
 
+/**
+ * Bean for holding API Manager configuration.
+ */
 public class APIMConfig {
 
     private String apiToken;
