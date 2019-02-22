@@ -393,10 +393,9 @@ local istio_version=$2
 
 #copy crds to
 kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/system/istio-crds.yaml
-
 kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/system/istio-demo-cellery.yaml
 kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/system/istio-gateway.yaml
-    
+
 kubectl wait deployment/istio-pilot --for condition=available --timeout=6000s -n istio-system
 #Enabling Istio injection
 kubectl label namespace default istio-injection=enabled
