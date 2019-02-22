@@ -1,4 +1,4 @@
-#  Copyright (c) 2018 WSO2 Inc. (http:www.wso2.org) All Rights Reserved.
+#  Copyright (c) 2019 WSO2 Inc. (http:www.wso2.org) All Rights Reserved.
 #
 #  WSO2 Inc. licenses this file to you under the Apache License,
 #  Version 2.0 (the "License"); you may not use this file except
@@ -14,34 +14,31 @@
 #  specific language governing permissions and limitations
 #  under the License.
 
-
-PROJECT_ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-BUILD_ROOT := $(PROJECT_ROOT)/build/target
-
-all: controller global-api-updater cell-sts
-
-controller:
-	go build -o ${BUILD_ROOT}/vick-controller -x ./system/controller/cmd/controller/
-
-.PHONY: controller-test
-controller-test:
-	go test -covermode=count -coverprofile=coverage.out ./system/controller/pkg/apis/... ./system/controller/pkg/client/... ./system/controller/pkg/controller/...
-
-controller-test-cover: controller-test
-	go tool cover -html=coverage.out
-
-.PHONY: ingress-test
-ingress-test:
-	go test -covermode=count -coverprofile=coverage.out ./system/ingress-controller/config/... ./system/ingress-controller/handler/...
-
-ingress-test-cover: ingress-test
-	go tool cover -html=coverage.out
-
-global-api-updater:
-	mvn clean install -f system/control-plane/cell/components/global-api-updater/pom.xml
-
-cell-sts:
-	mvn clean install -f system/control-plane/cell/components/cell-sts/pom.xml
+PROJECT_ROOT := $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+DOCKER_REPO := celleryio
+DOCKER_IMAGE_TAG := latest
 
 
+all: clean build docker
 
+
+.PHONY: clean
+clean:
+	mvn clean -f pom.xml
+
+
+.PHONY: build
+build:
+	mvn install -f components/pom.xml
+
+
+.PHONY: docker
+docker: build
+	mvn install -f docker/pom.xml -Ddocker.repo.name=${DOCKER_REPO} -Ddocker.image.tag=${DOCKER_IMAGE_TAG}
+
+
+.PHONY: docker-push
+docker-push:
+	docker push ${DOCKER_REPO}/cell-gateway:${DOCKER_IMAGE_TAG}
+	docker push ${DOCKER_REPO}/cell-gateway-init:${DOCKER_IMAGE_TAG}
+	docker push ${DOCKER_REPO}/wso2am:${DOCKER_IMAGE_TAG}
