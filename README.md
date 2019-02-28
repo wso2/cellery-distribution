@@ -1,16 +1,16 @@
 Distribution
 ============
   [![Build Status](https://wso2.org/jenkins/view/cellery/job/cellery/job/distribution/badge/icon)](https://wso2.org/jenkins/view/cellery/job/cellery/job/distribution/)
-  [![GitHub (pre-)release](https://img.shields.io/github/release/cellery-io/distribution/all.svg)](https://github.com/cellery-io/distribution/releases)
-  [![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/cellery-io/distribution.svg)](https://github.com/cellery-io/distribution/releases)
-  [![GitHub last commit](https://img.shields.io/github/last-commit/cellery-io/distribution.svg)](https://github.com/cellery-io/distribution/commits/master)
+  [![GitHub (pre-)release](https://img.shields.io/github/release/wso2-cellery/distribution/all.svg)](https://github.com/wso2-cellery/distribution/releases)
+  [![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/wso2-cellery/distribution.svg)](https://github.com/wso2-cellery/distribution/releases)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/wso2-cellery/distribution.svg)](https://github.com/wso2-cellery/distribution/commits/master)
   [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Cellery distribution repository contains all the materials required to build cellery runtime. This includes all the kubernetes artifacts generated from other repositories as well. Also, this repository contains source and dockerfiles that's being used to initialize and run the Cell Gateway.
 
 ## Setting up Cellery runtime
 If you simply want to deploy Cellery runtime, using Cellery SDK would be easier approach for you. However if you you are looking for advanced configerations you can continue with this repositary.
-You can use [cellery-deploy.sh](https://github.com/cellery-io/distribution/blob/master/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh) to install Cellery runtime in a Linux box or in Google Cloud GKE.
+You can use [cellery-deploy.sh](https://github.com/wso2-cellery/distribution/blob/master/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh) to install Cellery runtime in a Linux box or in Google Cloud GKE.
 
 ### Deploy Cellery with kubeadm K8s provider
 
@@ -25,7 +25,7 @@ $ curl <cellery-deploy script url> | bash -s -- <k8s provider>
 ```
 
 ```bash
-$ curl https://raw.githubusercontent.com/cellery-io/distribution/v0.1.0/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh | bash -s -- kubeadm
+$ curl https://raw.githubusercontent.com/wso2-cellery/distribution/v0.1.0/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh | bash -s -- kubeadm
 ```
 
 ### Google Cloud Platform
@@ -37,7 +37,7 @@ $ curl <cellery deploy script url> | bash -s -- <K8s provider> <GCP Project ID> 
 ```
 
 ```bash
-$ curl https://raw.githubusercontent.com/cellery-io/distribution/v0.1.0/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh | bash -s -- <K8s provider> <GCP Project ID> <GCP Compute>
+$ curl https://raw.githubusercontent.com/wso2-cellery/distribution/v0.1.0/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh | bash -s -- <K8s provider> <GCP Project ID> <GCP Compute>
 ```
 ## Cleaning up Cellery runtime
 
@@ -104,7 +104,7 @@ make docker-push
 
 ### Issue Management
 
-Cellery Distribution issue management is mainly handled through GitHub Issues. Please feel free to open an issue about any question, bug report or feature request that you have in mind. (If you are unclear about where your issue should belong to, you can create it in [Cellery SDK](https://github.com/cellery-io/sdk).)
+Cellery Distribution issue management is mainly handled through GitHub Issues. Please feel free to open an issue about any question, bug report or feature request that you have in mind. (If you are unclear about where your issue should belong to, you can create it in [Cellery SDK](https://github.com/wso2-cellery/sdk).)
 
 We also welcome any external contributors who are willing to contribute. You can join a conversation in any existing issue and even send PRs to contribute. However, we suggest to start by joining into the conversations and learning about Cellery Distribution as the first step.
 
