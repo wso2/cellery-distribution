@@ -167,7 +167,7 @@ local download_location=$1
 
 for param in "${!nfs_config_params[@]}"
 do
-    sed -i "s|$param|${nfs_config_params[$param]}|g" ${download_location}/distribution-0.1.0/installer/k8s-artefacts/global-apim/artifacts-persistent-volume.yaml
+    sed -i "s|$param|${nfs_config_params[$param]}|g" ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/artifacts-persistent-volume.yaml
 done
 }
 
@@ -228,13 +228,13 @@ sudo mkdir -p /mnt/mysql
 #Change the folder ownership to mysql server user.
 sudo chown 999:999 /mnt/mysql
 
-kubectl create configmap mysql-dbscripts --from-file=${download_location}/distribution-0.1.0/installer/k8s-artefacts/mysql/dbscripts/ -n cellery-system
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/mysql/mysql-persistent-volumes-local.yaml -n cellery-system
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/mysql/mysql-persistent-volume-claim.yaml -n cellery-system
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/mysql/mysql-deployment.yaml -n cellery-system
+kubectl create configmap mysql-dbscripts --from-file=${download_location}/distribution-master/installer/k8s-artefacts/mysql/dbscripts/ -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql/mysql-persistent-volumes-local.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql/mysql-persistent-volume-claim.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql/mysql-deployment.yaml -n cellery-system
 #Wait till the mysql deployment availability
 kubectl wait deployment/wso2apim-with-analytics-mysql-deployment --for condition=available --timeout=6000s -n cellery-system
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/mysql/mysql-service.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql/mysql-service.yaml -n cellery-system
 }
 
 function deploy_mysql_server_gcp () {
@@ -255,7 +255,7 @@ echo "⚙️ Setting MySQL server root user password."
 gcloud sql users set-password root --instance=${sql_instance_name} --prompt-for-password --host=%
 #Wait till the credential update sync.
 sleep 30
-cat ${download_location}/distribution-0.1.0/installer/k8s-artefacts/mysql/dbscripts/init.sql | gcloud sql connect ${sql_instance_name} --user=root
+cat ${download_location}/distribution-master/installer/k8s-artefacts/mysql/dbscripts/init.sql | gcloud sql connect ${sql_instance_name} --user=root
 
 mysql_server_ip=$(gcloud beta sql instances describe ${sql_instance_name}  --format flattened | awk '/.ipAddress/ {print $2}')
 config_params["MYSQL_DATABASE_HOST"]=$mysql_server_ip
@@ -290,7 +290,7 @@ local download_location=$1
 
 for param in "${!config_params[@]}"
 do
-    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-0.1.0/installer/k8s-artefacts/mysql/dbscripts/init.sql
+    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-master/installer/k8s-artefacts/mysql/dbscripts/init.sql
 done
 }
 
@@ -301,8 +301,8 @@ local download_location=$1
 for param in "${!config_params[@]}"
 do
     #sed -i "s/$param/${config_params[$param]}/g" ${download_location}/apim-configs/pub-store/datasources/master-datasources.xml
-    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-0.1.0/installer/k8s-artefacts/global-apim/conf/datasources/master-datasources.xml
-    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-0.1.0/installer/k8s-artefacts/observability/sp/conf/deployment.yaml
+    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/datasources/master-datasources.xml
+    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-master/installer/k8s-artefacts/observability/sp/conf/deployment.yaml
 done
 }
 
@@ -319,25 +319,25 @@ if [ $iaas == "kubeadm" ] || [ $iaas == "k8s" ]; then
     sudo mkdir -p /mnt/apim_repository_deployment_server
     sudo chown 802:802 /mnt/apim_repository_deployment_server
     #Create apim local volumes and volume claims
-    kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/global-apim/persistent-volume-local.yaml -n cellery-system
-    kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/global-apim/persistent-volume-claim-local.yaml -n cellery-system
+    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/persistent-volume-local.yaml -n cellery-system
+    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/persistent-volume-claim-local.yaml -n cellery-system
 elif [ $iaas == "GCP" ]; then
     #Create apim NFS volumes and volume claims
-    kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/global-apim/artifacts-persistent-volume.yaml -n cellery-system
-    kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/global-apim/artifacts-persistent-volume-claim.yaml -n cellery-system
+    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/artifacts-persistent-volume.yaml -n cellery-system
+    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/artifacts-persistent-volume-claim.yaml -n cellery-system
 fi
 
 #Create the gw config maps
-kubectl create configmap gw-conf --from-file=${download_location}/distribution-0.1.0/installer/k8s-artefacts/global-apim/conf -n cellery-system
-kubectl create configmap gw-conf-datasources --from-file=${download_location}/distribution-0.1.0/installer/k8s-artefacts/global-apim/conf/datasources/ -n cellery-system
+kubectl create configmap gw-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf -n cellery-system
+kubectl create configmap gw-conf-datasources --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/datasources/ -n cellery-system
 #Create KM config maps
-kubectl create configmap conf-identity --from-file=${download_location}/distribution-0.1.0/installer/k8s-artefacts/global-apim/conf/identity -n cellery-system
-kubectl create configmap apim-template --from-file=${download_location}/distribution-0.1.0/installer/k8s-artefacts/global-apim/conf/resources/api_templates -n cellery-system
-kubectl create configmap apim-tomcat --from-file=${download_location}/distribution-0.1.0/installer/k8s-artefacts/global-apim/conf/tomcat -n cellery-system
-kubectl create configmap apim-security --from-file=${download_location}/distribution-0.1.0/installer/k8s-artefacts/global-apim/conf/security -n cellery-system
+kubectl create configmap conf-identity --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/identity -n cellery-system
+kubectl create configmap apim-template --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/resources/api_templates -n cellery-system
+kubectl create configmap apim-tomcat --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/tomcat -n cellery-system
+kubectl create configmap apim-security --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/security -n cellery-system
 
 #Create gateway deployment and the service
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/global-apim/global-apim.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/global-apim.yaml -n cellery-system
 #Wait till the gateway deployment availability
 kubectl wait deployment.apps/gateway --for condition=available --timeout=6000s -n cellery-system
 }
@@ -347,10 +347,10 @@ local download_location=$1
 
 #Create SP worker configmaps
 kubectl create configmap sp-worker-siddhi --from-file=${download_location}/mesh-observability-master/components/global/core/io.cellery.observability.siddhi.apps/src/main/siddhi -n cellery-system
-kubectl create configmap sp-worker-conf --from-file=${download_location}/distribution-0.1.0/installer/k8s-artefacts/observability/sp/conf -n cellery-system
+kubectl create configmap sp-worker-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/sp/conf -n cellery-system
 #kubectl create configmap sp-worker-bin --from-file=${download_location}/sp-worker/bin -n cellery-system
 #Create SP worker deployment
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/observability/sp/sp-worker.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/sp/sp-worker.yaml -n cellery-system
 #Create SP dashboard configmaps
 #kubectl create configmap sp-dashboard-conf --from-file=${download_location}/status-dashboard/conf -n cellery-system
 #kubectl create configmap sp-worker-bin --from-file=sp-worker/bin -n cellery-system
