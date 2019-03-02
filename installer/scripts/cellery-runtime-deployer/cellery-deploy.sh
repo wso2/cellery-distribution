@@ -346,7 +346,7 @@ function deploy_sp_dashboard_worker () {
 local download_location=$1
 
 #Create SP worker configmaps
-kubectl create configmap sp-worker-siddhi --from-file=${download_location}/mesh-observability-0.1.0/components/global/core/io.cellery.observability.siddhi.apps/src/main/siddhi -n cellery-system
+kubectl create configmap sp-worker-siddhi --from-file=${download_location}/mesh-observability-master/components/global/core/io.cellery.observability.siddhi.apps/src/main/siddhi -n cellery-system
 kubectl create configmap sp-worker-conf --from-file=${download_location}/distribution-0.1.0/installer/k8s-artefacts/observability/sp/conf -n cellery-system
 #kubectl create configmap sp-worker-bin --from-file=${download_location}/sp-worker/bin -n cellery-system
 #Create SP worker deployment
@@ -355,19 +355,19 @@ kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts
 #kubectl create configmap sp-dashboard-conf --from-file=${download_location}/status-dashboard/conf -n cellery-system
 #kubectl create configmap sp-worker-bin --from-file=sp-worker/bin -n cellery-system
 #Create observability portal deployment, service and ingress.
-kubectl create configmap observability-portal-config --from-file=${download_location}/mesh-observability-0.1.0/components/global/portal/io.cellery.observability.ui/node-server/config -n cellery-system
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/observability/portal/observability-portal.yaml -n cellery-system
+kubectl create configmap observability-portal-config --from-file=${download_location}/mesh-observability-master/components/global/portal/io.cellery.observability.ui/node-server/config -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/portal/observability-portal.yaml -n cellery-system
 
 # Create K8s Metrics Config-maps
-kubectl create configmap k8s-metrics-prometheus-conf --from-file=${download_location}/distribution-0.1.0/installer/k8s-artefacts/observability/prometheus/config -n cellery-system
-kubectl create configmap k8s-metrics-grafana-conf --from-file=${download_location}/distribution-0.1.0/installer/k8s-artefacts/observability/grafana/config -n cellery-system
-kubectl create configmap k8s-metrics-grafana-datasources --from-file=${download_location}/distribution-0.1.0/installer/k8s-artefacts/observability/grafana/datasources -n cellery-system
-kubectl create configmap k8s-metrics-grafana-dashboards --from-file=${download_location}/distribution-0.1.0/installer/k8s-artefacts/observability/grafana/dashboards -n cellery-system
-kubectl create configmap k8s-metrics-grafana-dashboards-default --from-file=${download_location}/distribution-0.1.0/installer/k8s-artefacts/observability/grafana/dashboards/default -n cellery-system
+kubectl create configmap k8s-metrics-prometheus-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/prometheus/config -n cellery-system
+kubectl create configmap k8s-metrics-grafana-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/config -n cellery-system
+kubectl create configmap k8s-metrics-grafana-datasources --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/datasources -n cellery-system
+kubectl create configmap k8s-metrics-grafana-dashboards --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/dashboards -n cellery-system
+kubectl create configmap k8s-metrics-grafana-dashboards-default --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/dashboards/default -n cellery-system
 
 #Create K8s Metrics deployment, service and ingress.
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/observability/prometheus/k8s-metrics-prometheus.yaml -n cellery-system
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/observability/grafana/k8s-metrics-grafana.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/prometheus/k8s-metrics-prometheus.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/k8s-metrics-grafana.yaml -n cellery-system
 }
 
 function init_control_plane () {
@@ -375,7 +375,7 @@ local download_location=$1
 local iaas=$2
 
 #Setup Celley namespace, create service account and the docker registry credentials
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/system/ns-init.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/ns-init.yaml
 
 if [ $iaas == "kubeadm" ]; then
     HOST_NAME=$(hostname | tr '[:upper:]' '[:lower:]')
@@ -392,9 +392,9 @@ local download_location=$1
 local istio_version=$2
 
 #copy crds to
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/system/istio-crds.yaml
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/system/istio-demo-cellery.yaml
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/system/istio-gateway.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/istio-crds.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/istio-demo-cellery.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/istio-gateway.yaml
 
 kubectl wait deployment/istio-pilot --for condition=available --timeout=6000s -n istio-system
 #Enabling Istio injection
@@ -405,15 +405,15 @@ function deploy_cellery_crds () {
 local download_location=$1
 
 #Install Cellery crds
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/controller/01-cluster-role.yaml
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/controller/02-service-account.yaml
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/controller/03-cluster-role-binding.yaml
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/controller/04-crd-cell.yaml
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/controller/05-crd-gateway.yaml
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/controller/06-crd-token-service.yaml
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/controller/07-crd-service.yaml
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/controller/08-config.yaml
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/controller/09-controller.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/01-cluster-role.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/02-service-account.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/03-cluster-role-binding.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/04-crd-cell.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/05-crd-gateway.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/06-crd-token-service.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/07-crd-service.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/08-config.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/09-controller.yaml
 }
 
 function create_artifact_folder () {
@@ -454,16 +454,16 @@ function install_nginx_ingress_kubeadm () {
 local download_location=$1
 
 #Install nginx-ingress for control plane ingress
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/system/mandatory.yaml
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/system/service-nodeport.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/mandatory.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/service-nodeport.yaml
 }
 
 function install_nginx_ingress_gcp () {
 local download_location=$1
 
 #Install nginx-ingress for control plane ingress
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/system/mandatory.yaml
-kubectl apply -f ${download_location}/distribution-0.1.0/installer/k8s-artefacts/system/cloud-generic.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/mandatory.yaml
+kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/cloud-generic.yaml
 }
 
 function read_configs_envs () {
@@ -525,8 +525,8 @@ declare -A nfs_config_params
 create_artifact_folder $download_path
 
 echo "🕷️ Downloading Cellery artifacts to ${download_path}"
-download_extract_celley_k8s_artifacts $download_path $distribution_url "distribution_v0.1.0.zip"
-download_extract_celley_k8s_artifacts $download_path $mesh_observability_url "observability_v0.1.0.zip"
+download_extract_celley_k8s_artifacts $download_path $distribution_url "distribution_master.zip"
+download_extract_celley_k8s_artifacts $download_path $mesh_observability_url "observability_master.zip"
 #download_cellery_artifacts $istio_base_url $download_path "${istio_yaml[@]}"
 
 #Install K8s
