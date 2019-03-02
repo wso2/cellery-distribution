@@ -476,8 +476,8 @@ if [[ -n ${IAAS/[ ]*\n/} ]]; then
     iaas=$IAAS
     download_path=${DOWNLOAD_PATH:-tmp-cellery}
     git_base_url=${GIT_BASE_URL:-https://github.com/cellery-io/distribution}
-    distribution_url=${GIT_DISTRIBUTION_URL:-https://github.com/cellery-io/distribution/archive/v0.1.0.zip}
-    mesh_observability_url=${GIT_MESH_OBSERVABILITY_URL:-https://github.com/cellery-io/mesh-observability/archive/v0.1.0.zip}
+    distribution_url=${GIT_DISTRIBUTION_URL:-https://github.com/cellery-io/distribution/archive/master.zip}
+    mesh_observability_url=${GIT_MESH_OBSERVABILITY_URL:-https://github.com/cellery-io/mesh-observability/archive/master.zip}
     istio_version=${ISTIO_VERSION:-1.0.2}
     if [ $iaas == "kubeadm" ]; then
         k8s_version=${K8S_VERSION:-1.11.3-00}
