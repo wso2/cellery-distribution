@@ -645,7 +645,7 @@ if [ $install_control_plane == "y" ]; then
     #deploy_global_pubstore $download_path
 
     echo "🔧Deploying Stream Processor"
-    deploy_sp_dashboard_worker $download_path $iaas
+    deploy_sp_dashboard_worker $download_path $release_version
 
     echo "🔧 Deploying ingress-nginx"
 
