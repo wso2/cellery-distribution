@@ -6,6 +6,8 @@ Distribution
   [![GitHub last commit](https://img.shields.io/github/last-commit/wso2-cellery/distribution.svg)](https://github.com/wso2-cellery/distribution/commits/master)
   [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+**Note**: If you just wish to get started with trying out Cellery, you can start your journey at [wso2-cellery/sdk](https://github.com/wso2-cellery/sdk) repository.  
+
 Cellery distribution repository contains all the materials required to build cellery runtime. This includes all the kubernetes artifacts generated from other repositories as well. Also, this repository contains source and dockerfiles that's being used to initialize and run the Cell Gateway.
 
 ## Setting up Cellery runtime
