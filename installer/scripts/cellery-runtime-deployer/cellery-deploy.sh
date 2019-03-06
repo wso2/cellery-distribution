@@ -380,7 +380,7 @@ kubectl apply -f ${download_location}/distribution-${release_version}/installer/
 function init_control_plane () {
 local download_location=$1
 local iaas=$2
-local release_version
+local release_version=$3
 
 #Setup Celley namespace, create service account and the docker registry credentials
 kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/system/ns-init.yaml
