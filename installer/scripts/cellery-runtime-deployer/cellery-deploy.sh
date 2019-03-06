@@ -164,10 +164,11 @@ echo
 #Update APIM PVs
 function update_apim_nfs_volumes () {
 local download_location=$1
+local release_version=$2
 
 for param in "${!nfs_config_params[@]}"
 do
-    sed -i "s|$param|${nfs_config_params[$param]}|g" ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/artifacts-persistent-volume.yaml
+    sed -i "s|$param|${nfs_config_params[$param]}|g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/artifacts-persistent-volume.yaml
 done
 }
 
@@ -220,6 +221,8 @@ kubectl create clusterrolebinding cluster-admin-binding \
 
 function deploy_mysql_server () {
 local download_location=$1
+local release_version=$2
+
 #Create folders required by the mysql PVC
 if [ -d /mnt/mysql ]; then
     sudo mv /mnt/mysql "/mnt/mysql.$(date +%s)"
@@ -228,13 +231,13 @@ sudo mkdir -p /mnt/mysql
 #Change the folder ownership to mysql server user.
 sudo chown 999:999 /mnt/mysql
 
-kubectl create configmap mysql-dbscripts --from-file=${download_location}/distribution-master/installer/k8s-artefacts/mysql/dbscripts/ -n cellery-system
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql/mysql-persistent-volumes-local.yaml -n cellery-system
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql/mysql-persistent-volume-claim.yaml -n cellery-system
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql/mysql-deployment.yaml -n cellery-system
+kubectl create configmap mysql-dbscripts --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/mysql/dbscripts/ -n cellery-system
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/mysql/mysql-persistent-volumes-local.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/mysql/mysql-persistent-volume-claim.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/mysql/mysql-deployment.yaml -n cellery-system
 #Wait till the mysql deployment availability
 kubectl wait deployment/wso2apim-with-analytics-mysql-deployment --for condition=available --timeout=6000s -n cellery-system
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/mysql/mysql-service.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/mysql/mysql-service.yaml -n cellery-system
 }
 
 function deploy_mysql_server_gcp () {
@@ -244,6 +247,7 @@ local gcp_compute_zone=$3
 local gcp_sql_tire=$4
 local service_account
 local mysql_server_ip
+local $release_version=$5
 
 gcloud -q sql instances create ${sql_instance_name} --tier=${gcp_sql_tire} --zone=${gcp_compute_zone}
 service_account=$(gcloud beta sql instances describe ${sql_instance_name} --format flattened | awk '/serviceAccountEmailAddress/ {print $2}')
@@ -255,7 +259,7 @@ echo "⚙️ Setting MySQL server root user password."
 gcloud sql users set-password root --instance=${sql_instance_name} --prompt-for-password --host=%
 #Wait till the credential update sync.
 sleep 30
-cat ${download_location}/distribution-master/installer/k8s-artefacts/mysql/dbscripts/init.sql | gcloud sql connect ${sql_instance_name} --user=root
+cat ${download_location}/distribution-${release_version}/installer/k8s-artefacts/mysql/dbscripts/init.sql | gcloud sql connect ${sql_instance_name} --user=root
 
 mysql_server_ip=$(gcloud beta sql instances describe ${sql_instance_name}  --format flattened | awk '/.ipAddress/ {print $2}')
 config_params["MYSQL_DATABASE_HOST"]=$mysql_server_ip
@@ -287,28 +291,30 @@ fi
 
 function update_control_plance_sql () {
 local download_location=$1
+local release_version=$2
 
 for param in "${!config_params[@]}"
 do
-    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-master/installer/k8s-artefacts/mysql/dbscripts/init.sql
+    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/mysql/dbscripts/init.sql
 done
 }
 
 #Update pub-store/gw/sp worker/ sp dashboard datasources
 function update_control_plane_datasources () {
 local download_location=$1
+local release_version=$2
 
 for param in "${!config_params[@]}"
 do
-    #sed -i "s/$param/${config_params[$param]}/g" ${download_location}/apim-configs/pub-store/datasources/master-datasources.xml
-    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/datasources/master-datasources.xml
-    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-master/installer/k8s-artefacts/observability/sp/conf/deployment.yaml
+    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/datasources/master-datasources.xml
+    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/observability/sp/conf/deployment.yaml
 done
 }
 
 function deploy_global_gw () {
 local download_location=$1
 local iaas=$2
+local release_version=$3
 
 if [ $iaas == "kubeadm" ] || [ $iaas == "k8s" ]; then
     #Create folders required by the APIM GW PVC
@@ -319,63 +325,65 @@ if [ $iaas == "kubeadm" ] || [ $iaas == "k8s" ]; then
     sudo mkdir -p /mnt/apim_repository_deployment_server
     sudo chown 802:802 /mnt/apim_repository_deployment_server
     #Create apim local volumes and volume claims
-    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/persistent-volume-local.yaml -n cellery-system
-    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/persistent-volume-claim-local.yaml -n cellery-system
+    kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/persistent-volume-local.yaml -n cellery-system
+    kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/persistent-volume-claim-local.yaml -n cellery-system
 elif [ $iaas == "GCP" ]; then
     #Create apim NFS volumes and volume claims
-    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/artifacts-persistent-volume.yaml -n cellery-system
-    kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/artifacts-persistent-volume-claim.yaml -n cellery-system
+    kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/artifacts-persistent-volume.yaml -n cellery-system
+    kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/artifacts-persistent-volume-claim.yaml -n cellery-system
 fi
 
 #Create the gw config maps
-kubectl create configmap gw-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf -n cellery-system
-kubectl create configmap gw-conf-datasources --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/datasources/ -n cellery-system
+kubectl create configmap gw-conf --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf -n cellery-system
+kubectl create configmap gw-conf-datasources --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/datasources/ -n cellery-system
 #Create KM config maps
-kubectl create configmap conf-identity --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/identity -n cellery-system
-kubectl create configmap apim-template --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/resources/api_templates -n cellery-system
-kubectl create configmap apim-tomcat --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/tomcat -n cellery-system
-kubectl create configmap apim-security --from-file=${download_location}/distribution-master/installer/k8s-artefacts/global-apim/conf/security -n cellery-system
+kubectl create configmap conf-identity --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/identity -n cellery-system
+kubectl create configmap apim-template --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/resources/api_templates -n cellery-system
+kubectl create configmap apim-tomcat --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/tomcat -n cellery-system
+kubectl create configmap apim-security --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/security -n cellery-system
 
 #Create gateway deployment and the service
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/global-apim/global-apim.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/global-apim.yaml -n cellery-system
 #Wait till the gateway deployment availability
 kubectl wait deployment.apps/gateway --for condition=available --timeout=6000s -n cellery-system
 }
 
 function deploy_sp_dashboard_worker () {
 local download_location=$1
+local release_version=$2
 
 #Create SP worker configmaps
-kubectl create configmap sp-worker-siddhi --from-file=${download_location}/mesh-observability-master/components/global/core/io.cellery.observability.siddhi.apps/src/main/siddhi -n cellery-system
-kubectl create configmap sp-worker-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/sp/conf -n cellery-system
+kubectl create configmap sp-worker-siddhi --from-file=${download_location}/mesh-observability-${release_version}/components/global/core/io.cellery.observability.siddhi.apps/src/main/siddhi -n cellery-system
+kubectl create configmap sp-worker-conf --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/observability/sp/conf -n cellery-system
 #kubectl create configmap sp-worker-bin --from-file=${download_location}/sp-worker/bin -n cellery-system
 #Create SP worker deployment
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/sp/sp-worker.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/observability/sp/sp-worker.yaml -n cellery-system
 #Create SP dashboard configmaps
 #kubectl create configmap sp-dashboard-conf --from-file=${download_location}/status-dashboard/conf -n cellery-system
 #kubectl create configmap sp-worker-bin --from-file=sp-worker/bin -n cellery-system
 #Create observability portal deployment, service and ingress.
-kubectl create configmap observability-portal-config --from-file=${download_location}/mesh-observability-master/components/global/portal/io.cellery.observability.ui/node-server/config -n cellery-system
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/portal/observability-portal.yaml -n cellery-system
+kubectl create configmap observability-portal-config --from-file=${download_location}/mesh-observability-${release_version}/components/global/portal/io.cellery.observability.ui/node-server/config -n cellery-system
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/observability/portal/observability-portal.yaml -n cellery-system
 
 # Create K8s Metrics Config-maps
-kubectl create configmap k8s-metrics-prometheus-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/prometheus/config -n cellery-system
-kubectl create configmap k8s-metrics-grafana-conf --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/config -n cellery-system
-kubectl create configmap k8s-metrics-grafana-datasources --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/datasources -n cellery-system
-kubectl create configmap k8s-metrics-grafana-dashboards --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/dashboards -n cellery-system
-kubectl create configmap k8s-metrics-grafana-dashboards-default --from-file=${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/dashboards/default -n cellery-system
+kubectl create configmap k8s-metrics-prometheus-conf --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/observability/prometheus/config -n cellery-system
+kubectl create configmap k8s-metrics-grafana-conf --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/config -n cellery-system
+kubectl create configmap k8s-metrics-grafana-datasources --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/datasources -n cellery-system
+kubectl create configmap k8s-metrics-grafana-dashboards --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/dashboards -n cellery-system
+kubectl create configmap k8s-metrics-grafana-dashboards-default --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/dashboards/default -n cellery-system
 
 #Create K8s Metrics deployment, service and ingress.
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/prometheus/k8s-metrics-prometheus.yaml -n cellery-system
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/observability/grafana/k8s-metrics-grafana.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/observability/prometheus/k8s-metrics-prometheus.yaml -n cellery-system
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/k8s-metrics-grafana.yaml -n cellery-system
 }
 
 function init_control_plane () {
 local download_location=$1
 local iaas=$2
+local release_version=$3
 
 #Setup Celley namespace, create service account and the docker registry credentials
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/ns-init.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/system/ns-init.yaml
 
 if [ $iaas == "kubeadm" ]; then
     HOST_NAME=$(hostname | tr '[:upper:]' '[:lower:]')
@@ -390,11 +398,12 @@ fi
 function deploy_istio () {
 local download_location=$1
 local istio_version=$2
+local release_version=$3
 
-#copy crds to
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/istio-crds.yaml
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/istio-demo-cellery.yaml
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/istio-gateway.yaml
+#Install Istio
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/system/istio-crds.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/system/istio-demo-cellery.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/system/istio-gateway.yaml
 
 kubectl wait deployment/istio-pilot --for condition=available --timeout=6000s -n istio-system
 #Enabling Istio injection
@@ -403,17 +412,18 @@ kubectl label namespace default istio-injection=enabled
 
 function deploy_cellery_crds () {
 local download_location=$1
+local release_version=$2
 
 #Install Cellery crds
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/01-cluster-role.yaml
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/02-service-account.yaml
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/03-cluster-role-binding.yaml
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/04-crd-cell.yaml
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/05-crd-gateway.yaml
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/06-crd-token-service.yaml
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/07-crd-service.yaml
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/08-config.yaml
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/controller/09-controller.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/controller/01-cluster-role.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/controller/02-service-account.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/controller/03-cluster-role-binding.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/controller/04-crd-cell.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/controller/05-crd-gateway.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/controller/06-crd-token-service.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/controller/07-crd-service.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/controller/08-config.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/controller/09-controller.yaml
 }
 
 function create_artifact_folder () {
@@ -452,18 +462,19 @@ unzip ${download_path}/${file_name} -d ${download_path}
 
 function install_nginx_ingress_kubeadm () {
 local download_location=$1
+local $release_version=$2
 
 #Install nginx-ingress for control plane ingress
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/mandatory.yaml
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/service-nodeport.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/system/mandatory.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/system/service-nodeport.yaml
 }
 
 function install_nginx_ingress_gcp () {
 local download_location=$1
 
 #Install nginx-ingress for control plane ingress
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/mandatory.yaml
-kubectl apply -f ${download_location}/distribution-master/installer/k8s-artefacts/system/cloud-generic.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/system/mandatory.yaml
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/system/cloud-generic.yaml
 }
 
 function read_configs_envs () {
@@ -475,9 +486,10 @@ fi
 if [[ -n ${IAAS/[ ]*\n/} ]]; then
     iaas=$IAAS
     download_path=${DOWNLOAD_PATH:-tmp-cellery}
-    git_base_url=${GIT_BASE_URL:-https://github.com/cellery-io/distribution}
-    distribution_url=${GIT_DISTRIBUTION_URL:-https://github.com/cellery-io/distribution/archive/master.zip}
-    mesh_observability_url=${GIT_MESH_OBSERVABILITY_URL:-https://github.com/cellery-io/mesh-observability/archive/master.zip}
+    release_version=${RELEASE_VERSION:-master}
+    git_base_url=${GIT_BASE_URL:-https://github.com/wso2-cellery/distribution}
+    distribution_url=${GIT_DISTRIBUTION_URL:-https://github.com/wso2-cellery/distribution/archive}
+    mesh_observability_url=${GIT_MESH_OBSERVABILITY_URL:-https://github.com/wso2-cellery/mesh-observability/archive}
     istio_version=${ISTIO_VERSION:-1.0.2}
     if [ $iaas == "kubeadm" ]; then
         k8s_version=${K8S_VERSION:-1.11.3-00}
@@ -525,9 +537,10 @@ declare -A nfs_config_params
 create_artifact_folder $download_path
 
 echo "🕷️ Downloading Cellery artifacts to ${download_path}"
-download_extract_celley_k8s_artifacts $download_path $distribution_url "distribution_master.zip"
-download_extract_celley_k8s_artifacts $download_path $mesh_observability_url "observability_master.zip"
-#download_cellery_artifacts $istio_base_url $download_path "${istio_yaml[@]}"
+distribution_artifact_url="${distribution_url}/${release_version}.zip"
+mesh_observability_artifact_url="${mesh_observability_url}/${release_version}.zip"
+download_extract_celley_k8s_artifacts $download_path $distribution_artifact_url "distribution_${release_version}.zip"
+download_extract_celley_k8s_artifacts $download_path $mesh_observability_artifact_url "observability_${release_version}.zip"
 
 #Install K8s
 if [[ -n ${iaas/[ ]*\n/} ]]; then
@@ -562,14 +575,14 @@ fi
 
 #Create cellery-system namespace and the cellery service account
 echo "🔧 Creating cellery-system namespace and the service account"
-init_control_plane $download_path $iaas
+init_control_plane $download_path $iaas $release_version
 
 #Deploy Cellery Data plane
 echo "🔧 Deploying Istio version $istio_version"
-deploy_istio $download_path $istio_version
+deploy_istio $download_path $istio_version $release_version
 
 echo "🔧 Deploying Cellery CRDs"
-deploy_cellery_crds $download_path
+deploy_cellery_crds $download_path $release_version
 
 read -p "⛏️ Do you want to deploy Cellery control plane [y/N]: " install_control_plane < /dev/tty
 
@@ -587,7 +600,7 @@ if [ $install_control_plane == "y" ]; then
         else
             create_nfs_share_gcp "data" $gcp_compute_zone
         fi
-        update_apim_nfs_volumes $download_path
+        update_apim_nfs_volumes $download_path $release_version
     fi
 
     #Deploy/configure MySQL / APIM datasources
@@ -605,40 +618,41 @@ if [ $install_control_plane == "y" ]; then
             deploy_mysql_server_gcp $download_path \
                                     "cellery-mysql-$((1 + RANDOM % 1000))" \
                                     $gcp_compute_zone \
-                                    $gcp_sql_tire
+                                    $gcp_sql_tire \
+                                    $release_version
         elif [ $iaas == "kubeadm" ]; then
             read_control_plane_datasources_configs
             #update the sql file
-            update_control_plance_sql $download_path
-            deploy_mysql_server $download_path
+            update_control_plance_sql $download_path $release_version
+            deploy_mysql_server $download_path $release_version
         else
             echo "🔧 Deploy MySQL server into the existing K8s clusters"
             read_control_plane_datasources_configs
-            update_control_plance_sql $download_path
-            deploy_mysql_server $download_path
+            update_control_plance_sql $download_path $release_version
+            deploy_mysql_server $download_path $release_version
         fi
     else
         read_control_plane_datasources_configs
     fi
 
-    update_control_plane_datasources $download_path
+    update_control_plane_datasources $download_path $release_version
 
 
     echo "ℹ️ Start to Deploying the Cellery control plane"
     echo "🔧 Deploying the control plane API Manager"
 
-    deploy_global_gw $download_path $iaas
+    deploy_global_gw $download_path $iaas $release_version
     #deploy_global_pubstore $download_path
 
     echo "🔧Deploying Stream Processor"
-    deploy_sp_dashboard_worker $download_path $iaas
+    deploy_sp_dashboard_worker $download_path $release_version
 
     echo "🔧 Deploying ingress-nginx"
 
     if [ $iaas == "kubeadm" ]; then
-        install_nginx_ingress_kubeadm $download_path
+        install_nginx_ingress_kubeadm $download_path $release_version
     elif [ $iaas == "GCP" ]; then
-        install_nginx_ingress_gcp $download_path
+        install_nginx_ingress_gcp $download_path $release_version
     fi
 fi
 echo "ℹ️ Cellery installation is finished."
