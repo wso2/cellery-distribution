@@ -271,7 +271,7 @@ local db_user
 local db_passwd
 local db_hostname="wso2apim-with-analytics-rdbms-service"
 
-if [ $iaas == "kubeadm" ]; then
+if [ $iaas == "kubeadm" ] || [ $iaas == "k8s" ]; then
 echo "Configuring remote MySQL server"
 #read -p "Database host name: " db_hostname < /dev/tty
     if [[ ! -z "${db_hostname/ //}" ]]; then
@@ -385,14 +385,15 @@ local release_version=$3
 #Setup Celley namespace, create service account and the docker registry credentials
 kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/system/ns-init.yaml
 
-if [ $iaas == "kubeadm" ]; then
+if [ $iaas == "kubeadm" ] || [ $iaas == "k8s" ]; then
     HOST_NAME=$(hostname | tr '[:upper:]' '[:lower:]')
     #label the node if k8s provider is kubeadm
     kubectl label nodes $HOST_NAME disk=local
-    #Create credentials for docker.wso2.com
-    #kubectl create secret docker-registry wso2creds --docker-server=docker.wso2.com --docker-username=$DOCKER_REG_USER \
-    # --docker-password=$DOCKER_REG_PASSWD --docker-email=$DOCKER_REG_USER_EMAIL -n cellery-system
+
 fi
+#Create credentials for docker.wso2.com
+#kubectl create secret docker-registry wso2creds --docker-server=docker.wso2.com --docker-username=$DOCKER_REG_USER \
+# --docker-password=$DOCKER_REG_PASSWD --docker-email=$DOCKER_REG_USER_EMAIL -n cellery-system
 }
 
 function deploy_istio () {
@@ -483,14 +484,15 @@ if [ -f cellery.env ]; then
 fi
 
 #Initialize the IaaS specific configurations.
+download_path=${DOWNLOAD_PATH:-tmp-cellery}
+release_version=${RELEASE_VERSION:-master}
+git_base_url=${GIT_BASE_URL:-https://github.com/wso2-cellery/distribution}
+distribution_url=${GIT_DISTRIBUTION_URL:-https://github.com/wso2-cellery/distribution/archive}
+mesh_observability_url=${GIT_MESH_OBSERVABILITY_URL:-https://github.com/wso2-cellery/mesh-observability/archive}
+istio_version=${ISTIO_VERSION:-1.0.2}
+
 if [[ -n ${IAAS/[ ]*\n/} ]]; then
     iaas=$IAAS
-    download_path=${DOWNLOAD_PATH:-tmp-cellery}
-    release_version=${RELEASE_VERSION:-master}
-    git_base_url=${GIT_BASE_URL:-https://github.com/wso2-cellery/distribution}
-    distribution_url=${GIT_DISTRIBUTION_URL:-https://github.com/wso2-cellery/distribution/archive}
-    mesh_observability_url=${GIT_MESH_OBSERVABILITY_URL:-https://github.com/wso2-cellery/mesh-observability/archive}
-    istio_version=${ISTIO_VERSION:-1.0.2}
     if [ $iaas == "kubeadm" ]; then
         k8s_version=${K8S_VERSION:-1.11.3-00}
         flannel_version=${FLANNEL_VERSION:-0.10.0}
@@ -571,6 +573,11 @@ if [[ -n ${iaas/[ ]*\n/} ]]; then
     fi
 else
     echo "Installing Cellery into an existing k8s cluster"
+    if ! [ -x "$(command -v kubectl)" ]; then
+	echo kubectl is not installed.
+	exit 1
+    fi
+    iaas="k8s"
 fi
 
 #Create cellery-system namespace and the cellery service account
@@ -625,7 +632,7 @@ if [ $install_control_plane == "y" ]; then
             #update the sql file
             update_control_plance_sql $download_path $release_version
             deploy_mysql_server $download_path $release_version
-        else
+        elif [ $iaas == "k8s" ]; then
             echo "🔧 Deploy MySQL server into the existing K8s clusters"
             read_control_plane_datasources_configs
             update_control_plance_sql $download_path $release_version
