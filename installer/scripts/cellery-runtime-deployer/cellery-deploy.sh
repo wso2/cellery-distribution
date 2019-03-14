@@ -269,23 +269,23 @@ config_params["MYSQL_DATABASE_HOST"]=$mysql_server_ip
 function read_control_plane_datasources_configs () {
 local db_user
 local db_passwd
-local db_hostname="wso2apim-with-analytics-rdbms-service"
+local db_hostname
 
 if [ $iaas == "kubeadm" ] || [ $iaas == "k8s" ]; then
-echo "Configuring remote MySQL server"
-#read -p "Database host name: " db_hostname < /dev/tty
-    if [[ ! -z "${db_hostname/ //}" ]]; then
-            echo "Db Hostname ${db_hostname}"
-            config_params["MYSQL_DATABASE_HOST"]=$db_hostname
+    config_params["MYSQL_DATABASE_HOST"]="wso2apim-with-analytics-rdbms-service"
+    config_params["DATABASE_USERNAME"]="cellery"
+    db_passwd=$(cat /dev/urandom | env LC_CTYPE=C tr -dc a-zA-Z0-9 | head -c 16; echo)
+    config_params["DATABASE_PASSWORD"]=$db_passwd
+else
+    echo "Configuring remote MySQL server"
+    read -p "⛏️ Database user name: " db_user < /dev/tty
+    if [[ ! -z "${db_user/ //}" ]]; then
+            config_params["DATABASE_USERNAME"]=$db_user
     fi
-fi
-read -p "⛏️ Database user name: " db_user < /dev/tty
-if [[ ! -z "${db_user/ //}" ]]; then
-        config_params["DATABASE_USERNAME"]=$db_user
-fi
-read -s -p "⛏️ Database user password: " db_passwd < /dev/tty
-if [[ ! -z "${db_passwd/ //}" ]]; then
-        config_params["DATABASE_PASSWORD"]=$db_passwd
+    read -s -p "⛏️ Database user password: " db_passwd < /dev/tty
+    if [[ ! -z "${db_passwd/ //}" ]]; then
+            config_params["DATABASE_PASSWORD"]=$db_passwd
+    fi
 fi
 }
 
