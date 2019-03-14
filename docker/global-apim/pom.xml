@@ -137,7 +137,7 @@
                     </execution>
                     <execution>
                         <id>copy-sts-web-app</id>
-                        <phase>package</phase>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>copy</goal>
                         </goals>
