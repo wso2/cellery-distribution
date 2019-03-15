@@ -433,6 +433,22 @@ kubectl apply -f ${download_location}/distribution-${release_version}/installer/
 kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/controller/09-controller.yaml
 }
 
+function deploy_cellery_idp () {
+local download_location=$1
+local release_version=$2
+
+#Create the IDP config maps
+kubectl create configmap identity-server-conf --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf -n cellery-system
+kubectl create configmap identity-server-conf-datasources --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/datasources/ -n cellery-system
+#kubectl create configmap conf-identity --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/identity -n cellery-system
+kubectl create configmap identity-server-tomcat --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/tomcat -n cellery-system
+#kubectl create configmap identity-server-security --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/security -n cellery-system
+
+#Create IDP deployment and the service
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/global-idp.yaml -n cellery-system
+
+}
+
 function create_artifact_folder () {
  local tmp_folder=$1
 
@@ -596,6 +612,9 @@ deploy_istio $download_path $istio_version $release_version
 
 echo "🔧 Deploying Cellery CRDs"
 deploy_cellery_crds $download_path $release_version
+
+echo "🔧 Deploying Cellery IDP"
+deploy_cellery_idp $download_path $release_version
 
 read -p "⛏️ Do you want to deploy Cellery control plane [y/N]: " install_control_plane < /dev/tty
 
