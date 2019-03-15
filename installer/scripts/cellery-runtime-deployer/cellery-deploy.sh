@@ -278,6 +278,11 @@ if [ $iaas == "kubeadm" ] || [ $iaas == "k8s" ]; then
     config_params["DATABASE_PASSWORD"]=$db_passwd
 else
     echo "Configuring remote MySQL server"
+    read -p "Database host name: " db_hostname < /dev/tty
+    if [[ ! -z "${db_hostname/ //}" ]]; then
+            echo "Db Hostname ${db_hostname}"
+            config_params["MYSQL_DATABASE_HOST"]=$db_hostname
+    fi
     read -p "⛏️ Database user name: " db_user < /dev/tty
     if [[ ! -z "${db_user/ //}" ]]; then
             config_params["DATABASE_USERNAME"]=$db_user
