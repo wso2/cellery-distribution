@@ -48,7 +48,7 @@ else
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
 fi
 sudo apt-get update -qq
-sudo apt-get install -y docker.io
+sudo apt-get install -y docker-ce=18.06.0~ce~3-0~ubuntu
 #Install NFS client
 sudo apt-get install -y nfs-common
 #Enable docker service
