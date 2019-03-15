@@ -313,6 +313,7 @@ for param in "${!config_params[@]}"
 do
     sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/datasources/master-datasources.xml
     sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/observability/sp/conf/deployment.yaml
+    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/datasources/master-datasources.xml
 done
 }
 
