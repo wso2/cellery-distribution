@@ -613,9 +613,6 @@ deploy_istio $download_path $istio_version $release_version
 echo "🔧 Deploying Cellery CRDs"
 deploy_cellery_crds $download_path $release_version
 
-echo "🔧 Deploying Cellery IDP"
-deploy_cellery_idp $download_path $release_version
-
 read -p "⛏️ Do you want to deploy Cellery control plane [y/N]: " install_control_plane < /dev/tty
 
 if [ $install_control_plane == "y" ]; then
@@ -675,6 +672,9 @@ if [ $install_control_plane == "y" ]; then
 
     deploy_global_gw $download_path $iaas $release_version
     #deploy_global_pubstore $download_path
+
+    echo "🔧 Deploying Cellery IDP"
+    deploy_cellery_idp $download_path $release_version
 
     echo "🔧Deploying Stream Processor"
     deploy_sp_dashboard_worker $download_path $release_version
