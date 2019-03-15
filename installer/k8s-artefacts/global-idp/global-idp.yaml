@@ -63,12 +63,14 @@ spec:
         volumeMounts:
         - name: identity-server-conf
           mountPath: /home/wso2carbon/wso2-config-volume/repository/conf
-        - name: identity-server-conf-axis2
-          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/axis2
+#        - name: identity-server-conf-axis2
+#          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/axis2
         - name: identity-server-conf-datasources
           mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/datasources
-        - name: identity-server-conf-identity
-          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/identity
+        - name: identity-server-tomcat
+          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/tomcat
+#        - name: identity-server-conf-identity
+#          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/identity
 #        - name: shared-deployment-persistent-disk
 #          mountPath: /home/wso2carbon/wso2is-lightweightv1/repository/deployment
 #        - name: shared-tenants-persistent-disk
@@ -80,15 +82,18 @@ spec:
       - name: identity-server-conf
         configMap:
           name: identity-server-conf
-      - name: identity-server-conf-axis2
-        configMap:
-          name: identity-server-conf-axis2
+#      - name: identity-server-conf-axis2
+#        configMap:
+#          name: identity-server-conf-axis2
       - name: identity-server-conf-datasources
         configMap:
           name: identity-server-conf-datasources
-      - name: identity-server-conf-identity
+      - name: identity-server-tomcat
         configMap:
-          name: identity-server-conf-identity
+          name: identity-server-tomcat
+#      - name: identity-server-conf-identity
+#        configMap:
+#          name: identity-server-conf-identity
 #      - name: shared-deployment-persistent-disk
 #        persistentVolumeClaim:
 #          claimName: is-shared-deployment-volume-claim
