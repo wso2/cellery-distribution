@@ -77,6 +77,7 @@ if [ -f $HOME/.kube/config ]; then
 fi
 
 cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
+#chown deep:deep $HOME/.kube/config
 chown -R vagrant:vagrant $HOME/.kube
 
 #if you are using a single node which acts as both a master and a worker
@@ -84,6 +85,6 @@ chown -R vagrant:vagrant $HOME/.kube
 kubectl taint nodes --all node-role.kubernetes.io/master-
 
 #Install Flannel network
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.11.0/Documentation/kube-flannel.yml
 
 echo "Done."
