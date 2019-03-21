@@ -38,7 +38,8 @@ spec:
     spec:
       containers:
       - name: gateway
-        image: celleryio/wso2am:v0.1.0
+        image: celleryio/wso2am:02a0f1bf88573ab5ffd3b2330fa74669bdb54626
+
         livenessProbe:
           exec:
             command:

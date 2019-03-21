@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       -
-        image: celleryio/sp-worker:v0.1.0
+        image: celleryio/sp-worker:33688439f65cdbacaf90b177dd0fbb32e1a30eed
         name: wso2sp-worker
         imagePullPolicy: Always
         resources:
