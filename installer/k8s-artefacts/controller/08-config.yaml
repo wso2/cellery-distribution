@@ -67,9 +67,11 @@ data:
     [b7a.observability.tracing]
     enabled=false
 
-  cell-gateway-init-image: celleryio/cell-gateway-init:02a0f1bf88573ab5ffd3b2330fa74669bdb54626
+  cell-gateway-init-image: celleryio/cell-gateway-init:3ad545b7524c1b85483460c2556abafbc5bcfab7
 
-  cell-gateway-image: celleryio/cell-gateway:02a0f1bf88573ab5ffd3b2330fa74669bdb54626
+
+  cell-gateway-image: celleryio/cell-gateway:3ad545b7524c1b85483460c2556abafbc5bcfab7
+
 
   cell-sts-config: |
     {
