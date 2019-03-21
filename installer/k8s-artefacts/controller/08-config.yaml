@@ -67,12 +67,9 @@ data:
     [b7a.observability.tracing]
     enabled=false
 
-  cell-gateway-init-image: celleryio/cell-gateway-init:3ad545b7524c1b85483460c2556abafbc5bcfab7
-
-
-  cell-gateway-image: celleryio/cell-gateway:3ad545b7524c1b85483460c2556abafbc5bcfab7
-
-
+  cell-gateway-init-image: celleryio/cell-gateway-init
+  cell-gateway-image: celleryio/cell-gateway
+  oidc-filter-image: celleryio/envoy-oidc-filter
   cell-sts-config: |
     {
         "endpoint": "https://gateway.cellery-system:9443/api/identity/cellery-auth/v1.0/sts/token",
@@ -86,10 +83,10 @@ data:
         "OPAQueryPrefix" : "data/cellery/io"
     }
   opa-default-policy: |
-      package cellery.io
+    package cellery.io
 
-      default allow = true
-  cell-sts-image: celleryio/cell-sts:86413a4a62cd4cdc7b08582339e692a259c47efd
+    default allow = true
+  cell-sts-image: celleryio/cell-sts
   cell-sts-opa-image: openpolicyagent/opa:0.10.3
 kind: ConfigMap
 metadata:
