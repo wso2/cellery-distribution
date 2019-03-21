@@ -74,7 +74,9 @@ kubectl label nodes $HOST_NAME disk=local
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/istio-crds.yaml
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/istio-demo-cellery.yaml
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/istio-gateway.yaml
-sleep 360
+#Enabling Istio injection
+kubectl label namespace default istio-injection=enabled
+sleep 60
 #Create Cellery CRDs.
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/01-cluster-role.yaml
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/02-service-account.yaml
@@ -138,3 +140,7 @@ kubectl create configmap k8s-metrics-grafana-dashboards-default --from-file=${do
 #Create K8s Metrics deployment, service and ingress.
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/prometheus/k8s-metrics-prometheus.yaml -n cellery-system
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/k8s-metrics-grafana.yaml -n cellery-system
+
+#Create ingress-nginx deployment
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/mandatory.yaml
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/service-nodeport.yaml
