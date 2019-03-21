@@ -26,6 +26,10 @@ mkdir ${download_path}
 wget ${distribution_url}/${release_version}.zip -O ${download_path}/${release_version}.zip -a cellery-setup.log
 unzip ${download_path}/${release_version}.zip -d ${download_path}
 
+mesh_observability_url=${GIT_MESH_OBSERVABILITY_URL:-https://github.com/wso2-cellery/mesh-observability/archive}
+wget ${mesh_observability_url}/${release_version}.zip -O ${download_path}/${release_version}.zip -a cellery-setup.log
+unzip ${download_path}/${release_version}.zip -d ${download_path}
+
 #Create folders required by the mysql PVC
 if [ -d /mnt/mysql ]; then
     mv /mnt/mysql "/mnt/mysql.$(date +%s)"
@@ -50,8 +54,7 @@ config_params["DATABASE_PASSWORD"]=$db_passwd
 for param in "${!config_params[@]}"
 do
     sed -i "s/$param/${config_params[$param]}/g" ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/datasources/master-datasources.xml
-#    sed -i "s/$param/${config_params[$param]}/g" ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/sp/conf/deployment.yaml
-#    sed -i "s/$param/${config_params[$param]}/g" ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/datasources/master-datasources.xml
+    sed -i "s/$param/${config_params[$param]}/g" ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/sp/conf/deployment.yaml
 done
 
 for param in "${!config_params[@]}"
@@ -110,3 +113,28 @@ kubectl create configmap apim-security --from-file=${download_path}/distribution
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/global-apim.yaml -n cellery-system
 #Wait till the gateway deployment availability
 kubectl wait deployment.apps/gateway --for condition=available --timeout=6000s -n cellery-system
+
+#Observability
+#Create SP worker configmaps
+kubectl create configmap sp-worker-siddhi --from-file=${download_path}/mesh-observability-${release_version}/components/global/core/io.cellery.observability.siddhi.apps/src/main/siddhi -n cellery-system
+kubectl create configmap sp-worker-conf --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/sp/conf -n cellery-system
+#kubectl create configmap sp-worker-bin --from-file=${download_path}/sp-worker/bin -n cellery-system
+#Create SP worker deployment
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/sp/sp-worker.yaml -n cellery-system
+#Create SP dashboard configmaps
+#kubectl create configmap sp-dashboard-conf --from-file=${download_path}/status-dashboard/conf -n cellery-system
+#kubectl create configmap sp-worker-bin --from-file=sp-worker/bin -n cellery-system
+#Create observability portal deployment, service and ingress.
+kubectl create configmap observability-portal-config --from-file=${download_path}/mesh-observability-${release_version}/components/global/portal/io.cellery.observability.ui/node-server/config -n cellery-system
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/portal/observability-portal.yaml -n cellery-system
+
+# Create K8s Metrics Config-maps
+kubectl create configmap k8s-metrics-prometheus-conf --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/prometheus/config -n cellery-system
+kubectl create configmap k8s-metrics-grafana-conf --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/config -n cellery-system
+kubectl create configmap k8s-metrics-grafana-datasources --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/datasources -n cellery-system
+kubectl create configmap k8s-metrics-grafana-dashboards --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/dashboards -n cellery-system
+kubectl create configmap k8s-metrics-grafana-dashboards-default --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/dashboards/default -n cellery-system
+
+#Create K8s Metrics deployment, service and ingress.
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/prometheus/k8s-metrics-prometheus.yaml -n cellery-system
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/k8s-metrics-grafana.yaml -n cellery-system

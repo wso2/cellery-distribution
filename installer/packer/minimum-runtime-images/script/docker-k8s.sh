@@ -23,7 +23,7 @@ UBUNTU_VERSION=$(lsb_release -r | awk ' /'Release'/ {print $2} ')
 
 #Update all installed packages.
 apt-get update
-yes | apt-get upgrade
+#yes | apt-get upgrade
 
 #if you get an error similar to
 #'[ERROR Swap]: running with swap on is not supported. Please disable swap', disable swap:
