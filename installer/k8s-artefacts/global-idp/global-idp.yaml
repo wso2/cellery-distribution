@@ -114,7 +114,7 @@ spec:
     targetPort: 9763
     protocol: TCP
   - name: servlet-https
-    port: 9443
+    port: 443
     targetPort: 9443
     protocol: TCP
 ---
@@ -131,9 +131,9 @@ metadata:
 spec:
   tls:
   - hosts:
-    - idp
+    - idp.cellery-system
   rules:
-  - host: idp
+  - host: idp.cellery-system
     http:
       paths:
       - path: /

@@ -23,7 +23,7 @@ UBUNTU_VERSION=$(lsb_release -r | awk ' /'Release'/ {print $2} ')
 
 #Update all installed packages.
 apt-get update
-yes | apt-get upgrade
+#yes | apt-get upgrade
 
 #if you get an error similar to
 #'[ERROR Swap]: running with swap on is not supported. Please disable swap', disable swap:
@@ -77,7 +77,6 @@ if [ -f $HOME/.kube/config ]; then
 fi
 
 cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
-#chown deep:deep $HOME/.kube/config
 chown -R vagrant:vagrant $HOME/.kube
 
 #if you are using a single node which acts as both a master and a worker
