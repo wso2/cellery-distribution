@@ -98,3 +98,7 @@ kubectl create configmap identity-server-tomcat --from-file=${download_path}/dis
 #Create IDP deployment and the service
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/global-idp.yaml -n cellery-system
 
+#Create ingress-nginx deployment
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/mandatory.yaml
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/service-nodeport.yaml
+
