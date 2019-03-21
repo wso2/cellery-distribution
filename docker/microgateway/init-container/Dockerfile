@@ -16,7 +16,7 @@
 #
 # ------------------------------------------------------------------------
 
-FROM celleryio/cell-gateway-base
+FROM wso2cellery/cell-gateway-base
 
 ## copy java, microgateway and init.sh file to docker image
 #COPY ./files/jdk1.8.0_* /java

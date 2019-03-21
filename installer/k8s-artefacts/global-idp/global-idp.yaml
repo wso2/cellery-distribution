@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: idp
-        image: celleryio/wso2is-lightweight 
+        image: wso2cellery/wso2is-lightweight
         livenessProbe:
           exec:
             command:
