@@ -72,7 +72,10 @@ kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/istio-crds.yaml
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/istio-demo-cellery.yaml
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/istio-gateway.yaml
-sleep 360
+kubectl wait deployment/istio-pilot --for condition=available --timeout=6000s -n istio-system
+#Enabling Istio injection
+kubectl label namespace default istio-injection=enabled
+sleep 60
 #Create Cellery CRDs.
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/01-cluster-role.yaml
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/02-service-account.yaml
