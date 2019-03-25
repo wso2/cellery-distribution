@@ -166,9 +166,20 @@ function update_apim_nfs_volumes () {
 local download_location=$1
 local release_version=$2
 
+darwin=false;
+case "`uname`" in
+  Darwin*) darwin=true ;;
+esac
+
+if $darwin; then
+  sedi="/usr/bin/sed -i ''"
+else
+  sedi="sed -i"
+fi
+
 for param in "${!nfs_config_params[@]}"
 do
-    sed -i "s|$param|${nfs_config_params[$param]}|g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/artifacts-persistent-volume.yaml
+    $sedi "s|$param|${nfs_config_params[$param]}|g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/artifacts-persistent-volume.yaml
 done
 }
 
@@ -298,9 +309,20 @@ function update_control_plance_sql () {
 local download_location=$1
 local release_version=$2
 
+darwin=false;
+case "`uname`" in
+  Darwin*) darwin=true ;;
+esac
+
+if $darwin; then
+  sedi="/usr/bin/sed -i ''"
+else
+  sedi="sed -i"
+fi
+
 for param in "${!config_params[@]}"
 do
-    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/mysql/dbscripts/init.sql
+    $sedi "s/$param/${config_params[$param]}/g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/mysql/dbscripts/init.sql
 done
 }
 
@@ -309,11 +331,22 @@ function update_control_plane_datasources () {
 local download_location=$1
 local release_version=$2
 
+darwin=false;
+case "`uname`" in
+  Darwin*) darwin=true ;;
+esac
+
+if $darwin; then
+  sedi="/usr/bin/sed -i ''"
+else
+  sedi="sed -i"
+fi
+
 for param in "${!config_params[@]}"
 do
-    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/datasources/master-datasources.xml
-    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/observability/sp/conf/deployment.yaml
-    sed -i "s/$param/${config_params[$param]}/g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/datasources/master-datasources.xml
+    $sedi "s/$param/${config_params[$param]}/g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/datasources/master-datasources.xml
+    $sedi "s/$param/${config_params[$param]}/g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/observability/sp/conf/deployment.yaml
+    $sedi "s/$param/${config_params[$param]}/g" ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/datasources/master-datasources.xml
 done
 }
 
@@ -440,14 +473,12 @@ local release_version=$2
 #Create the IDP config maps
 kubectl create configmap identity-server-conf --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf -n cellery-system
 kubectl create configmap identity-server-conf-datasources --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/datasources/ -n cellery-system
-kubectl create configmap identity-server-conf-identity
---from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/identity -n cellery-system
+kubectl create configmap identity-server-conf-identity --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/identity -n cellery-system
 kubectl create configmap identity-server-tomcat --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/tomcat -n cellery-system
-#kubectl create configmap identity-server-security --from-file=${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/security -n cellery-system
+#kubectl create configmap identity-server-security --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/security -n cellery-system
 
 #Create IDP deployment and the service
 kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-idp/global-idp.yaml -n cellery-system
-
 }
 
 function create_artifact_folder () {
@@ -536,8 +567,6 @@ fi
 }
 #-----------------------------------------------------------------------------------------------------------------------
 
-#TODO Bash 4 / gnu sed / gcloud tools if GCP
-
 #Read parameter from the STDIN as bash positional parameters and set IaaS, GCP Project and GCP Compute Zone
 if [[ -n ${1/[ ]*\n/} ]]; then
     #iaas=$1
@@ -614,6 +643,7 @@ deploy_istio $download_path $istio_version $release_version
 echo "🔧 Deploying Cellery CRDs"
 deploy_cellery_crds $download_path $release_version
 
+
 read -p "⛏️ Do you want to deploy Cellery control plane [y/N]: " install_control_plane < /dev/tty
 
 if [ $install_control_plane == "y" ]; then
@@ -667,26 +697,57 @@ if [ $install_control_plane == "y" ]; then
 
     update_control_plane_datasources $download_path $release_version
 
-
     echo "ℹ️ Start to Deploying the Cellery control plane"
     echo "🔧 Deploying the control plane API Manager"
 
     deploy_global_gw $download_path $iaas $release_version
     #deploy_global_pubstore $download_path
 
-    echo "🔧 Deploying Cellery IDP"
-    deploy_cellery_idp $download_path $release_version
-
     echo "🔧Deploying Stream Processor"
     deploy_sp_dashboard_worker $download_path $release_version
+else
 
-    echo "🔧 Deploying ingress-nginx"
-
-    if [ $iaas == "kubeadm" ]; then
-        install_nginx_ingress_kubeadm $download_path $release_version
-    elif [ $iaas == "GCP" ]; then
-        install_nginx_ingress_gcp $download_path $release_version
+#Deploy/configure MySQL / IDP datasources
+read -p "⛏️ Do you want to deploy MySQL server [y/N]: " install_mysql < /dev/tty
+if [[ -z ${install_mysql/[ ]*\n/} ]]; then
+        install_mysql="N"
     fi
+if [ $install_mysql == "y" ]; then
+
+    if [ $iaas == "GCP" ]; then
+        #Read db user / passwd
+        read_control_plane_datasources_configs
+        #Update the sql
+        update_control_plance_sql $download_path
+        deploy_mysql_server_gcp $download_path \
+                                "cellery-mysql-$((1 + RANDOM % 1000))" \
+                                $gcp_compute_zone \
+                                $gcp_sql_tire \
+                                $release_version
+    elif [ $iaas == "kubeadm" ]; then
+        read_control_plane_datasources_configs
+        #update the sql file
+        update_control_plance_sql $download_path $release_version
+        deploy_mysql_server $download_path $release_version
+    elif [ $iaas == "k8s" ]; then
+        echo "🔧 Deploy MySQL server into the existing K8s clusters"
+        read_control_plane_datasources_configs
+        update_control_plance_sql $download_path $release_version
+        deploy_mysql_server $download_path $release_version
+    fi
+else
+    read_control_plane_datasources_configs
+fi
+update_control_plane_datasources $download_path $release_version
+echo "🔧 Deploying Cellery IDP"
+deploy_cellery_idp $download_path $release_version
+fi
+
+echo "🔧 Deploying ingress-nginx"
+if [ $iaas == "kubeadm" ]; then
+    install_nginx_ingress_kubeadm $download_path $release_version
+elif [ $iaas == "GCP" ]; then
+    install_nginx_ingress_gcp $download_path $release_version
 fi
 echo "ℹ️ Cellery installation is finished."
 echo "-=🎉=-"
