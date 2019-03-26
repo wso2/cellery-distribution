@@ -361,7 +361,7 @@
                 Default value for IDTokenIssuerID, is OAuth2TokenEPUrl.
                 If that doesn't satisfy uncomment the following config and explicitly configure the value
             -->
-            <IDTokenIssuerID>https://idp.cellery.io</IDTokenIssuerID>
+            <IDTokenIssuerID>${carbon.protocol}://${carbon.host}/oauth2/token</IDTokenIssuerID>
             <IDTokenCustomClaimsCallBackHandler>org.wso2.carbon.identity.openidconnect.SAMLAssertionClaimsCallback</IDTokenCustomClaimsCallBackHandler>
             <IDTokenExpiration>3600</IDTokenExpiration>
             <UserInfoJWTSignatureAlgorithm>SHA256withRSA</UserInfoJWTSignatureAlgorithm>
@@ -783,7 +783,7 @@
         <Resource context="(.*)/api/identity/recovery/(.*)" http-method="all" secured="true">
             <Permissions>/permission/admin/manage/identity/identitymgt</Permissions>
         </Resource>
-        <Resource context="(.*)/.well-known(.*)" http-method="all" secured="true"/>
+        <Resource context="(.*)/.well-known(.*)" http-method="all" secured="false"/>
         <Resource context="(.*)/api/identity/oauth2/dcr/v1.1/register(.*)"
                   http-method="POST" secured="true">
             <Permissions>/permission/admin/manage/identity/applicationmgt/create</Permissions>
