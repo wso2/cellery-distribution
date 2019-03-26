@@ -87,7 +87,7 @@
         {
             "type": "file",
             "source": "/home/vagrant/.kube/config",
-            "destination": "kubectl_conf/config",
+            "destination": "kubectl_conf/config-full-runtime-0.2.0",
             "direction": "download"
         }],
     "variables": {
@@ -112,7 +112,7 @@
         "ssh_username": "vagrant",
         "update": "true",
         "vagrantfile_template": "",
-        "version": "0.2.0",
+        "version": "full-runtime-0.2.0",
         "virtualbox_guest_os_type": "Ubuntu_64",
         "vm_name": "ubuntu-18.04"
     }
