@@ -59,7 +59,7 @@ add-apt-repository "deb [arch=amd64] http://apt.kubernetes.io/ kubernetes-xenial
 
 #Install K8s components
 apt-get update
-apt-get install -y kubelet=$K8S_VERSION kubeadm=$K8S_VERSION kubectl=$K8S_VERSION
+apt-get install -y kubelet=$K8S_VERSION kubeadm=$K8S_VERSION kubectl=$K8S_VERSION kubernetes-cni=0.6.0-00
 
 apt-mark hold kubelet kubeadm kubectl
 
