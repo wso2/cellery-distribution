@@ -272,6 +272,7 @@
         <!-- Cellery Dependencies -->
         <cellery.mesh.obesrvability.version>0.1.0</cellery.mesh.obesrvability.version>
         <cellery.mesh.security.version>0.1.0</cellery.mesh.security.version>
+        <carbon.identity.oauth2.version>6.0.105</carbon.identity.oauth2.version>
 
         <!-- External Jars for Tracing Utilization -->
         <zipkin.version>2.11.6</zipkin.version>
