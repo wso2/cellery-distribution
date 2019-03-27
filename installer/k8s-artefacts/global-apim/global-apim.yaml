@@ -177,6 +177,24 @@ spec:
       protocol: TCP
       port: 9443
 ---
+# This is required when idp.cellery-system calls are made assuming there is an IDP running within the mesh
+apiVersion: v1
+kind: Service
+metadata:
+  name: idp
+spec:
+  selector:
+    deployment: gateway
+  ports:
+  - name: servlet-http
+    port: 9763
+    targetPort: 9763
+    protocol: TCP
+  - name: servlet-https
+    port: 443
+    targetPort: 9443
+    protocol: TCP
+---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -198,6 +216,30 @@ spec:
         backend:
           serviceName: gateway
           servicePort: 8280
+---
+# This is required when idp.cellery-system calls are made assuming there is an IDP running from outside the mesh.
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: wso2is-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
+spec:
+  tls:
+  - hosts:
+    - idp.cellery-system
+  rules:
+  - host: idp.cellery-system
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: gateway
+          servicePort: 9443
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
