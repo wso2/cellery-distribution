@@ -16,7 +16,7 @@
 #
 # ------------------------------------------------------------------------
 
-FROM wso2vick/wso2am:base
+FROM wso2cellery/wso2am-base:2.6.0
 
 ARG USER_HOME=/home/wso2carbon
 ARG FILES=./target/files
