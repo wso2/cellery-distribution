@@ -87,8 +87,12 @@
         {
             "type": "file",
             "source": "/home/vagrant/.kube/config",
-            "destination": "kubectl_conf/config-cellery-runtime-complete-0.2.0",
+            "destination": "kubectl_conf/config-cellery-runtime-complete-{{user `version`}}",
             "direction": "download"
+        },
+        {
+            "type": "shell",
+            "inline": ["echo 'vagrant' | sudo -S sh -c 'cp /tmp/50-cellery.yaml /etc/netplan/50-cellery.yaml'"]
         }],
     "variables": {
         "boot_command_prefix": "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
