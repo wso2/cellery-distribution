@@ -16,6 +16,7 @@
             "passwd/user-password={{user `ssh_password`}} ",
             "passwd/user-password-again={{user `ssh_password`}} ",
             "passwd/username={{user `ssh_username`}} ",
+            "interface=enp0s3<wait> ",
             "-- <enter>"
         ],
         "disk_size": "{{user `disk_size`}}",
@@ -42,7 +43,9 @@
             ["modifyvm", "{{.Name}}", "--vram", "12"],
             ["modifyvm", "{{.Name}}", "--vrde", "off"],
             ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
-            ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"]
+            ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
+            ["modifyvm", "{{.Name}}", "--nic2", "hostonly"],
+            ["modifyvm", "{{.Name}}", "--hostonlyadapter2", "vboxnet0"]
         ],
         "virtualbox_version_file": ".vbox_version",
         "vm_name": "{{user `vm_name`}}"
@@ -89,6 +92,12 @@
             "source": "/home/vagrant/.kube/config",
             "destination": "kubectl_conf/config-cellery-runtime-complete-{{user `version`}}",
             "direction": "download"
+        },
+        {
+            "type": "file",
+            "source": "resources/50-cellery.yaml",
+            "destination": "/tmp/50-cellery.yaml",
+            "direction": "upload"
         },
         {
             "type": "shell",
