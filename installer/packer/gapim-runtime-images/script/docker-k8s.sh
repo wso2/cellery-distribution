@@ -64,7 +64,7 @@ apt-get install -y kubelet=$K8S_VERSION kubeadm=$K8S_VERSION kubectl=$K8S_VERSIO
 apt-mark hold kubelet kubeadm kubectl
 
 #Initialize the k8s cluster
-kubeadm init --pod-network-cidr=10.244.0.0/16
+kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=0.0.0.0
 
 sleep 60
 
