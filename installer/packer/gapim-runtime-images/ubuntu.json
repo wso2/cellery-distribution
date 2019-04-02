@@ -9,6 +9,7 @@
             "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
             "hostname={{user `hostname`}} ",
             "grub-installer/bootdev=/dev/sda<wait> ",
+            "interface=enp0s3 <wait>",
             "fb=false debconf/frontend=noninteractive ",
             "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
             "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
@@ -16,7 +17,6 @@
             "passwd/user-password={{user `ssh_password`}} ",
             "passwd/user-password-again={{user `ssh_password`}} ",
             "passwd/username={{user `ssh_username`}} ",
-            "interface=enp0s3<wait> ",
             "-- <enter>"
         ],
         "disk_size": "{{user `disk_size`}}",
