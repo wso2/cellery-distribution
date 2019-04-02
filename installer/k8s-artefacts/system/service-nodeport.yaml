@@ -11,6 +11,7 @@ spec:
   externalIPs:
   - 172.17.17.100
   - 10.0.2.15
+  - 192.168.56.10
   ports:
     - name: http
       port: 80

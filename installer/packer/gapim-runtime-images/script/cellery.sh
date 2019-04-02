@@ -94,7 +94,7 @@ kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/mysql/mysql-persistent-volume-claim.yaml -n cellery-system
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/mysql/mysql-deployment.yaml -n cellery-system
 #Wait till the mysql deployment availability
-kubectl wait deployment/wso2apim-with-analytics-mysql-deployment --for condition=available --timeout=6000s -n cellery-system
+kubectl wait deployment/wso2apim-with-analytics-mysql-deployment --for condition=available --timeout=300s -n cellery-system
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/mysql/mysql-service.yaml -n cellery-system 
 
 #Create apim local volumes and volume claims
@@ -114,7 +114,7 @@ kubectl create configmap apim-security --from-file=${download_path}/distribution
 #Create gateway deployment and the service
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/global-apim.yaml -n cellery-system
 #Wait till the gateway deployment availability
-kubectl wait deployment.apps/gateway --for condition=available --timeout=6000s -n cellery-system
+kubectl wait deployment.apps/gateway --for condition=available --timeout=300s -n cellery-system
 
 #Observability
 #Create SP worker configmaps
