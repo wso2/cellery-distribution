@@ -9,6 +9,7 @@
             "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
             "hostname={{user `hostname`}} ",
             "grub-installer/bootdev=/dev/sda<wait> ",
+            "interface=enp0s3 <wait>",
             "fb=false debconf/frontend=noninteractive ",
             "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
             "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
@@ -42,7 +43,9 @@
             ["modifyvm", "{{.Name}}", "--vram", "12"],
             ["modifyvm", "{{.Name}}", "--vrde", "off"],
             ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
-            ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"]
+            ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
+            ["modifyvm", "{{.Name}}", "--nic2", "hostonly"],
+            ["modifyvm", "{{.Name}}", "--hostonlyadapter2", "vboxnet0"]
         ],
         "virtualbox_version_file": ".vbox_version",
         "vm_name": "{{user `vm_name`}}"
@@ -87,8 +90,18 @@
         {
             "type": "file",
             "source": "/home/vagrant/.kube/config",
-            "destination": "kubectl_conf/config-cellery-runtime-complete-0.2.0",
+            "destination": "kubectl_conf/config-cellery-runtime-complete-{{user `version`}}",
             "direction": "download"
+        },
+        {
+            "type": "file",
+            "source": "resources/50-cellery.yaml",
+            "destination": "/tmp/50-cellery.yaml",
+            "direction": "upload"
+        },
+        {
+            "type": "shell",
+            "inline": ["echo 'vagrant' | sudo -S sh -c 'cp /tmp/50-cellery.yaml /etc/netplan/50-cellery.yaml'"]
         }],
     "variables": {
         "boot_command_prefix": "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",

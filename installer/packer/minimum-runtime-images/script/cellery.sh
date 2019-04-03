@@ -18,12 +18,16 @@
 # ------------------------------------------------------------------------
 
 download_path=${DOWNLOAD_PATH:-tmp-cellery}
-distribution_url=${GIT_DISTRIBUTION_URL:-https://github.com/wso2-cellery/distribution/archive}
 release_version=${RELEASE_VERSION:-master}
 
 #Download k8s artifacts
 mkdir ${download_path}
+distribution_url=${GIT_DISTRIBUTION_URL:-https://github.com/wso2-cellery/distribution/archive}
 wget ${distribution_url}/${release_version}.zip -O ${download_path}/${release_version}.zip -a cellery-setup.log
+unzip ${download_path}/${release_version}.zip -d ${download_path}
+
+mesh_observability_url=${GIT_MESH_OBSERVABILITY_URL:-https://github.com/wso2-cellery/mesh-observability/archive}
+wget ${mesh_observability_url}/${release_version}.zip -O ${download_path}/${release_version}.zip -a cellery-setup.log
 unzip ${download_path}/${release_version}.zip -d ${download_path}
 
 #Create folders required by the mysql PVC
@@ -43,6 +47,7 @@ config_params["DATABASE_PASSWORD"]=$db_passwd
 for param in "${!config_params[@]}"
 do
     sed -i "s/$param/${config_params[$param]}/g" ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/datasources/master-datasources.xml
+    sed -i "s/$param/${config_params[$param]}/g" ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/sp/conf/deployment.yaml
 done
 
 for param in "${!config_params[@]}"
@@ -85,7 +90,8 @@ kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/06-crd-token-service.yaml
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/07-crd-service.yaml
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/08-config.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/09-controller.yaml
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/09-autoscale-policy.yaml
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/10-controller.yaml
 sleep 120
 
 #Create the IDP config maps
@@ -97,6 +103,13 @@ kubectl create configmap identity-server-tomcat --from-file=${download_path}/dis
 
 #Create IDP deployment and the service
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/global-idp.yaml -n cellery-system
+
+#Observability
+#Create SP worker configmaps
+kubectl create configmap sp-worker-siddhi --from-file=${download_path}/mesh-observability-${release_version}/components/global/core/io.cellery.observability.siddhi.apps/src/main/siddhi -n cellery-system
+kubectl create configmap sp-worker-conf --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/sp/conf -n cellery-system
+#Create SP dashboard configmaps
+kubectl create configmap observability-portal-config --from-file=${download_path}/mesh-observability-${release_version}/components/global/portal/io.cellery.observability.ui/node-server/config -n cellery-system
 
 #Create ingress-nginx deployment
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/mandatory.yaml
