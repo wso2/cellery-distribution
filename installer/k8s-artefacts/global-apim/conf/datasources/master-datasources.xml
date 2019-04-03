@@ -135,29 +135,6 @@
             </definition>
         </datasource>
 
-        <datasource>
-            <name>WSO2_IDENTITY_DB</name>
-            <description>The datasource used for identity management</description>
-            <jndiConfig>
-                <name>jdbc/WSO2IdentityDS</name>
-            </jndiConfig>
-            <definition type="RDBMS">
-                <configuration>
-                    <url>jdbc:mysql://MYSQL_DATABASE_HOST:3306/WSO2IDP_IDENTITY_DB?autoReconnect=true&amp;useSSL=false</url>
-                    <username>DATABASE_USERNAME</username>
-                    <password>DATABASE_PASSWORD</password>
-                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
-                    <maxActive>80</maxActive>
-                    <maxWait>60000</maxWait>
-                    <minIdle>5</minIdle>
-                    <testOnBorrow>true</testOnBorrow>
-                    <validationQuery>SELECT 1</validationQuery>
-                    <validationInterval>30000</validationInterval>
-                    <defaultAutoCommit>false</defaultAutoCommit>
-                </configuration>
-            </definition>
-        </datasource>
-
         <!-- For an explanation of the properties, see: http://people.apache.org/~fhanik/jdbc-pool/jdbc-pool.html -->
         <!--datasource>
             <name>SAMPLE_DATA_SOURCE</name>
