@@ -282,7 +282,7 @@ local db_user
 local db_passwd
 local db_hostname
 
-if [ $iaas == "kubeadm" ] || [ $iaas == "k8s" ]; then
+if [ $iaas == "kubeadm" ] || [ $iaas == "k8s" ] || [ $iaas == "GCP" ]; then
     config_params["MYSQL_DATABASE_HOST"]="wso2apim-with-analytics-rdbms-service"
     config_params["DATABASE_USERNAME"]="cellery"
     db_passwd=$(cat /dev/urandom | env LC_CTYPE=C tr -dc a-zA-Z0-9 | head -c 16; echo)
@@ -552,7 +552,7 @@ if [[ -n ${IAAS/[ ]*\n/} ]]; then
         k8s_version=${K8S_VERSION:-1.11.3-00}
         flannel_version=${FLANNEL_VERSION:-0.10.0}
     elif [ $iaas == "GCP" ]; then
-        k8s_version=${K8S_VERSION:-1.11.6-gke.2}
+        k8s_version=${K8S_VERSION:-1.11.8-gke.5}
         #gcp_project=${GCP_PROJECT:-myc-ellery}
         #gcp_compute_region=${GCP_COMPUTE_REGION:-us-west1}
         gcp_compute_zone=${GCP_COMPUTE_ZONE:-us-west1-c}
@@ -675,7 +675,7 @@ if [ $install_control_plane == "y" ]; then
             #Read db user / passwd
             read_control_plane_datasources_configs
             #Update the sql
-            update_control_plance_sql $download_path
+            update_control_plance_sql $download_path $release_version
             deploy_mysql_server_gcp $download_path \
                                     "cellery-mysql-$((1 + RANDOM % 1000))" \
                                     $gcp_compute_zone \
