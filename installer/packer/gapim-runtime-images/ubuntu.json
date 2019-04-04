@@ -127,6 +127,6 @@
         "vagrantfile_template": "",
         "version": "0.2.0",
         "virtualbox_guest_os_type": "Ubuntu_64",
-        "vm_name": "cellery-runtime-complete"
+        "vm_name": "cellery-runtime-local"
     }
 }
