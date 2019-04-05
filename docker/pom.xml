@@ -33,5 +33,6 @@
     <modules>
         <module>microgateway</module>
         <module>global-apim</module>
+        <module>lightweight-idp</module>
     </modules>
 </project>
