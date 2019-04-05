@@ -586,8 +586,8 @@
         <ReturnOnlyMappedLocalRoles>false</ReturnOnlyMappedLocalRoles>
     </SPRoleManagement-->
     <EnableAskPasswordAdminUI>false</EnableAskPasswordAdminUI>
-    <EnableRecoveryEndpoint>true</EnableRecoveryEndpoint>
-    <EnableSelfSignUpEndpoint>true</EnableSelfSignUpEndpoint>
+    <EnableRecoveryEndpoint>false</EnableRecoveryEndpoint>
+    <EnableSelfSignUpEndpoint>false</EnableSelfSignUpEndpoint>
     <AuthenticationPolicy>
         <CheckAccountExist>true</CheckAccountExist>
     </AuthenticationPolicy>
