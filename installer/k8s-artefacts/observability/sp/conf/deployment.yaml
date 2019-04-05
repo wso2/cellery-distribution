@@ -31,11 +31,11 @@ celleryObservabilityPortal:
     # Cellery Dashboard URL
   dashboardURL: http://cellery-dashboard
     # IDP URL
-  idp: https://idp.cellery-system
+  idpURL: https://idp.cellery-system
     # Default username for IDP client registeration and token introspection
-  username: admin
+  idpAdminUsername: admin
     # Default password for IDP client registeration and token introspection
-  password: admin
+  idpAdminPassword: admin
 
 wso2.transport.http:
   transportProperties:
