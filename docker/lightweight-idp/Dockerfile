@@ -23,6 +23,7 @@ ARG FILES=./target/files
 
 RUN mkdir ${USER_HOME}/wso2is-lightweightv1/repository/deployment/server/webapps/authenticationendpoint
 
-RUN cd ${USER_HOME}/wso2is-lightweightv1/repository/deployment/server/webapps/authenticationendpoint ; jar -xvf ${USER_HOME}/wso2is-lightweightv1/repository/deployment/server/webapps/authenticationendpoint.war
+RUN cd ${USER_HOME}/wso2is-lightweightv1/repository/deployment/server/webapps/authenticationendpoint ; \
+jar -xvf ${USER_HOME}/wso2is-lightweightv1/repository/deployment/server/webapps/authenticationendpoint.war
 
 COPY --chown=wso2carbon:wso2 ${FILES}/authenticationendpoint/ ${USER_HOME}/wso2is-lightweightv1/repository/deployment/server/webapps/authenticationendpoint/

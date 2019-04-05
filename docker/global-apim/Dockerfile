@@ -31,6 +31,7 @@ COPY --chown=wso2carbon:wso2 ${FILES}/webapps/** ${USER_HOME}/wso2-tmp/server/we
 
 RUN mkdir ${USER_HOME}/wso2am-2.6.0/repository/deployment/server/webapps/authenticationendpoint
 
-RUN cd ${USER_HOME}/wso2am-2.6.0/repository/deployment/server/webapps/authenticationendpoint ; jar -xvf ${USER_HOME}/wso2am-2.6.0/repository/deployment/server/webapps/authenticationendpoint.war
+RUN cd ${USER_HOME}/wso2am-2.6.0/repository/deployment/server/webapps/authenticationendpoint ; \
+jar -xvf ${USER_HOME}/wso2am-2.6.0/repository/deployment/server/webapps/authenticationendpoint.war
 
 COPY --chown=wso2carbon:wso2 ${FILES}/authenticationendpoint/ ${USER_HOME}/wso2am-2.6.0/repository/deployment/server/webapps/authenticationendpoint/
