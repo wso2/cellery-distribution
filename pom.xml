@@ -95,6 +95,11 @@
             </dependency>
             <dependency>
                 <groupId>io.cellery.security</groupId>
+                <artifactId>io.cellery.security.post.idp.init</artifactId>
+                <version>${cellery.mesh.security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cellery.security</groupId>
                 <artifactId>io.cellery.security.sts.endpoint.core</artifactId>
                 <version>${cellery.mesh.security.version}</version>
             </dependency>
@@ -271,7 +276,7 @@
     <properties>
         <!-- Cellery Dependencies -->
         <cellery.mesh.obesrvability.version>0.1.0</cellery.mesh.obesrvability.version>
-        <cellery.mesh.security.version>0.1.0</cellery.mesh.security.version>
+        <cellery.mesh.security.version>0.1.1-SNAPSHOT</cellery.mesh.security.version>
         <carbon.identity.oauth2.version>6.0.105</carbon.identity.oauth2.version>
 
         <!-- External Jars for Tracing Utilization -->

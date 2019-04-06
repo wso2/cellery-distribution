@@ -42,6 +42,10 @@
         </dependency>
         <dependency>
             <groupId>io.cellery.security</groupId>
+            <artifactId>io.cellery.security.post.idp.init</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.cellery.security</groupId>
             <artifactId>io.cellery.security.token.endpoint</artifactId>
             <type>war</type>
         </dependency>
@@ -130,7 +134,8 @@
                             <includeScope>runtime</includeScope>
                             <outputDirectory>${project.build.directory}/files/lib/</outputDirectory>
                             <excludeArtifactIds>
-                                io.cellery.security.token.endpoint, io.cellery.observability.tracing.synapse.handler
+                                io.cellery.security.token.endpoint, io.cellery.observability.tracing.synapse.handler,
+                                io.cellery.security.post.idp.init
                             </excludeArtifactIds>
                             <excludeTransitive>true</excludeTransitive>
                         </configuration>

@@ -21,6 +21,9 @@ FROM wso2cellery/wso2is-lightweight-base:5.8.0
 ARG USER_HOME=/home/wso2carbon
 ARG FILES=./target/files
 
+# Copy the jar files
+COPY --chown=wso2carbon:wso2 ${FILES}/dropins/** ${USER_HOME}/wso2is-lightweightv1/repository/components/dropins/
+
 RUN mkdir ${USER_HOME}/wso2is-lightweightv1/repository/deployment/server/webapps/authenticationendpoint
 
 RUN cd ${USER_HOME}/wso2is-lightweightv1/repository/deployment/server/webapps/authenticationendpoint ; \
