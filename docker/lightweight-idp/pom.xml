@@ -31,6 +31,12 @@
     <description>Docker files for Cellery Control Plane Lightweight IDP</description>
     <packaging>pom</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.cellery.security</groupId>
+            <artifactId>io.cellery.security.post.idp.init</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -56,6 +62,25 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+            <execution>
+                <id>copy-osgi-libs</id>
+                <phase>initialize</phase>
+                <goals>
+                    <goal>copy-dependencies</goal>
+                </goals>
+                <configuration>
+                    <overWriteReleases>false</overWriteReleases>
+                    <includeScope>runtime</includeScope>
+                    <outputDirectory>${project.build.directory}/files/dropins</outputDirectory>
+                    <excludeTransitive>true</excludeTransitive>
+                </configuration>
+            </execution>
+            </executions>
             </plugin>
 
             <!--Build Docker image-->
