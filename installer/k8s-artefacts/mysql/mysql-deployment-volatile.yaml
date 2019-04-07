@@ -51,8 +51,8 @@ spec:
         volumeMounts:
         - name: mysql-dbscripts
           mountPath: /docker-entrypoint-initdb.d
-        - name: apim-rdbms-persistent-storage
-          mountPath: /var/lib/mysql
+#        - name: apim-rdbms-persistent-storage
+#          mountPath: /var/lib/mysql
         args: ["--max-connections", "10000"]
       volumes:
       - name: mysql-dbscripts
