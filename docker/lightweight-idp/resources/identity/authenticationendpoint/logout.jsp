@@ -1,12 +1,12 @@
 <%--
-  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~ Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~
-  ~  WSO2 Inc. licenses this file to you under the Apache License,
-  ~  Version 2.0 (the "License"); you may not use this file except
-  ~  in compliance with the License.
-  ~  You may obtain a copy of the License at
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
   ~
-  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing,
   ~ software distributed under the License is distributed on an
@@ -16,8 +16,8 @@
   ~ under the License.
   --%>
 
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="localize.jsp" %>
-<%@include file="init-url.jsp" %>
 
 <html>
 <head>
@@ -42,14 +42,16 @@
 <script type="text/javascript">
     function approved() {
         document.getElementById('consent').value = "approve";
-        document.getElementById("oidc_logout_consent_form").submit();
+        document.getElementById("oauth2_authz").submit();
     }
-
+    function approvedAlways() {
+        document.getElementById('consent').value = "approveAlways";
+        document.getElementById("oauth2_authz").submit();
+    }
     function deny() {
         document.getElementById('consent').value = "deny";
-        document.getElementById("oidc_logout_consent_form").submit();
+        document.getElementById("oauth2_authz").submit();
     }
-
 </script>
 
 <!-- header -->
@@ -70,45 +72,11 @@
         <div class="col-md-12">
 
             <!-- content -->
-            <div class="container col-xs-10 col-sm-6 col-md-6 col-lg-3 col-centered wr-content wr-login col-centered">
+            <div class="container col-xs-10 col-sm-6 col-md-6 col-lg-5 col-centered wr-content wr-login col-centered">
                 <div class="padding-top-double">
                     <h2 class="wr-title uppercase grey-bg white top-header">
-                        <%=AuthenticationEndpointUtil.i18n(resourceBundle, "openid.connect.logout")%>
+                        <%=AuthenticationEndpointUtil.i18n(resourceBundle, "logged.out")%>
                     </h2>
-                </div>
-
-                <div class="boarder-all ">
-                    <div class="clearfix"></div>
-                    <form action="<%=oidcLogoutURL%>" method="post" id="oidc_logout_consent_form"
-                          name="oidc_logout_consent_form"
-                          class="form-horizontal">
-                        <div class="padding-double login-form">
-                            <div class="form-group">
-                                <p><strong>
-                                    <%=AuthenticationEndpointUtil.i18n(resourceBundle, "do.you.want.to.logout")%>
-                                    </strong>
-                                </p>
-                            </div>
-                            <table width="100%" class="styledLeft">
-                                <tbody>
-                                <tr>
-                                    <td class="buttonRow" colspan="2">
-                                        <div style="text-align:left;">
-                                            <input type="button" class="btn btn-primary" id="approve" name="approve"
-                                                   onclick="javascript: approved(); return false;"
-                                                   value="<%=AuthenticationEndpointUtil.i18n(resourceBundle, "yes")%>"/>
-                                            <input class="btn" type="reset"
-                                                   value="<%=AuthenticationEndpointUtil.i18n(resourceBundle, "no")%>"
-                                                   onclick="javascript: deny(); return false;"/>
-                                        </div>
-
-                                        <input type="hidden" name="consent" id="consent" value="deny"/>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -116,8 +84,6 @@
     </div>
 </div>
 <!-- /content/body -->
-
-</div>
 
 <!-- footer -->
 <footer class="footer">
@@ -135,3 +101,6 @@
 <script src="libs/bootstrap_3.3.5/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+
+
