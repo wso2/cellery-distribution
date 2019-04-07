@@ -518,7 +518,7 @@ public class UpdateManager {
     private static Map<String, Path> createAPIResources(API api) {
         Map<String, Path> pathMap = new HashMap<>();
         for (ApiDefinition definition : api.getDefinitions()) {
-            Path path = new Path();
+            Path path = pathMap.computeIfAbsent(definition.getPath(), (key) -> new Path());
             Operation op = new Operation();
 
             Map<String, Response> resMap = new HashMap<>();
@@ -536,10 +536,15 @@ public class UpdateManager {
                 case Constants.JsonParamNames.POST:
                     path.setPost(op);
                     break;
+                case Constants.JsonParamNames.PUT:
+                    path.setPut(op);
+                    break;
+                case Constants.JsonParamNames.DELETE:
+                    path.setDelete(op);
+                    break;
                 default:
                     log.error("HTTP Method not implemented");
             }
-            pathMap.put(definition.getPath(), path);
         }
         return pathMap;
     }
