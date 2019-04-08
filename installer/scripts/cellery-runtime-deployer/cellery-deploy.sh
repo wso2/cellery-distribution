@@ -247,7 +247,7 @@ kubectl apply -f ${download_location}/distribution-${release_version}/installer/
 kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/mysql/mysql-persistent-volume-claim.yaml -n cellery-system
 kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/mysql/mysql-deployment.yaml -n cellery-system
 #Wait till the mysql deployment availability
-kubectl wait deployment/wso2apim-with-analytics-mysql-deployment --for condition=available --timeout=6000s -n cellery-system
+kubectl wait deployment/wso2apim-with-analytics-mysql-deployment --for condition=available --timeout=300s -n cellery-system
 kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/mysql/mysql-service.yaml -n cellery-system
 }
 
@@ -384,7 +384,7 @@ kubectl create configmap apim-security --from-file=${download_location}/distribu
 #Create gateway deployment and the service
 kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/global-apim/global-apim.yaml -n cellery-system
 #Wait till the gateway deployment availability
-kubectl wait deployment.apps/gateway --for condition=available --timeout=6000s -n cellery-system
+kubectl wait deployment.apps/gateway --for condition=available --timeout=300s -n cellery-system
 }
 
 function deploy_sp_dashboard_worker () {
@@ -445,7 +445,7 @@ kubectl apply -f ${download_location}/distribution-${release_version}/installer/
 kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/system/istio-demo-cellery.yaml
 kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/system/istio-gateway.yaml
 
-kubectl wait deployment/istio-pilot --for condition=available --timeout=6000s -n istio-system
+kubectl wait deployment/istio-pilot --for condition=available --timeout=300s -n istio-system
 #Enabling Istio injection
 kubectl label namespace default istio-injection=enabled
 }
