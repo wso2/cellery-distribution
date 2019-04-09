@@ -132,6 +132,13 @@ kubectl create configmap sp-worker-conf --from-file=${download_path}/distributio
 #Create SP dashboard configmaps
 kubectl create configmap observability-portal-config --from-file=${download_path}/mesh-observability-${release_version}/components/global/portal/io.cellery.observability.ui/node-server/config -n cellery-system
 
+# Create K8s Metrics Config-maps
+kubectl create configmap k8s-metrics-prometheus-conf --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/prometheus/config -n cellery-system
+kubectl create configmap k8s-metrics-grafana-conf --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/config -n cellery-system
+kubectl create configmap k8s-metrics-grafana-datasources --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/datasources -n cellery-system
+kubectl create configmap k8s-metrics-grafana-dashboards --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/dashboards -n cellery-system
+kubectl create configmap k8s-metrics-grafana-dashboards-default --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/dashboards/default -n cellery-system
+
 #Create ingress-nginx deployment
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/mandatory.yaml
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/service-nodeport.yaml
