@@ -38,6 +38,13 @@ mkdir -p /mnt/mysql
 #Change the folder ownership to mysql server user.
 chown 999:999 /mnt/mysql
 
+if [ -d /mnt/apim_repository_deployment_server ]; then
+    mv /mnt/apim_repository_deployment_server "/mnt/apim_repository_deployment_server.$(date +%s)"
+fi
+#Create folders required by the APIM PVC
+mkdir -p /mnt/apim_repository_deployment_server
+chown 802:802 /mnt/apim_repository_deployment_server
+
 declare -A config_params
 config_params["MYSQL_DATABASE_HOST"]="wso2apim-with-analytics-rdbms-service"
 config_params["DATABASE_USERNAME"]="cellery"
@@ -47,6 +54,7 @@ config_params["DATABASE_PASSWORD"]=$db_passwd
 for param in "${!config_params[@]}"
 do
     sed -i "s/$param/${config_params[$param]}/g" ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/datasources/master-datasources.xml
+    sed -i "s/$param/${config_params[$param]}/g" ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/datasources/master-datasources.xml
     sed -i "s/$param/${config_params[$param]}/g" ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/sp/conf/deployment.yaml
 done
 
@@ -54,7 +62,6 @@ for param in "${!config_params[@]}"
 do
     sed -i "s/$param/${config_params[$param]}/g" ${download_path}/distribution-${release_version}/installer/k8s-artefacts/mysql/dbscripts/init.sql
 done
-
 
 #Deploy Cellery k8s artifacts
 #Create Cellery ns
@@ -103,6 +110,20 @@ kubectl create configmap identity-server-tomcat --from-file=${download_path}/dis
 
 #Create IDP deployment and the service
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/global-idp.yaml -n cellery-system
+
+#Create apim local volumes and volume claims
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/persistent-volume-local.yaml -n cellery-system
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/persistent-volume-claim-local.yaml -n cellery-system
+
+#Create the gw config maps
+kubectl create configmap gw-conf --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf -n cellery-system
+kubectl create configmap gw-conf-datasources --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/datasources/ -n cellery-system
+
+#Create KM config maps
+kubectl create configmap conf-identity --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/identity -n cellery-system
+kubectl create configmap apim-template --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/resources/api_templates -n cellery-system
+kubectl create configmap apim-tomcat --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/tomcat -n cellery-system
+kubectl create configmap apim-security --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/security -n cellery-system
 
 #Observability
 #Create SP worker configmaps
