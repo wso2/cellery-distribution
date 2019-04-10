@@ -337,3 +337,13 @@ a:hover {
 .alert-container {
     padding-bottom: 20px;
 }
+.btn-primary {
+    background-color: #69b26d;
+    color: #fff;
+    border-color: #69b26d;;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background-color: #69b26d;
+    color: #fff;
+    border-color: #69b26d;;
+}

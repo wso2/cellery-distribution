@@ -83,18 +83,17 @@
                           name="oidc_logout_consent_form"
                           class="form-horizontal">
                         <div class="padding-double login-form">
-                            <div class="form-group">
-                                <p><strong>
-                                    <%=AuthenticationEndpointUtil.i18n(resourceBundle, "do.you.want.to.logout")%>
-                                    </strong>
-                                </p>
-                            </div>
+                            <p class="margin-bottom"><strong>
+                                <%=AuthenticationEndpointUtil.i18n(resourceBundle, "do.you.want.to.logout")%>
+                                </strong>
+                            </p>
                             <table width="100%" class="styledLeft">
                                 <tbody>
                                 <tr>
                                     <td class="buttonRow" colspan="2">
-                                        <div style="text-align:left;">
-                                            <input type="button" class="btn btn-primary" id="approve" name="approve"
+                                        <div>
+                                            <input type="button" class="btn btn-primary" id="approve"
+                                                   name="approve"
                                                    onclick="javascript: approved(); return false;"
                                                    value="<%=AuthenticationEndpointUtil.i18n(resourceBundle, "yes")%>"/>
                                             <input class="btn" type="reset"
