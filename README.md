@@ -27,7 +27,7 @@ $ curl <cellery-deploy script url> | bash -s -- <k8s provider>
 ```
 
 ```bash
-$ curl https://raw.githubusercontent.com/wso2-cellery/distribution/v0.1.0/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh | bash -s -- kubeadm
+$ curl https://raw.githubusercontent.com/wso2-cellery/distribution/master/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh | bash -s -- kubeadm
 ```
 
 ### Google Cloud Platform
@@ -39,7 +39,7 @@ $ curl <cellery deploy script url> | bash -s -- <K8s provider> <GCP Project ID> 
 ```
 
 ```bash
-$ curl https://raw.githubusercontent.com/wso2-cellery/distribution/v0.1.0/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh | bash -s -- <K8s provider> <GCP Project ID> <GCP Compute>
+$ curl https://raw.githubusercontent.com/wso2-cellery/distribution/master/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh | bash -s -- <K8s provider> <GCP Project ID> <GCP Compute>
 ```
 ## Cleaning up Cellery runtime
 
@@ -47,26 +47,6 @@ Simply run following command to cleanup local kubeadm cluster
 
 ```bash
 $ cat cellery-cleanup.sh | bash -s -- kubeadm
-```
-  
-  
-
-## Repo Structure  
-
-```
-├── components
-│   ├── gateway
-│   │   └── io.cellery.cell.gateway.initializer (Cell gateway & Cell Gateway initializer)  
-├── docker
-│   ├── global-apim
-│   ├── microgateway
-│   │   ├── init-container
-│   │   ├── init-container-base
-│   │   └── microgateway-container
-└── installer
-    ├── k8s-artefacts (K8s artifacts of the runtime)
-    └── scripts
-        └── cellery-runtime-deployer
 ```
 
 
