@@ -54,6 +54,11 @@ spec:
         - name: apim-rdbms-persistent-storage
           mountPath: /var/lib/mysql
         args: ["--max-connections", "10000"]
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 45
+          timeoutSeconds: 5
       volumes:
       - name: mysql-dbscripts
         configMap:
