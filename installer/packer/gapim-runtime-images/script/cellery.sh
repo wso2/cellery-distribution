@@ -18,7 +18,7 @@
 # ------------------------------------------------------------------------
 
 download_path=${DOWNLOAD_PATH:-tmp-cellery}
-release_version=0.2.0
+release_archive_version=master
 release_archive_version=v0.2.0
 
 #Download k8s artifacts
