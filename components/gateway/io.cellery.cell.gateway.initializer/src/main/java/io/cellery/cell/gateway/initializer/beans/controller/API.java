@@ -40,6 +40,9 @@ public class API {
     @JsonProperty(Constants.JsonParamNames.GLOBAL)
     private boolean global;
 
+    @JsonProperty(Constants.JsonParamNames.AUTHENTICATE)
+    private boolean authenticate;
+
     public String getContext() {
         return context;
     }
@@ -70,5 +73,13 @@ public class API {
 
     public void setGlobal(boolean global) {
         this.global = global;
+    }
+
+    public boolean isAuthenticate() {
+        return authenticate;
+    }
+
+    public void setAuthenticate(boolean authenticate) {
+        this.authenticate = authenticate;
     }
 }
