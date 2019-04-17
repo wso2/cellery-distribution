@@ -15,8 +15,9 @@
 #  under the License.
 
 PROJECT_ROOT := $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
-DOCKER_REPO := wso2cellery
-DOCKER_IMAGE_TAG := latest
+GIT_REVISION := $(shell git rev-parse --verify HEAD)
+DOCKER_REPO ?= wso2cellery
+DOCKER_IMAGE_TAG ?= $(GIT_REVISION)
 
 
 all: clean build docker
@@ -33,12 +34,22 @@ build:
 
 
 .PHONY: docker
-docker: build
-	mvn install -f docker/pom.xml -Ddocker.repo.name=${DOCKER_REPO} -Ddocker.image.tag=${DOCKER_IMAGE_TAG}
+docker: 
+	[ -d "docker/global-apim/target" ] || mvn initialize -f docker/pom.xml
+	cd docker/global-apim; \
+	docker build -t ${DOCKER_REPO}/wso2am:${DOCKER_IMAGE_TAG} .
+	cd docker/microgateway/init-container; \
+	docker build -t ${DOCKER_REPO}/cell-gateway-init:${DOCKER_IMAGE_TAG} .
+	cd docker/microgateway/microgateway-container; \
+	docker build -t ${DOCKER_REPO}/cell-gateway:${DOCKER_IMAGE_TAG} .
+	cd docker/lightweight-idp; \
+	docker build -t ${DOCKER_REPO}/wso2is-lightweight:${DOCKER_IMAGE_TAG} .
 
 
 .PHONY: docker-push
-docker-push:
+docker-push: docker
 	docker push ${DOCKER_REPO}/cell-gateway:${DOCKER_IMAGE_TAG}
 	docker push ${DOCKER_REPO}/cell-gateway-init:${DOCKER_IMAGE_TAG}
 	docker push ${DOCKER_REPO}/wso2am:${DOCKER_IMAGE_TAG}
+	docker push ${DOCKER_REPO}/wso2is-lightweight:${DOCKER_IMAGE_TAG}
+
