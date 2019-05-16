@@ -583,13 +583,13 @@
         </PolicyDeployer>
         <BlockCondition>
             <Enabled>true</Enabled>
-            <!--InitDelay>300000</InitDelay>
-            <Period>3600000</Period-->
+            <InitDelay>120000</InitDelay>
+            <Period>3600000</Period>
         </BlockCondition>
         <JMSConnectionDetails>
             <Enabled>true</Enabled>
             <Destination>throttleData</Destination>
-            <!--InitDelay>300000</InitDelay-->
+            <InitDelay>120000</InitDelay>
             <JMSConnectionParameters>
                 <transport.jms.ConnectionFactoryJNDIName>TopicConnectionFactory</transport.jms.ConnectionFactoryJNDIName>
                 <transport.jms.DestinationType>topic</transport.jms.DestinationType>
