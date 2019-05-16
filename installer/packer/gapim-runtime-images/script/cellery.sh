@@ -26,6 +26,7 @@ mkdir ${download_path}
 distribution_url=${GIT_DISTRIBUTION_URL:-https://github.com/wso2-cellery/distribution/archive}
 wget ${distribution_url}/${release_archive_version}.zip -O ${download_path}/${release_version}.zip -a cellery-setup.log
 unzip ${download_path}/${release_version}.zip -d ${download_path}
+sed -i "s#<EnableAdvanceThrottling>.*</EnableAdvanceThrottling>#<EnableAdvanceThrottling>false</EnableAdvanceThrottling>#" ${download_path}/distribution-master/installer/k8s-artefacts/global-apim/conf/api-manager.xml
 
 mesh_observability_url=${GIT_MESH_OBSERVABILITY_URL:-https://github.com/wso2-cellery/mesh-observability/archive}
 wget ${mesh_observability_url}/${release_archive_version}.zip -O ${download_path}/${release_version}.zip -a cellery-setup.log
