@@ -19,13 +19,13 @@
     <parent>
         <groupId>io.cellery.distribution</groupId>
         <artifactId>io.cellery.distribution.components</artifactId>
-        <version>0.2.1-SNAPSHOT</version>
+        <version>0.2.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>io.cellery.distribution.components.gateway</artifactId>
-    <version>0.2.1-SNAPSHOT</version>
+    <version>0.2.1</version>
     <name>Cellery Distribution - Control Plance Gateway</name>
     <description>Control Plance Gateway</description>
     <packaging>pom</packaging>
