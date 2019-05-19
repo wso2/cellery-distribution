@@ -275,7 +275,7 @@
 
     <properties>
         <!-- Cellery Dependencies -->
-        <cellery.mesh.obesrvability.version>0.2.1</cellery.mesh.obesrvability.version>
+        <cellery.mesh.obesrvability.version>0.2.2</cellery.mesh.obesrvability.version>
         <cellery.mesh.security.version>0.2.1</cellery.mesh.security.version>
         <carbon.identity.oauth2.version>6.0.105</carbon.identity.oauth2.version>
 
