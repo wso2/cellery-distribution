@@ -23,15 +23,6 @@ spec:
       labels:
         deployment: wso2apim-with-analytics-mysql
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: disk
-                operator: In
-                values:
-                - local
       containers:
       - name: wso2apim-with-analytics-mysql
         image: mysql:5.7
