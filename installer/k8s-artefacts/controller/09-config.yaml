@@ -70,6 +70,8 @@ data:
   cell-gateway-init-image: wso2cellery/cell-gateway-init
   cell-gateway-image: wso2cellery/cell-gateway
   oidc-filter-image: wso2cellery/envoy-oidc-filter
+  skip-tls-verification: "true"
+  enable-autoscaling: "false"
   cell-sts-config: |
     {
         "endpoint": "https://gateway.cellery-system:9443/api/identity/cellery-auth/v1.0/sts/token",
@@ -83,12 +85,11 @@ data:
         "OPAQueryPrefix" : "data/cellery/io"
     }
   opa-default-policy: |
-    package cellery.io
+      package cellery.io
 
-    default allow = true
+      default allow = true
   cell-sts-image: wso2cellery/cell-sts
   cell-sts-opa-image: openpolicyagent/opa:0.10.3
-  enable-autoscaling: "false"
 kind: ConfigMap
 metadata:
   name: cellery-config
