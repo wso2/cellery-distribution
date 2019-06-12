@@ -450,6 +450,13 @@ kubectl wait deployment/istio-pilot --for condition=available --timeout=300s -n 
 kubectl label namespace default istio-injection=enabled
 }
 
+function deploy_knative_serving () {
+local download_location=$1
+local release_version=$2
+#Install Knative serving
+kubectl apply -f ${download_location}/distribution-${release_version}/installer/k8s-artefacts/system/knative-serving.yaml
+}
+
 function deploy_cellery_crds () {
 local download_location=$1
 local release_version=$2
@@ -640,6 +647,9 @@ init_control_plane $download_path $iaas $release_version
 #Deploy Cellery Data plane
 echo "🔧 Deploying Istio version $istio_version"
 deploy_istio $download_path $istio_version $release_version
+
+echo "🔧 Deploying Knative"
+deploy_knative_serving $download_path $release_version
 
 echo "🔧 Deploying Cellery CRDs"
 deploy_cellery_crds $download_path $release_version
