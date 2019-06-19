@@ -92,9 +92,10 @@ kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/05-crd-gateway.yaml
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/06-crd-token-service.yaml
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/07-crd-service.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/08-config.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/09-autoscale-policy.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/10-controller.yaml
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/08-crd-autoscale-policy.yaml
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/09-config.yaml
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/10-secret.yaml
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/11-controller.yaml
 sleep 120
 
 kubectl create configmap mysql-dbscripts --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/mysql/dbscripts/ -n cellery-system
