@@ -90,10 +90,6 @@ kubectl wait deployment/istio-pilot --for condition=available --timeout=6000s -n
 kubectl label namespace default istio-injection=enabled
 sleep 120
 
-#Create Knative Serving deployment
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/knative-serving.yaml
-sleep 60
-
 #Create Cellery CRDs.
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/01-cluster-role.yaml
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/02-service-account.yaml
