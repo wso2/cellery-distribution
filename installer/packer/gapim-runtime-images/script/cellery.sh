@@ -82,6 +82,8 @@ sleep 120
 
 #Create Knative Serving deployment
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/knative-serving.yaml
+# Fix for installing only knative serving CRD's
+kubectl delete namespaces knative-serving
 sleep 60
 
 #Create Cellery CRDs.
