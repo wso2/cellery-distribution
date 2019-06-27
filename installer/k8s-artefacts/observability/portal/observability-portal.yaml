@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cellery-observability-portal
@@ -21,6 +21,10 @@ metadata:
     app: cellery-observability-portal
     node: cellery-observability-portal
 spec:
+  selector:
+    matchLabels:
+      app: cellery-observability-portal
+      node: cellery-observability-portal
   strategy:
     type: Recreate
   template:

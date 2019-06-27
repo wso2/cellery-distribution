@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: k8s-metrics-grafana
@@ -6,6 +6,9 @@ metadata:
   labels:
     app: k8s-metrics-grafana
 spec:
+  selector:
+    matchLabels:
+      app: k8s-metrics-grafana
   strategy:
     type: Recreate
   replicas: 1

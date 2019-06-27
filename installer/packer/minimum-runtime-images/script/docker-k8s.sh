@@ -17,7 +17,7 @@
 #
 # ------------------------------------------------------------------------
 
-K8S_VERSION=1.11.3-00
+K8S_VERSION=1.14.3-00
 node_type=master
 UBUNTU_VERSION=$(lsb_release -r | awk ' /'Release'/ {print $2} ')
 
@@ -59,7 +59,7 @@ add-apt-repository "deb [arch=amd64] http://apt.kubernetes.io/ kubernetes-xenial
 
 #Install K8s components
 apt-get update
-apt-get install -y kubelet=$K8S_VERSION kubeadm=$K8S_VERSION kubectl=$K8S_VERSION kubernetes-cni=0.6.0-00
+apt-get install -y kubelet=$K8S_VERSION kubeadm=$K8S_VERSION kubectl=$K8S_VERSION kubernetes-cni=0.7.5-00
 
 apt-mark hold kubelet kubeadm kubectl
 
@@ -84,6 +84,6 @@ chown -R vagrant:vagrant $HOME/.kube
 kubectl taint nodes --all node-role.kubernetes.io/master-
 
 #Install Flannel network
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
 
 echo "Done."
