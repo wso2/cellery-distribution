@@ -284,14 +284,15 @@ spec:
             - --udp-services-configmap=$(POD_NAMESPACE)/udp-services
             - --publish-service=$(POD_NAMESPACE)/ingress-nginx
             - --annotations-prefix=nginx.ingress.kubernetes.io
-          securityContext:
-            capabilities:
-                drop:
-                - ALL
-                add:
-                - NET_BIND_SERVICE
-            # www-data -> 33
-            runAsUser: 33
+# Temp fix for gcp 1.13 permission issue
+#          securityContext:
+#            capabilities:
+#                drop:
+#                - ALL
+#                add:
+#                - NET_BIND_SERVICE
+#            # www-data -> 33
+#            runAsUser: 33
           env:
             - name: POD_NAME
               valueFrom:
