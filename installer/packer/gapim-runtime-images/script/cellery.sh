@@ -127,6 +127,13 @@ kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-
 #Wait till the gateway deployment availability
 kubectl wait deployment.apps/gateway --for condition=available --timeout=300s -n cellery-system
 
+#Create the IDP config maps
+kubectl create configmap identity-server-conf --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf -n cellery-system
+kubectl create configmap identity-server-conf-datasources --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/datasources/ -n cellery-system
+kubectl create configmap identity-server-conf-identity --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/identity -n cellery-system
+kubectl create configmap identity-server-tomcat --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/tomcat -n cellery-system
+#kubectl create configmap identity-server-security --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/security -n cellery-system
+
 #Observability
 #Create SP worker configmaps
 kubectl create configmap sp-worker-siddhi --from-file=${download_path}/mesh-observability-${release_version}/components/global/core/io.cellery.observability.siddhi.apps/src/main/siddhi -n cellery-system
