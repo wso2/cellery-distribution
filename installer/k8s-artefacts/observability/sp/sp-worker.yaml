@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
       -
-        image: wso2cellery/sp-worker:0.3.0
+        image: wso2cellery/sp-worker
         name: wso2sp-worker
         imagePullPolicy: Always
         resources:
