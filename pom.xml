@@ -215,7 +215,7 @@
         <repository>
             <id>cellery.mesh.security.repo</id>
             <name>Security Staging Repository</name>
-            <url>https://maven.wso2.org/nexus/content/repositories/iocellerysecurity-1019/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/iocellerysecurity-1020</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -227,7 +227,7 @@
         <repository>
             <id>cellery.mesh.observability.repo</id>
             <name>Observability Staging Repository</name>
-            <url>https://maven.wso2.org/nexus/content/repositories/iocelleryobservability-1025/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/iocelleryobservability-1027</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
