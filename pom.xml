@@ -26,7 +26,7 @@
     <groupId>io.cellery.distribution</groupId>
     <artifactId>io.cellery.distribution.parent</artifactId>
     <name>Cellery Distribution</name>
-    <version>0.3.0</version>
+    <version>0.3.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -176,7 +176,7 @@
         <url>https://github.com/cellery-io/distribution.git</url>
         <developerConnection>scm:git:https://github.com/cellery-io/distribution.git</developerConnection>
         <connection>scm:git:https://github.com/cellery-io/distribution.git</connection>
-        <tag>v0.3.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <repositories>

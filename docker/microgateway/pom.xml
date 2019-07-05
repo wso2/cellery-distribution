@@ -19,13 +19,13 @@
     <parent>
         <groupId>io.cellery.distribution</groupId>
         <artifactId>io.cellery.distribution.docker</artifactId>
-        <version>0.3.0</version>
+        <version>0.3.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>io.cellery.distribution.docker.microgateway</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1-SNAPSHOT</version>
     <name>Cellery Distribution - Dockerfiles</name>
     <description>Dockerfiles for Cellery Micro GW</description>
     <packaging>pom</packaging>
