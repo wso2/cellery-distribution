@@ -67,9 +67,9 @@ data:
     [b7a.observability.tracing]
     enabled=false
 
-  cell-gateway-init-image: wso2cellery/cell-gateway-init:0.3.1
-  cell-gateway-image: wso2cellery/cell-gateway:0.3.1
-  oidc-filter-image: wso2cellery/envoy-oidc-filter:0.3.1
+  cell-gateway-init-image: wso2cellery/cell-gateway-init
+  cell-gateway-image: wso2cellery/cell-gateway
+  oidc-filter-image: wso2cellery/envoy-oidc-filter
   skip-tls-verification: "true"
   enable-autoscaling: "true"
   cell-sts-config: |
@@ -88,7 +88,7 @@ data:
       package cellery.io
 
       default allow = true
-  cell-sts-image: wso2cellery/cell-sts:0.3.1
+  cell-sts-image: wso2cellery/cell-sts
   cell-sts-opa-image: openpolicyagent/opa:0.10.3
   cell-sts-jwks-image: wso2cellery/jwks-server
 kind: ConfigMap
