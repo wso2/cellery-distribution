@@ -12,22 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-dependencies:
-- name: mysql
-  version: 0.19.0
-  condition: mysql.enabled
-- name: controller
-  version: 0.1.0
-  condition: controller.enabled
-- name: apim
-  version: 0.1.0
-  condition: apim.enabled
-- name: idp
-  version: 0.1.0
-  condition: idp.enabled
-- name: observability-portal
-  version: 0.1.0
-  condition: observability-portal.enabled
-- name: sp-worker
-  version: 0.1.0
-  condition: sp-worker.enabled
+apiVersion: v1
+appVersion: "1.0"
+description: Cellery Controller Helm chart for Kubernetes
+name: controller
+version: 0.1.0
