@@ -1,0 +1,29 @@
+
+
+# Default values for global-apim.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+namespace: "cellery-system"
+svcaccount: "cellerysvc-account"
+
+# persistence:
+#   enabled: true
+#   media: default value "volatile" "local-filesystem" or "nfs"
+#   nfsServerIp: 192.168.100.10
+#   sharedDeploymentLocation: /deployment
+
+persistence:
+  enabled: false
+#  media: "volatile"
+
+#celleryDbUser: "cellery"
+#celleryDbPassword: "cellerypasswd"
+#celleryDbHost: "cellery-mysql"
+
+service:
+  port: "9443"
+
+
+celleryRuntime:
+  db:
+    host: "cellery-runtime-mysql"

@@ -1,0 +1,8 @@
+#celleryDbUser: "cellery"
+#celleryDbPassword: "cellerypasswd"
+#celleryDbHost: "cellery-mysql"
+
+
+celleryRuntime:
+  db:
+    host: "cellery-runtime-mysql"

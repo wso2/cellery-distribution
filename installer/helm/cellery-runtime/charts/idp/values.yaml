@@ -1,0 +1,24 @@
+username: ""
+password: ""
+email: ""
+namespace: "cellery-system"
+svcaccount: "cellerysvc-account"
+serverIp: ""
+sharedDeploymentLocationPath: ""
+sharedTenantsLocationPath: ""
+
+#celleryDbUser: "cellery"
+#celleryDbPassword: "cellerypasswd"
+#celleryDbHost: "cellery-mysql"
+
+persistence:
+  enabled: false
+#  media: "volatile"
+
+service:
+  port: "9443"
+
+
+celleryRuntime:
+  db:
+    host: "cellery-runtime-mysql"
