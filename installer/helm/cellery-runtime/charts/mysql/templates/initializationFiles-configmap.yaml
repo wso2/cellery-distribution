@@ -1,0 +1,10 @@
+{{- if .Values.initializationFilesFromFs -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "mysql.fullname" . }}-initialization
+data:
+  0-init.sql: {{ tpl (.Files.Get "confs/0-init.sql") . | quote }}
+  1-init.sql: {{ tpl (.Files.Get "confs/1-init.sql") . | quote }}
+  2-init.sql: {{ tpl (.Files.Get "confs/2-init.sql") . | quote }}
+{{- end -}}
