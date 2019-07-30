@@ -38,6 +38,9 @@ mysql:
     serverIp: 10.163.138.18
     shareLocation: "/data"
 
+controller:
+  enabled: true
+
 apim:
   enabled: false
   ingress:
@@ -73,7 +76,7 @@ idp:
       - idp
 
 observability-portal:
-    enabled: true
+    enabled: false
 
 sp-worker:
-    enabled: true
+    enabled: false
