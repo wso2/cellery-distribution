@@ -17,6 +17,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: gw-ingress
+  namespace : {{ .Values.namespace }}
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/affinity: "cookie"
@@ -39,6 +40,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: wso2is-ingress
+  namespace : {{ .Values.namespace }}
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
@@ -62,6 +64,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: pub-store-ingress
+  namespace : {{ .Values.namespace }}
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
