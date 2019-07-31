@@ -42,7 +42,7 @@ controller:
   enabled: true
 
 apim:
-  enabled: false
+  enabled: true
   ingress:
     enabled: false
     annotations:

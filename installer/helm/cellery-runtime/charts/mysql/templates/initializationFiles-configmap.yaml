@@ -3,6 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ template "mysql.fullname" . }}-initialization
+  namespace: cellery-system
 data:
   0-init.sql: {{ tpl (.Files.Get "confs/0-init.sql") . | quote }}
   1-init.sql: {{ tpl (.Files.Get "confs/1-init.sql") . | quote }}
