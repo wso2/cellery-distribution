@@ -24,6 +24,18 @@ echo "Installing Cellery runtime"
 helm init --wait
 # Create service account.
 kubectl apply -f helm-service-account.yaml
+
+# Install istio
+curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.2.2 sh -
+cd istio-1.2.2/
+helm install install/kubernetes/helm/istio-init --name istio-init --namespace istio-system
+crd_count=$(kubectl get crds | grep 'istio.io\|certmanager.k8s.io' | wc -l)
+if [[ crd_count -eq 23 ]]; then
+    helm install install/kubernetes/helm/istio --name istio --namespace istio-system
+    echo "Istio installation is finished"
+fi
+cd ..
+
 # Install Cellery runtime.
 helm install --name cellery-runtime cellery-runtime
 
