@@ -29,7 +29,7 @@ global:
           password: "celleryRuntimePassword"
 
 mysql:
-  enabled: true
+  enabled: false
   rootPassword: "mysqlRootPass"
 
   # NFS server
@@ -39,10 +39,10 @@ mysql:
     shareLocation: "/data"
 
 controller:
-  enabled: true
+  enabled: false
 
 apim:
-  enabled: true
+  enabled: false
   ingress:
     enabled: false
     annotations:

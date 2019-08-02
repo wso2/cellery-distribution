@@ -20,6 +20,8 @@ if [[ ! ${helm_version}=~Client ]]; then
 fi
 
 helm del --purge cellery-runtime
+helm del --purge istio
+helm del --purge istio-init
 
 read -p "Do you want to delete ingress controller (nginx ingress) [y/N]: " delete_nginx_ingress < /dev/tty
     if [ -z ${delete_nginx_ingress/[ ]*\n/} ] || [ ${delete_nginx_ingress} == "N" ]; then
