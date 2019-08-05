@@ -94,17 +94,7 @@ sleep 120
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/knative-serving-crds.yaml
 
 #Create Cellery CRDs.
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/01-cluster-role.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/02-service-account.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/03-cluster-role-binding.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/04-crd-cell.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/05-crd-gateway.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/06-crd-token-service.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/07-crd-service.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/08-crd-autoscale-policy.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/09-config.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/10-secret.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/11-controller.yaml
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/
 sleep 120
 
 #Create the IDP config maps
