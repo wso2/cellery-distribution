@@ -201,3 +201,6 @@ nfs:
   enabled: false
   serverIp: 10.163.138.18
   shareLocation: "/data"
+
+localStorage:
+  enabled: false
