@@ -26,9 +26,9 @@ metadata:
 spec:
   tls:
   - hosts:
-    - wso2-apim-gateway
+    - gateway
   rules:
-  - host: wso2-apim-gateway
+  - host: gateway
     http:
       paths:
       - path: /
@@ -65,7 +65,10 @@ kind: Ingress
 metadata:
   name: pub-store-ingress
   namespace : {{ .Values.namespace }}
+  {{- with .Values.global.hubProxy.ingress.annotations }}
   annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     nginx.ingress.kubernetes.io/affinity: "cookie"
@@ -74,9 +77,9 @@ metadata:
 spec:
   tls:
   - hosts:
-    - wso2-apim
+    - apim
   rules:
-  - host: wso2-apim
+  - host: apim
     http:
       paths:
       - path: /
