@@ -60,7 +60,7 @@ mysql:
 
 
 controller:
-  enabled: false
+  enabled: true
 
 apim:
   enabled: false
