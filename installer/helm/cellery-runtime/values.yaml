@@ -63,9 +63,9 @@ controller:
   enabled: true
 
 apim:
-  enabled: false
+  enabled: true
   ingress:
-    enabled: false
+    enabled: true
     annotations:
       kubernetes.io/ingress.class: nginx
       nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
@@ -97,7 +97,7 @@ idp:
       - idp
 
 observability-portal:
-    enabled: false
+    enabled: true
 
 sp-worker:
-    enabled: false
+    enabled: true

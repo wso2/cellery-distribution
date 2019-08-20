@@ -36,3 +36,18 @@ service:
 celleryRuntime:
   db:
     host: "cellery-runtime-mysql"
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    certmanager.k8s.io/cluster-issuer: "letsencrypt-dev"
+  hosts:
+    - host: apim
+      paths: ["/"]
+  tls:
+    - secretName: apim-tls
+      hosts:
+        - apim
