@@ -15,3 +15,7 @@
 celleryRuntime:
   db:
     host: "cellery-runtime-mysql"
+
+namespace: "cellery-system"
+svcaccount: "cellerysvc-account"
+
