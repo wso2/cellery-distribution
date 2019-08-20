@@ -20,6 +20,7 @@ if [[ ! ${helm_version}=~Client ]]; then
 fi
 
 helm del --purge cellery-runtime
+helm del --purge knative
 helm del --purge istio
 helm del --purge istio-init
 

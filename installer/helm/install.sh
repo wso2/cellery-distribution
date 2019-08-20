@@ -13,6 +13,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+HOST_NAME=$(hostname | tr '[:upper:]' '[:lower:]')
+kubectl label nodes $HOST_NAME disk=local
+
 helm_version=$(helm version)
 if [[ ! ${helm_version}=~Client ]]; then
     echo "Helm is not installed."
@@ -35,6 +38,9 @@ if [[ crd_count -eq 23 ]]; then
     echo "Istio installation is finished"
 fi
 cd ..
+
+# Install Knative CRDs
+helm install --name knative knative
 
 # Install Cellery runtime.
 helm install --name cellery-runtime cellery-runtime
