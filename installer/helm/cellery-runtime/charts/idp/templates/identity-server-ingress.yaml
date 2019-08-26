@@ -17,21 +17,30 @@ kind: Ingress
 metadata:
   name: wso2is-ingress
   namespace : {{ .Values.namespace }}
+  {{- with .Values.ingress.annotations }}
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-    nginx.ingress.kubernetes.io/affinity: "cookie"
-    nginx.ingress.kubernetes.io/session-cookie-name: "route"
-    nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
+{{- if .Values.ingress.tls }}
   tls:
+    {{- range .Values.ingress.tls }}
   - hosts:
-    - wso2is
+    {{- range .hosts }}
+    - {{ . | quote }}
+    {{- end }}
+    secretName: {{ .secretName }}
+    {{- end }}
+    {{- end }}
   rules:
-  - host: wso2is
+    {{- range .Values.ingress.hosts }}
+  - host: {{ .host | quote }}
     http:
       paths:
-      - path: /
+      {{- range .paths }}
+      - path: {{ . }}
         backend:
           serviceName: wso2is-service
           servicePort: 9443
+      {{- end }}
+    {{- end }}
