@@ -40,6 +40,8 @@ fi
 cd ..
 
 # Install Knative CRDs
+helm install --name knative-crd knative-crd
+sleep 30
 helm install --name knative knative
 
 # Install Cellery runtime.
