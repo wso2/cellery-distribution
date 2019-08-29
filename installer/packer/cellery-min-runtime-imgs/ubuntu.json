@@ -74,6 +74,36 @@
             "inline": ["echo 'vagrant' | sudo -S sh -c 'cp /tmp/rbac-config.yaml /home/vagrant/rbac-config.yaml'"]
         },
         {
+            "type": "file",
+            "source": "resources/cellery-runtime-values.yaml",
+            "destination": "/tmp/cellery-runtime-values.yaml",
+            "direction": "upload"
+        },
+        {
+            "type": "shell",
+            "inline": ["echo 'vagrant' | sudo -S sh -c 'cp /tmp/cellery-runtime-values.yaml /home/vagrant/cellery-runtime-values.yaml'"]
+        },
+        {
+            "type": "file",
+            "source": "resources/ingress-controller-values.yaml",
+            "destination": "/tmp/ingress-controller-values.yaml",
+            "direction": "upload"
+        },
+        {
+            "type": "shell",
+            "inline": ["echo 'vagrant' | sudo -S sh -c 'cp /tmp/ingress-controller-values.yaml /home/vagrant/ingress-controller-values.yaml'"]
+        },
+        {
+            "type": "file",
+            "source": "resources/values-istio-demo.yaml",
+            "destination": "/tmp/values-istio-demo.yaml",
+            "direction": "upload"
+        },
+        {
+            "type": "shell",
+            "inline": ["echo 'vagrant' | sudo -S sh -c 'cp /tmp/values-istio-demo.yaml /home/vagrant/values-istio-demo.yaml'"]
+        },
+        {
         "environment_vars": [
             "DEBIAN_FRONTEND=noninteractive",
             "UPDATE={{user `update`}}",
@@ -113,16 +143,6 @@
         {
             "type": "shell",
             "inline": ["echo 'vagrant' | sudo -S sh -c 'cp /tmp/50-cellery.yaml /etc/netplan/50-cellery.yaml'"]
-        },
-        {
-            "type": "file",
-            "source": "resources/rbac-config.yaml",
-            "destination": "/tmp/rbac-config.yaml",
-            "direction": "upload"
-        },
-        {
-            "type": "shell",
-            "inline": ["echo 'vagrant' | sudo -S sh -c 'cp /tmp/rbac-config.yaml /home/vagrant/rbac-config.yaml'"]
         }
     ],
     "variables": {
