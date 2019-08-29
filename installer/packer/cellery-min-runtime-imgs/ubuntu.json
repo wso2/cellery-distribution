@@ -94,16 +94,6 @@
             "inline": ["echo 'vagrant' | sudo -S sh -c 'cp /tmp/ingress-controller-values.yaml /home/vagrant/ingress-controller-values.yaml'"]
         },
         {
-            "type": "file",
-            "source": "resources/values-istio-demo.yaml",
-            "destination": "/tmp/values-istio-demo.yaml",
-            "direction": "upload"
-        },
-        {
-            "type": "shell",
-            "inline": ["echo 'vagrant' | sudo -S sh -c 'cp /tmp/values-istio-demo.yaml /home/vagrant/values-istio-demo.yaml'"]
-        },
-        {
         "environment_vars": [
             "DEBIAN_FRONTEND=noninteractive",
             "UPDATE={{user `update`}}",
