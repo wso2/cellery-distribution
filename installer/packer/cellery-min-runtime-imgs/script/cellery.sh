@@ -37,7 +37,7 @@ if [ -d /mnt/mysql ]; then
 fi
 mkdir -p /mnt/mysql
 #Change the folder ownership to mysql server user.
-chown 999:999 /mnt/mysql
+chown 999:999 /mnt/mysql/cellery_runtime_mysql
 
 if [ -d /mnt/apim_repository_deployment_server ]; then
     mv /mnt/apim_repository_deployment_server "/mnt/apim_repository_deployment_server.$(date +%s)"
@@ -59,20 +59,25 @@ sleep 120
 curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.2.2 sh -
 cd istio-1.2.2/
 helm install install/kubernetes/helm/istio-init --name istio-init --namespace istio-system
+sleep 60
 crd_count=$(kubectl get crds | grep 'istio.io\|certmanager.k8s.io' | wc -l)
-if [[ crd_count -eq 23 ]]; then
-    helm install install/kubernetes/helm/istio --name istio --namespace istio-system
-    echo "Istio installation is finished"
-fi
+#if [[ crd_count -eq 23 ]]; then
+helm install install/kubernetes/helm/istio --name istio --namespace istio-system --values install/kubernetes/helm/istio/values-istio-demo.yaml
+sleep 30
+echo "Istio installation is finished"
+#fi
 cd ..
+
+#Enabling Istio injection
+kubectl label namespace default istio-injection=enabled
 
 # Install Knative CRDs
 helm install --name knative-crd ${download_path}/distribution-${release_version}/installer/helm/knative-crd
-sleep 30
+sleep 120
 helm install --name knative ${download_path}/distribution-${release_version}/installer/helm/knative
 
 # Install Cellery control plane
-helm install --name cellery-runtime ${download_path}/distribution-${release_version}/installer/helm/cellery-runtime
+helm install --name cellery-runtime ${download_path}/distribution-${release_version}/installer/helm/cellery-runtime -f /home/vagrant/cellery-runtime-values.yaml
 
 # Install ingress controller
 cd ${download_path}/distribution-${release_version}/installer/helm/ingress-controller/
@@ -80,4 +85,4 @@ mkdir charts
 cd charts
 helm fetch stable/nginx-ingress
 cd ../../../../../../
-helm install --name ingress-controller ${download_path}/distribution-${release_version}/installer/helm/ingress-controller --namespace ingress-controller
+helm install --name ingress-controller ${download_path}/distribution-${release_version}/installer/helm/ingress-controller --namespace ingress-controller -f /home/vagrant/ingress-controller-values.yaml
