@@ -40,7 +40,7 @@ spec:
       {{- range .paths }}
       - path: {{ . }}
         backend:
-          serviceName: wso2is-service
+          serviceName: idp
           servicePort: 9443
       {{- end }}
     {{- end }}
