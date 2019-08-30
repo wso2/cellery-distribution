@@ -14,8 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-HOST_NAME=$(hostname | tr '[:upper:]' '[:lower:]')
-kubectl label nodes $HOST_NAME disk=local
+if [ "$(uname)" == "Darwin" ]; then
+    kubectl label nodes docker-desktop disk=local
+else
+    HOST_NAME=$(hostname | tr '[:upper:]' '[:lower:]')
+    kubectl label nodes $HOST_NAME disk=local
+fi
 
 helm_version=$(helm version)
 if [[ ! ${helm_version}=~Client ]]; then
@@ -32,12 +36,12 @@ kubectl apply -f helm-service-account.yaml
 # Install istio
 curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.2.2 sh -
 cd istio-1.2.2/
-helm install install/kubernetes/helm/istio-init --name istio-init --namespace istio-system
+helm install install/kubernetes/helm/istio-init --name istio-init --namespace istio-system --values install/kubernetes/helm/istio/values-istio-demo.yaml
 crd_count=$(kubectl get crds | grep 'istio.io\|certmanager.k8s.io' | wc -l)
-if [[ crd_count -eq 23 ]]; then
-    helm install install/kubernetes/helm/istio --name istio --namespace istio-system
-    echo "Istio installation is finished"
-fi
+#if [[ crd_count -eq 23 ]]; then
+helm install install/kubernetes/helm/istio --name istio --namespace istio-system
+echo "Istio installation is finished"
+#fi
 cd ..
 
 # Install Knative CRDs

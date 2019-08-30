@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wso2is-deployment
+  name: idp
   namespace : {{ .Values.namespace }}
 spec:
+  selector:
+    matchLabels:
+      deployment: idp
   replicas: 1
   minReadySeconds: 30
   strategy:
@@ -28,77 +31,76 @@ spec:
   template:
     metadata:
       labels:
-        deployment: wso2is
+        deployment: idp
     spec:
       containers:
-      - name: wso2is
-        {{- if or (eq .Values.username "") (eq .Values.password "") }}
-        image: wso2cellery/wso2is-lightweight
-        {{- else }}
-        image: wso2cellery/wso2is-lightweight
-        {{- end }}
-        livenessProbe:
-          exec:
-            command:
-            - /bin/sh
-            - -c
-            - nc -z localhost 9443
-          initialDelaySeconds: 60
-          periodSeconds: 10
-        readinessProbe:
-          exec:
-            command:
-              - /bin/sh
-              - -c
-              - nc -z localhost 9443
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        lifecycle:
-          preStop:
+        - name: idp
+          image: wso2cellery/wso2is-lightweight
+          livenessProbe:
             exec:
-              command:  ['sh', '-c', '${WSO2_SERVER_HOME}/bin/wso2server.sh stop']
-        imagePullPolicy: Always
-        securityContext:
-          runAsUser: 802
-        ports:
-        - containerPort: 9763
-          protocol: TCP
-        - containerPort: 9443
-          protocol: TCP
-        volumeMounts:
-        - name: identity-server-conf
-          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf
-#        - name: identity-server-conf-axis2
-#          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/axis2
-        - name: identity-server-conf-datasources
-          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/datasources
-        - name: identity-server-conf-identity
-          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/identity
-        {{- if .Values.persistence.enabled }}
-        - name: shared-deployment-persistent-disk
-          mountPath: /home/wso2carbon/wso2is-5.8.0/repository/deployment
-        - name: shared-tenants-persistent-disk
-          mountPath: /home/wso2carbon/wso2is-5.8.0/repository/tenants
-        {{- end }}
-      serviceAccountName: {{ .Values.svcaccount }}
+              command:
+                - /bin/sh
+                - -c
+                - nc -z localhost 9443
+            initialDelaySeconds: 250
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - nc -z localhost 9443
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          lifecycle:
+            preStop:
+              exec:
+                command:  ['sh', '-c', '${WSO2_SERVER_HOME}/bin/wso2server.sh stop']
+          imagePullPolicy: Always
+          securityContext:
+            runAsUser: 802
+          ports:
+            - containerPort: 9763
+              protocol: TCP
+            - containerPort: 9443
+              protocol: TCP
+          volumeMounts:
+            - name: identity-server-conf
+              mountPath: /home/wso2carbon/wso2-config-volume/repository/conf
+            #        - name: identity-server-conf-axis2
+            #          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/axis2
+            - name: identity-server-conf-datasources
+              mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/datasources
+            - name: identity-server-tomcat
+              mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/tomcat
+            - name: identity-server-conf-identity
+              mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/identity
+      #        - name: shared-deployment-persistent-disk
+      #          mountPath: /home/wso2carbon/wso2is-lightweightv1/repository/deployment
+      #        - name: shared-tenants-persistent-disk
+      #          mountPath: /home/wso2carbon/wso2is-lightweightv1/repository/tenants
+      serviceAccountName: "cellerysvc-account"
+      imagePullSecrets:
+        - name: wso2creds
       volumes:
-      - name: identity-server-conf
-        configMap:
-          name: identity-server-conf
- #     - name: identity-server-conf-axis2
- #       configMap:
- #         name: identity-server-conf-axis2
-      - name: identity-server-conf-datasources
-        configMap:
-          name: identity-server-conf-datasources
-      - name: identity-server-conf-identity
-        configMap:
-          name: identity-server-conf-identity
-      {{- if .Values.persistence.enabled }}
-      - name: shared-deployment-persistent-disk
-        persistentVolumeClaim:
-          claimName: is-shared-deployment-volume-claim
-      - name: shared-tenants-persistent-disk
-        persistentVolumeClaim:
-          claimName: is-shared-tenants-volume-claim
-      {{- end }}
+        - name: identity-server-conf
+          configMap:
+            name: identity-server-conf
+        #      - name: identity-server-conf-axis2
+        #        configMap:
+        #          name: identity-server-conf-axis2
+        - name: identity-server-conf-datasources
+          configMap:
+            name: identity-server-conf-datasources
+        - name: identity-server-tomcat
+          configMap:
+            name: identity-server-tomcat
+        - name: identity-server-conf-identity
+          configMap:
+            name: identity-server-conf-identity
+#      - name: shared-deployment-persistent-disk
+#        persistentVolumeClaim:
+#          claimName: is-shared-deployment-volume-claim
+#      - name: shared-tenants-persistent-disk
+#        persistentVolumeClaim:
+#          claimName: is-shared-tenants-volume-claim

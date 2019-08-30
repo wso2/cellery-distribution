@@ -41,6 +41,6 @@ spec:
       - path: {{ . }}
         backend:
           serviceName: idp
-          servicePort: 9443
+          servicePort: 443
       {{- end }}
     {{- end }}
