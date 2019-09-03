@@ -75,8 +75,7 @@ kubectl label namespace default istio-injection=enabled
 helm install --name knative-crd ${download_path}/distribution-${release_version}/installer/helm/knative-crd
 sleep 120
 # Install Knative
-# Knative is disabled for minimum installation.
-#helm install --name knative ${download_path}/distribution-${release_version}/installer/helm/knative
+# helm install --name knative ${download_path}/distribution-${release_version}/installer/helm/knative
 
 # Install Cellery control plane
 helm install --name cellery-runtime ${download_path}/distribution-${release_version}/installer/helm/cellery-runtime -f /home/vagrant/cellery-runtime-values.yaml
