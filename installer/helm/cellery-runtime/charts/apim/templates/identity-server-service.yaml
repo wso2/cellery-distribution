@@ -19,7 +19,7 @@ metadata:
   namespace : {{ .Values.namespace }}
 spec:
   selector:
-    deployment: gateway
+    deployment: wso2apim-deployment
   ports:
     - name: servlet-http
       port: 9763
