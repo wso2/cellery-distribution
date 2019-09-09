@@ -149,7 +149,7 @@ rules:
     resources:
       - customresourcedefinitions
     verbs:
-      - list
+      - get
   - apiGroups:
       - mesh.cellery.io
     resources:
