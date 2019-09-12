@@ -14730,7 +14730,7 @@ data:
       tracing:
         zipkin:
           # Address of the Zipkin collector
-          address: zipkin.istio-system:9411
+          address: wso2sp-worker.cellery-system:9411
       #
       # Mutual TLS authentication between sidecars and istio control plane.
       controlPlaneAuthPolicy: NONE
@@ -16772,7 +16772,7 @@ spec:
         - --serviceCluster
         - istio-egressgateway
         - --zipkinAddress
-        - zipkin:9411
+        - wso2sp-worker.cellery-system:9411
         - --proxyAdminPort
         - "15000"
         - --statusPort
@@ -16953,7 +16953,7 @@ spec:
         - --serviceCluster
         - istio-ingressgateway
         - --zipkinAddress
-        - zipkin:9411
+        - wso2sp-worker.cellery-system:9411
         - --proxyAdminPort
         - "15000"
         - --statusPort
@@ -17423,7 +17423,7 @@ spec:
         - --configDefaultNamespace=istio-system
         - --useAdapterCRDs=false
         - --useTemplateCRDs=false
-        - --trace_zipkin_url=http://zipkin.istio-system:9411/api/v1/spans
+        - --trace_zipkin_url=http://wso2sp-worker.cellery-system:9411/api/v1/spans
         env:
         - name: GODEBUG
           value: "gctrace=1"
@@ -17593,7 +17593,7 @@ spec:
         - --configDefaultNamespace=istio-system
         - --useAdapterCRDs=false
         - --useTemplateCRDs=false
-        - --trace_zipkin_url=http://zipkin.istio-system:9411/api/v1/spans
+        - --trace_zipkin_url=http://wso2sp-worker.cellery-system:9411/api/v1/spans
         - --averageLatencyThreshold
         - 100ms
         - --loadsheddingMode
