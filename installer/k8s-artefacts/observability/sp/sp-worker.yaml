@@ -154,6 +154,7 @@ rules:
       - mesh.cellery.io
     resources:
       - cells
+      - composites
     verbs:
       - watch
 ---
