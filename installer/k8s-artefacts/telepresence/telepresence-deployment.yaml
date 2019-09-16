@@ -17,15 +17,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: telepresence
+  name: {{cell}}--telepresence
 spec:
+  selector:
+    matchLabels:
+      mesh.cellery.io/cell: {{cell}}
+      mesh.cellery.io/telepresence: telepresence
   template:
     metadata:
       labels:
-        name: telepresence
         mesh.cellery.io/telepresence: telepresence
+        mesh.cellery.io/cell: {{cell}}
       annotations:
-        sidecar.istio.io/inject: "false"
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
       - name: telepresence
