@@ -119,6 +119,11 @@
                 <artifactId>io.cellery.cell.gateway.initializer</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.cellery.distribution</groupId>
+                <artifactId>io.cellery.cell.api.publisher</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <!-- End of APIM docker image dependencies -->
         </dependencies>
     </dependencyManagement>
