@@ -18,20 +18,19 @@
 
     <parent>
         <groupId>io.cellery.distribution</groupId>
-        <artifactId>io.cellery.distribution.parent</artifactId>
+        <artifactId>io.cellery.distribution.components</artifactId>
         <version>0.3.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>io.cellery.distribution.components</artifactId>
+    <artifactId>io.cellery.distribution.components.api</artifactId>
     <version>0.3.2-SNAPSHOT</version>
-    <name>Cellery Distribution - Components</name>
-    <description>Cellery Control Plane Components</description>
+    <name>Cellery Distribution - Control Plance Api</name>
+    <description>Control Plance Api</description>
     <packaging>pom</packaging>
 
     <modules>
-        <module>gateway</module>
-        <module>api</module>
+        <module>io.cellery.cell.api.publisher</module>
     </modules>
 </project>

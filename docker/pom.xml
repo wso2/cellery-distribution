@@ -31,6 +31,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>api-publisher</module>
         <module>microgateway</module>
         <module>global-apim</module>
         <module>lightweight-idp</module>
