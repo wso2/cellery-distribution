@@ -256,75 +256,18 @@ spec:
   template: metric
   params:
     dimensions:
+      requestID: request.headers["x-request-id"] | ""
+      traceID: request.headers["x-b3-traceid"] | ""
+      spanID: request.headers["x-b3-spanid"] | ""
       sourceUID: source.uid | ""
-      sourceLabelsApp: source.labels["app"] | ""
-      sourceLabelsVersion: source.labels["version"] | ""
-      sourceLabelsSvc: source.labels["svc"] | ""
-      sourceLabelsCell: source.labels["mesh.cellery.io.cell"] | ""
-      sourceLabelsCellSlash: source.labels["mesh.cellery.io/cell"] | ""
-      sourceLabelsCellGateway: source.labels["mesh.cellery.io/gateway"] | ""
-      sourceLabelsPodTemplateHash: source.labels["pod-template-hash"] | ""
-      sourceName: source.name | ""
-      sourceNamespace: source.namespace | ""
-      sourcePrincipal: source.principal | ""
-      sourceOwner: source.owner | ""
-      sourceWorkloadUID: source.workload.uid | ""
-      sourceWorkloadName: source.workload.name | ""
-      sourceWorkloadNamespace: source.workload.namespace | ""
       destinationUID: destination.uid | ""
-      destinationPort: destination.port | 0
-      destinationName: destination.name | ""
-      destinationNamespace: destination.namespace | ""
-      destinationPrincipal: destination.principal | ""
-      destinationOwner: destination.owner | ""
-      destinationWorkloadUID: destination.workload.uid | ""
-      destinationWorkload: destination.workload.name | ""
-      destinationWorkloadNamespace: destination.workload.namespace | ""
-      destinationContainerName: destination.container.name | ""
-      destinationServiceHost: destination.service.host | ""
-      destinationServiceUID: destination.service.uid | ""
-      destinationServiceName: destination.service.name | ""
-      destinationServiceNamespace: destination.service.namespace | ""
-      requestID: request.id | ""
-      requestPath: request.path | ""
-      requestHost: request.host | ""
-      requestMethod: request.method | ""
-      requestReason: request.reason | ""
-      requestReferer: request.referer | ""
-      requestScheme: request.scheme | ""
-      requestSize: request.size | 0
-      requestTotalSize: request.total_size | 0
-      requestUserAgent: request.useragent | ""
-      responseSize: response.size | 0
-      responseTotalSize: response.total_size | 0
-      responseDurationNanoSec: response.duration
-      responseCode: response.code | 0
-      responseGrpcStatus: response.grpc_status | ""
-      responseGrpcMessage: response.grpc_message | ""
-      connectionID: connection.id | ""
-      connectionEvent: connection.event | ""
-      connectionReceivedBytes: connection.received.bytes | 0
-      connectionReceivedBytesTotal: connection.received.bytes_total | 0
-      connectionSentBytes: connection.sent.bytes | 0
-      connectionSentBytesTotal: connection.sent.bytes_total | 0
-      connectionMTLS: connection.mtls | false
-      connectionRequestedServerName: connection.requested_server_name | ""
-      contextProtocol: context.protocol | ""
       contextReporterKind: context.reporter.kind | ""
-      contextReporterUID: context.reporter.uid | ""
-      apiService: api.service | ""
-      apiVersion: api.version | ""
-      apiOperation: api.operation | ""
-      apiProtocol: api.protocol | ""
-      requestAuthPrincipal: request.auth.principal | ""
-      requestAuthAudiences: request.auth.audiences | ""
-      requestAuthPresenter: request.auth.presenter | ""
-      requestApiKey: request.api_key | ""
-      checkErrorCode: check.error_code | 0
-      checkErrorMessage: check.error_message | ""
-      checkCasheHit: check.cache_hit | false
-      quotaCacheHit: quota.cache_hit | false
-      contextReporterLocal: context.reporter.local | false
+      requestPath: request.path | ""
+      requestMethod: request.method | ""
+      requestTotalSize: request.total_size | 0
+      responseCode: response.code | 0
+      responseDurationNanoSec: response.duration
+      responseTotalSize: response.total_size | 0
 ---
 
 # rule to dispatch to handler wso2spadapter-handler
@@ -382,4 +325,3 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 38355
----
