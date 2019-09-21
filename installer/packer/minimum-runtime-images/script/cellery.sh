@@ -135,9 +135,6 @@ kubectl create configmap k8s-metrics-grafana-datasources --from-file=${download_
 kubectl create configmap k8s-metrics-grafana-dashboards --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/dashboards -n cellery-system
 kubectl create configmap k8s-metrics-grafana-dashboards-default --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/dashboards/default -n cellery-system
 
-#Create mixer-adapter deployment
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/mixer-adapter/mixer-adapter.yaml
-
 #Create ingress-nginx deployment
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/mandatory.yaml
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/service-nodeport.yaml
