@@ -16,6 +16,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: wso2sp-worker
+  namespace: cellery-system
   labels:
     app: wso2sp-worker
     node: wso2sp-worker
