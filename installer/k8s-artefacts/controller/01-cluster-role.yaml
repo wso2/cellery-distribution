@@ -14,6 +14,7 @@ rules:
   - services
   - events
   - serviceaccounts
+  - persistentvolumeclaims
   verbs:
   - get
   - list
@@ -50,6 +51,7 @@ rules:
   - apps
   resources:
   - deployments
+  - statefulsets
   verbs:
   - get
   - list
@@ -99,10 +101,11 @@ rules:
   resources:
   - cells
   - composites
-  - services
+  - components
   - gateways
   - tokenservices
   - autoscalepolicies
+  - '*/status'
   verbs:
   - get
   - list
