@@ -14,7 +14,7 @@
 #  specific language governing permissions and limitations
 #  under the License.
 
-apiVersion: mesh.cellery.io/v1alpha1
+apiVersion: mesh.cellery.io/v1alpha2
 kind: Cell
 metadata:
   name: telepresence
@@ -23,9 +23,12 @@ metadata:
     mesh.cellery.io/cell-image-name: telepresence
     mesh.cellery.io/cell-image-version: 1.0.0
 spec:
-  servicesTemplates:
+  components:
   - metadata:
       name: telepresence
     spec:
-      container:
-        image: datawire/telepresence-k8s:0.101
+      type: "Deployment"
+      template:
+        containers:
+        - image: "datawire/telepresence-k8s:0.101"
+          name: "telepresence"
