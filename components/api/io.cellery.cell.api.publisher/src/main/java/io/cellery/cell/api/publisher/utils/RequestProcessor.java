@@ -23,6 +23,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -38,7 +39,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Map;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -164,6 +164,53 @@ public class RequestProcessor {
             closeClientConnection();
         } catch (IOException e) {
             String errorMessage = "Error occurred while executing the http Post connection.";
+            log.error(errorMessage, e);
+            throw new APIException(errorMessage, e);
+        }
+        return returnObj;
+    }
+
+    /**
+     * Execute http put request
+     *
+     * @param url         url
+     * @param contentType content type
+     * @param acceptType  accept type
+     * @param authHeader  authorization header
+     * @param payload     put payload
+     * @return Closable http response
+     * @throws APIException Api exception when an error occurred
+     */
+    public String doPut(String url, String contentType, String acceptType, String authHeader, String payload)
+            throws APIException {
+        String returnObj = null;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Put payload: " + payload);
+                log.debug("Put auth header: " + authHeader);
+            }
+            StringEntity payloadEntity = new StringEntity(payload);
+            HttpPut httpPut = new HttpPut(url);
+            httpPut.setHeader(Constants.Utils.HTTP_CONTENT_TYPE, contentType);
+            httpPut.setHeader(Constants.Utils.HTTP_RESPONSE_TYPE_ACCEPT, acceptType);
+            httpPut.setHeader(Constants.Utils.HTTP_REQ_HEADER_AUTHZ, authHeader);
+            httpPut.setEntity(payloadEntity);
+
+            CloseableHttpResponse response = httpClient.execute(httpPut);
+            HttpEntity entity = response.getEntity();
+            String responseStr = EntityUtils.toString(entity);
+            int statusCode = response.getStatusLine().getStatusCode();
+
+            if (log.isDebugEnabled()) {
+                log.debug("Response status code: " + statusCode);
+                log.debug("Response string : " + responseStr);
+            }
+            if (responseValidate(statusCode, responseStr)) {
+                returnObj = responseStr;
+            }
+            closeClientConnection();
+        } catch (IOException e) {
+            String errorMessage = "Error occurred while executing the http Put connection.";
             log.error(errorMessage, e);
             throw new APIException(errorMessage, e);
         }

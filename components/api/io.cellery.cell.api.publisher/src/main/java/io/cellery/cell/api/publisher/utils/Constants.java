@@ -50,6 +50,7 @@ public class Constants {
         public static final String APIM_BASE_URL = "apimBaseUrl";
         public static final String TOKEN_ENDPOINT = "tokenEndpoint";
         public static final String NAME = "name";
+        public static final String ID = "id";
         public static final String DESCRIPTION = "description";
         public static final String IS_DEFAULT_VERSION = "isDefaultVersion";
         public static final String TRANSPORT = "transport";
@@ -111,8 +112,6 @@ public class Constants {
         // Config map file paths
         public static final String CELL_CONFIGURATION_FILE_PATH = "/etc/config/api.json";
         public static final String REST_CONFIGURATION_FILE_PATH = "/etc/config/gw.json";
-        public static final String API_CONFIG_PATH = "/apiconfig.json";
-        public static final String SWAGGER_FOLDER = "/swagger/";
 
         // Token constants
         public static final String CLIENT_ID = "clientId";
@@ -134,6 +133,7 @@ public class Constants {
         public static final String PATH_APIS = "/apis";
         public static final String PATH_LIFECYCLE = "/apis/change-lifecycle?";
         public static final String PATH_CREATE_NEW_VERSION = "/apis/copy-api?";
+        public static final String PATH_QUERY = "/apis?query=";
 
         // API Properties
         public static final String CELL_NAME_PROPERTY = "cell_name";
