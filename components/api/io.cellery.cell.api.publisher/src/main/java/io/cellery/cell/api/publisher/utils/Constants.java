@@ -77,6 +77,8 @@ public class Constants {
         public static final String SWAGGER = "swagger";
         public static final String ADDITIONAL_PROPERTIES = "additionalProperties";
         public static final String NONE = "None";
+        public static final String INFO = "info";
+        public static final String TITLE = "title";
     }
 
     /**
@@ -104,7 +106,7 @@ public class Constants {
         public static final String ALLOW_QUERY_PATTERN = "/*";
         public static final String WILDCARD_PATTERN = "/*";
         public static final String TOKEN_PAYLOAD = "grant_type=password&username=$USER&password=$PASS" +
-                "&scope=apim:api_create apim:api_publish apim:label_manage";
+                "&scope=apim:api_create apim:api_publish apim:label_manage apim:api_view";
 
         // Config map file paths
         public static final String CELL_CONFIGURATION_FILE_PATH = "/etc/config/api.json";
@@ -117,6 +119,7 @@ public class Constants {
         public static final String CLIENT_SECRET = "clientSecret";
         public static final String ACCESS_TOKEN = "access_token";
         public static final String ID = "id";
+        public static final String COUNT = "count";
 
         // Error constants
         public static final String DUPLICATE_LABEL_ERROR = "Error while adding new Label for";
@@ -130,7 +133,11 @@ public class Constants {
         public static final String PATH_REGISTER = "/register";
         public static final String PATH_APIS = "/apis";
         public static final String PATH_LIFECYCLE = "/apis/change-lifecycle?";
+        public static final String PATH_CREATE_NEW_VERSION = "/apis/copy-api?";
 
+        // API Properties
         public static final String CELL_NAME_PROPERTY = "cell_name";
+        public static final String API_CONTEXT_PROPERTY = "api_context";
+        public static final String CELLNAME_N_CONTEXT_PROPERTY = "cellncontext";
     }
 }

@@ -38,6 +38,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Map;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -82,24 +83,44 @@ public class RequestProcessor {
      * @return Closable http response
      * @throws APIException Api exception when an error occurred
      */
-    public CloseableHttpResponse doGet(String url, String contentType, String acceptType, String authHeader)
-            throws APIException {
-
-        CloseableHttpResponse response;
+    public String doGet(String url, String contentType, String acceptType, String authHeader) throws APIException {
+        String returnObj = null;
         try {
+            if (log.isDebugEnabled()) {
+//                log.debug("Get payload: " + queryParams.entrySet());
+                log.debug("Get auth header: " + authHeader);
+            }
+//            URIBuilder builder = new URIBuilder(url);
+//            queryParams.forEach(builder::setParameter);
+//            for (Map.Entry<String, String> entry : queryParams.entrySet()) {
+//                builder.setParameter(entry.getKey(),entry.getValue());
+//            }
+
+//            HttpGet httpGet = new HttpGet(builder.build());
             HttpGet httpGet = new HttpGet(url);
             httpGet.setHeader(Constants.Utils.HTTP_CONTENT_TYPE, contentType);
             httpGet.setHeader(Constants.Utils.HTTP_RESPONSE_TYPE_ACCEPT, acceptType);
             httpGet.setHeader(Constants.Utils.HTTP_REQ_HEADER_AUTHZ, authHeader);
 
-            response = httpClient.execute(httpGet);
+            CloseableHttpResponse response = httpClient.execute(httpGet);
+            HttpEntity entity = response.getEntity();
+            String responseStr = EntityUtils.toString(entity);
+            int statusCode = response.getStatusLine().getStatusCode();
+
+            if (log.isDebugEnabled()) {
+                log.debug("Response status code: " + statusCode);
+                log.debug("Response string : " + responseStr);
+            }
+            if (responseValidate(statusCode, responseStr)) {
+                returnObj = responseStr;
+            }
             closeClientConnection();
         } catch (IOException e) {
             String errorMessage = "Error occurred while executing the http Get connection.";
             log.error(errorMessage, e);
             throw new APIException(errorMessage, e);
         }
-        return response;
+        return returnObj;
     }
 
     /**

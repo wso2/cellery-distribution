@@ -27,6 +27,7 @@ import io.cellery.cell.api.publisher.beans.controller.Cell;
 import io.cellery.cell.api.publisher.beans.controller.RestConfig;
 import io.cellery.cell.api.publisher.beans.request.ApiCreateRequest;
 import io.cellery.cell.api.publisher.beans.request.Endpoint;
+import io.cellery.cell.api.publisher.beans.request.InfoDefenietion;
 import io.cellery.cell.api.publisher.beans.request.Method;
 import io.cellery.cell.api.publisher.beans.request.Parameter;
 import io.cellery.cell.api.publisher.beans.request.PathDefinition;
@@ -144,30 +145,36 @@ public class UpdateManager {
         for (API api : apis) {
             if (api.isGlobal()) {
                 // Create api payload with gateway backend
-                ApiCreateRequest globalApiCreateRequest = new ApiCreateRequest();
-                globalApiCreateRequest.setName(generateAPIName(api));
-                if (cellConfig.getGlobalContext().equals(Constants.Utils.EMPTY_STRING)) {
-                    globalApiCreateRequest.setContext((cellConfig.getCell() + "/" + api.getContext())
-                            .replaceAll("//", "/"));
-                } else {
-                    globalApiCreateRequest.setContext((cellConfig.getCell() + "/" + cellConfig.getGlobalContext())
-                            .replaceAll("//", "/"));
-                }
-                if (cellConfig.getVersion().equals(Constants.Utils.EMPTY_STRING)) {
-                    globalApiCreateRequest.setVersion(api.getVersion());
-                } else {
-                    globalApiCreateRequest.setVersion(cellConfig.getVersion());
-                }
-                globalApiCreateRequest.setApiDefinition(getAPIDefinition(api));
-                globalApiCreateRequest.setEndpointConfig(getGlobalEndpoint(api));
-                globalApiCreateRequest.setGatewayEnvironments(Constants.Utils.PRODUCTION_AND_SANDBOX);
+                String existingApiId = requireCreateAsNewApi(api);
+                if (existingApiId.equals("")) {
+                    ApiCreateRequest globalApiCreateRequest = new ApiCreateRequest();
+                    globalApiCreateRequest.setName(generateAPIName(api));
+                    globalApiCreateRequest.setContext(getContext(api));
+                    globalApiCreateRequest.setVersion(getVersion(api));
+                    globalApiCreateRequest.setApiDefinition(getAPIDefinition(api));
+                    globalApiCreateRequest.setEndpointConfig(getGlobalEndpoint(api));
+                    globalApiCreateRequest.setGatewayEnvironments(Constants.Utils.PRODUCTION_AND_SANDBOX);
 
-                // Set some additional properties.
-                Map<String, String> additionalProperties = new HashMap<>();
-                additionalProperties.put(Constants.Utils.CELL_NAME_PROPERTY, cellConfig.getCell());
-                globalApiCreateRequest.setAdditionalProperties(additionalProperties);
+                    // Set some additional properties.
+                    Map<String, String> additionalProperties = new HashMap<>();
+                    additionalProperties.put(Constants.Utils.CELL_NAME_PROPERTY, cellConfig.getCell());
+                    additionalProperties.put(Constants.Utils.API_CONTEXT_PROPERTY, getContext(api));
+                    additionalProperties.put(Constants.Utils.CELLNAME_N_CONTEXT_PROPERTY, cellConfig.getCell() +
+                            getContext(api).replace("/", "_"));
+                    globalApiCreateRequest.setAdditionalProperties(additionalProperties);
 
-                apiPayloadsArray.put(globalApiCreateRequest);
+                    apiPayloadsArray.put(globalApiCreateRequest);
+                } else {
+                    if (requireCreateAsNewVersion(api)) {
+                        if (log.isDebugEnabled()) {
+                            log.debug("Need to publish as a new api");
+                        }
+                        String newApiVersionId = createNewApiVersion(existingApiId, "4.9.94");
+                        if (log.isDebugEnabled()) {
+                            log.debug("Newly created api version Id : " + newApiVersionId);
+                        }
+                    }
+                }
             }
         }
         return apiPayloadsArray;
@@ -213,7 +220,8 @@ public class UpdateManager {
     private static String getGlobalEndpoint(API api) {
         String response = Constants.Utils.EMPTY_STRING;
         ProductionEndpoint productionEndpoint = new ProductionEndpoint();
-        productionEndpoint.setUrl(Constants.Utils.HTTP + cellConfig.getHostname() + "/" + api.getContext());
+        productionEndpoint.setUrl(Constants.Utils.HTTP + (cellConfig.getHostname() + "/" + api.getContext())
+                .replaceAll("//", "/"));
 
         Endpoint endpoint = new Endpoint();
         endpoint.setProductionEndPoint(productionEndpoint);
@@ -278,6 +286,10 @@ public class UpdateManager {
             }
             apiDefinition.addPathDefinition(allowQueryPath, pathDefinition);
         }
+        InfoDefenietion info = new InfoDefenietion();
+        info.setTitle(generateAPIName(api));
+        info.setVersion(getVersion(api));
+        apiDefinition.setInfo(info);
         ObjectMapper objectMapper = new ObjectMapper();
         String apiDefinitionStr = Constants.Utils.EMPTY_STRING;
 
@@ -433,6 +445,13 @@ public class UpdateManager {
      * @return API name
      */
     private static String generateAPIName(API api) {
+//        String apiName1 = "";
+//        if (cellConfig.getGlobalContext().equals(Constants.Utils.EMPTY_STRING)) {
+//            apiName1 = cellConfig.getCell() + Constants.Utils.UNDERSCORE + api.getContext();
+//        } else {
+//            apiName1 = cellConfig.getCell() + Constants.Utils.UNDERSCORE + cellConfig.getGlobalContext() +
+//                    Constants.Utils.UNDERSCORE + api.getContext();
+//        }
         String apiName = cellConfig.getCell() + Constants.Utils.UNDERSCORE + Constants.Utils.GLOBAL +
                 Constants.Utils.UNDERSCORE + cellConfig.getVersion() + Constants.Utils.UNDERSCORE +
                 api.getContext().replace("/", Constants.Utils.EMPTY_STRING);
@@ -458,5 +477,139 @@ public class UpdateManager {
      */
     private static String removeSpecialChars(String string) {
         return string.replaceAll("[^a-zA-Z0-9]", "");
+    }
+
+    private static String getContext(API api) {
+        if (cellConfig.getGlobalContext().equals(Constants.Utils.EMPTY_STRING)) {
+            return (cellConfig.getCell() + "/" + api.getContext()).replaceAll("//", "/");
+        } else {
+            return (cellConfig.getGlobalContext() + "/" + api.getContext())
+                    .replaceAll("//", "/");
+        }
+    }
+
+    private static String getVersion(API api) {
+        if (cellConfig.getVersion().equals(Constants.Utils.EMPTY_STRING)) {
+            return api.getVersion();
+        } else {
+            return cellConfig.getVersion();
+        }
+    }
+
+    /**
+     * Check the need of publishing a new Global API.
+     *
+     * @return true if new api need to be published.
+     * @throws APIException throw API Exception if an error occurred while checking APIs availability.
+     */
+    private static String requireCreateAsNewApi(API api) throws APIException {
+        if (log.isDebugEnabled()) {
+            log.debug("Checking APIs need to be published as a new api in Global API Manager...");
+        }
+
+        RequestProcessor requestProcessor = new RequestProcessor();
+        String apiRetrieveResponse;
+        String apiRetrievePath;
+
+        apimConfig = ConfigManager.getAPIMConfiguration();
+        apiRetrievePath = restConfig.getApimBaseUrl() + Constants.Utils.PATH_PUBLISHER
+                + restConfig.getApiVersion() + Constants.Utils.PATH_APIS + "?query=cellncontext:hr_gl_newinfo";
+//        Map<String, String> queryParams = new HashMap<>();
+//        queryParams.put(Constants.Utils.CELL_NAME_PROPERTY, cellConfig.getCell());
+//        queryParams.put(Constants.Utils.API_CONTEXT_PROPERTY, getContext(api));
+//        queryParams.put(Constants.Utils.API_CONTEXT_PROPERTY, getContext(api));
+        apiRetrieveResponse = requestProcessor
+                .doGet(apiRetrievePath, Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
+                        Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
+                        Constants.Utils.BEARER + apimConfig.getApiToken());
+
+        if (apiRetrieveResponse != null) {
+            JSONObject jsonObj = new JSONObject(apiRetrieveResponse);
+            int apiCount = jsonObj.getInt(Constants.Utils.COUNT);
+            if (log.isDebugEnabled()) {
+                log.debug("New Api Check Api Count :" + apiCount);
+                log.debug("New Api Check payload :" + jsonObj);
+            }
+            if (apiCount > 0) {
+                String id = jsonObj.getJSONArray("list").getJSONObject(0).getString("id");
+                if (log.isDebugEnabled()) {
+                    log.debug("New Api Check Api ID :" + id);
+                }
+                return id;
+            }
+//            return apiCount == 0;
+        } else {
+            throw new APIException("Error while retrieving apis from the global API");
+        }
+        return "";
+    }
+
+    /**
+     * Check the need of publishing a new Global API version.
+     *
+     * @return true if api need to be published as a new version.
+     * @throws APIException throw API Exception if an error occurred while checking APIs availability.
+     */
+    private static Boolean requireCreateAsNewVersion(API api) throws APIException {
+        if (log.isDebugEnabled()) {
+            log.debug("Checking APIs need to be published as a new version in Global API Manager...");
+        }
+
+        RequestProcessor requestProcessor = new RequestProcessor();
+        String apiRetrieveResponse;
+        String apiRetrievePath;
+
+        apimConfig = ConfigManager.getAPIMConfiguration();
+        apiRetrievePath = restConfig.getApimBaseUrl() + Constants.Utils.PATH_PUBLISHER
+                + restConfig.getApiVersion() + Constants.Utils.PATH_APIS + "?query=cellncontext:hr_gl_newinfo%20version:4.9.94";
+//        Map<String, String> queryParams = new HashMap<>();
+//        queryParams.put(Constants.Utils.CELL_NAME_PROPERTY, cellConfig.getCell());
+//        queryParams.put(Constants.Utils.API_CONTEXT_PROPERTY, getContext(api));
+//        queryParams.put(Constants.JsonParamNames.VERSION, getVersion(api));
+        apiRetrieveResponse = requestProcessor
+                .doGet(apiRetrievePath, Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
+                        Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
+                        Constants.Utils.BEARER + apimConfig.getApiToken());
+
+        if (apiRetrieveResponse != null) {
+            JSONObject jsonObj = new JSONObject(apiRetrieveResponse);
+            int apiCount = jsonObj.getInt(Constants.Utils.COUNT);
+            if (log.isDebugEnabled()) {
+                log.debug("Api versioning Check Api Count :" + apiCount);
+                log.debug("Api versioning Check payload :" + jsonObj.toString());
+            }
+            return apiCount == 0;
+        } else {
+            throw new APIException("Error while retrieving apis from the global API");
+        }
+    }
+
+    /**
+     * Create new Global API version
+     *
+     * @return String that contains created API ID
+     * @throws APIException throw API Exception if an error occurred while creating new version of API.
+     */
+    private static String createNewApiVersion(String existingApiId, String version) throws APIException {
+        String newApiVersionId = "";
+        if (log.isDebugEnabled()) {
+            log.debug("Creating new api version for existing Api. ID:" + existingApiId);
+        }
+        RequestProcessor requestProcessor = new RequestProcessor();
+        String createApiVersionResponse;
+        String createApiVersionPath = restConfig.getApimBaseUrl() + Constants.Utils.PATH_PUBLISHER
+                + restConfig.getApiVersion() + Constants.Utils.PATH_CREATE_NEW_VERSION + "apiId=" + existingApiId + "&newVersion=" + version;
+        createApiVersionResponse = requestProcessor.doPost(createApiVersionPath, Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
+                Constants.Utils.CONTENT_TYPE_APPLICATION_JSON, Constants.Utils.BEARER + apimConfig.getApiToken(),
+                Constants.Utils.EMPTY_STRING);
+
+        log.debug("Create new API version response :" + createApiVersionResponse);
+
+        if (createApiVersionResponse != null) {
+            JSONObject jsonObj = new JSONObject(createApiVersionResponse);
+            return jsonObj.getString(Constants.Utils.ID);
+        } else {
+            throw new APIException("Error while creating the new API version with URL: " + createApiVersionPath);
+        }
     }
 }
