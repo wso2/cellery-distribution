@@ -21,18 +21,16 @@ package io.cellery.cell.api.publisher.beans.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.cellery.cell.api.publisher.utils.Constants;
 
-/**
- * Represent the sandbox endpoint.
- */
+/** Represent the sandbox endpoint. */
 public class SandboxEndpoint {
-    @JsonProperty(Constants.JsonParamNames.URL)
-    private String url;
+  @JsonProperty(Constants.JsonParamNames.URL)
+  private String url;
 
-    public String getUrl() {
-        return url;
-    }
+  public String getUrl() {
+    return url;
+  }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+  public void setUrl(String url) {
+    this.url = url;
+  }
 }

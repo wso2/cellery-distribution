@@ -21,45 +21,43 @@ package io.cellery.cell.api.publisher.beans.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.cellery.cell.api.publisher.utils.Constants;
 
-/**
- * Class to represent API definition parameters.
- */
+/** Class to represent API definition parameters. */
 public class Parameter {
 
-    @JsonProperty(Constants.JsonParamNames.NAME)
-    private String name;
+  @JsonProperty(Constants.JsonParamNames.NAME)
+  private String name;
 
-    @JsonProperty(Constants.JsonParamNames.REQUIRED)
-    private Boolean required;
+  @JsonProperty(Constants.JsonParamNames.REQUIRED)
+  private Boolean required;
 
-    @JsonProperty(Constants.JsonParamNames.IN)
-    private String in;
+  @JsonProperty(Constants.JsonParamNames.IN)
+  private String in;
 
-    public Parameter() {
-        this.required = true;
-    }
+  public Parameter() {
+    this.required = true;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public Boolean getRequired() {
-        return required;
-    }
+  public Boolean getRequired() {
+    return required;
+  }
 
-    public void setRequired(Boolean required) {
-        this.required = required;
-    }
+  public void setRequired(Boolean required) {
+    this.required = required;
+  }
 
-    public String getIn() {
-        return in;
-    }
+  public String getIn() {
+    return in;
+  }
 
-    public void setIn(String in) {
-        this.in = in;
-    }
+  public void setIn(String in) {
+    this.in = in;
+  }
 }

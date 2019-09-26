@@ -23,85 +23,83 @@ import io.cellery.cell.api.publisher.utils.Constants;
 
 import java.util.List;
 
-/**
- * Class to represent API.
- */
+/** Class to represent API. */
 public class API {
 
-    @JsonProperty(Constants.JsonParamNames.CONTEXT)
-    private String context;
+  @JsonProperty(Constants.JsonParamNames.CONTEXT)
+  private String context;
 
-    @JsonProperty(Constants.JsonParamNames.DEFINITION)
-    private List<ApiDefinition> definitions;
+  @JsonProperty(Constants.JsonParamNames.DEFINITION)
+  private List<ApiDefinition> definitions;
 
-    @JsonProperty(Constants.JsonParamNames.DESTINATION)
-    private ApiDestination destination;
+  @JsonProperty(Constants.JsonParamNames.DESTINATION)
+  private ApiDestination destination;
 
-    @JsonProperty(Constants.JsonParamNames.GLOBAL)
-    private boolean global;
+  @JsonProperty(Constants.JsonParamNames.GLOBAL)
+  private boolean global;
 
-    @JsonProperty(Constants.JsonParamNames.AUTHENTICATE)
-    private boolean authenticate;
+  @JsonProperty(Constants.JsonParamNames.AUTHENTICATE)
+  private boolean authenticate;
 
-    @JsonProperty(Constants.JsonParamNames.PORT)
-    private int port;
+  @JsonProperty(Constants.JsonParamNames.PORT)
+  private int port;
 
-    @JsonProperty(Constants.JsonParamNames.VERSION)
-    private String version;
+  @JsonProperty(Constants.JsonParamNames.VERSION)
+  private String version;
 
-    public String getContext() {
-        return context;
-    }
+  public String getContext() {
+    return context;
+  }
 
-    public void setContext(String context) {
-        this.context = context;
-    }
+  public void setContext(String context) {
+    this.context = context;
+  }
 
-    public List<ApiDefinition> getDefinitions() {
-        return definitions;
-    }
+  public List<ApiDefinition> getDefinitions() {
+    return definitions;
+  }
 
-    public void setDefinitions(List<ApiDefinition> definitions) {
-        this.definitions = definitions;
-    }
+  public void setDefinitions(List<ApiDefinition> definitions) {
+    this.definitions = definitions;
+  }
 
-    public boolean isGlobal() {
-        return global;
-    }
+  public boolean isGlobal() {
+    return global;
+  }
 
-    public void setGlobal(boolean global) {
-        this.global = global;
-    }
+  public void setGlobal(boolean global) {
+    this.global = global;
+  }
 
-    public boolean isAuthenticate() {
-        return authenticate;
-    }
+  public boolean isAuthenticate() {
+    return authenticate;
+  }
 
-    public void setAuthenticate(boolean authenticate) {
-        this.authenticate = authenticate;
-    }
+  public void setAuthenticate(boolean authenticate) {
+    this.authenticate = authenticate;
+  }
 
-    public ApiDestination getDestination() {
-      return destination;
-    }
+  public ApiDestination getDestination() {
+    return destination;
+  }
 
-    public void setDestination(ApiDestination destination) {
-      this.destination = destination;
-    }
+  public void setDestination(ApiDestination destination) {
+    this.destination = destination;
+  }
 
-    public int getPort() {
-      return port;
-    }
+  public int getPort() {
+    return port;
+  }
 
-    public void setPort(int port) {
-      this.port = port;
-    }
+  public void setPort(int port) {
+    this.port = port;
+  }
 
-    public String getVersion() {
-        return version;
-    }
+  public String getVersion() {
+    return version;
+  }
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
+  public void setVersion(String version) {
+    this.version = version;
+  }
 }

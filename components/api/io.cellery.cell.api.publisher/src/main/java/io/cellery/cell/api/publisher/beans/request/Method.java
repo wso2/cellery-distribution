@@ -24,47 +24,45 @@ import io.cellery.cell.api.publisher.utils.Constants;
 
 import java.util.List;
 
-/**
- * Class t represent method information.
- */
+/** Class t represent method information. */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Method {
 
-    @JsonProperty(Constants.JsonParamNames.PARAMETERS)
-    private List<Parameter> parameters;
+  @JsonProperty(Constants.JsonParamNames.PARAMETERS)
+  private List<Parameter> parameters;
 
-    @JsonProperty(Constants.JsonParamNames.X_AUTH_TYPE)
-    private String xAuthType;
+  @JsonProperty(Constants.JsonParamNames.X_AUTH_TYPE)
+  private String xAuthType;
 
-    @JsonProperty(Constants.JsonParamNames.X_THROTTLING_TIER)
-    private String xThrottlingTier;
+  @JsonProperty(Constants.JsonParamNames.X_THROTTLING_TIER)
+  private String xThrottlingTier;
 
-    public Method() {
-        this.xAuthType = "Application & Application User";
-        this.xThrottlingTier = "Unlimited";
-    }
+  public Method() {
+    this.xAuthType = "Application & Application User";
+    this.xThrottlingTier = "Unlimited";
+  }
 
-    public List<Parameter> getParameters() {
-        return parameters;
-    }
+  public List<Parameter> getParameters() {
+    return parameters;
+  }
 
-    public void setParameters(List<Parameter> parameters) {
-        this.parameters = parameters;
-    }
+  public void setParameters(List<Parameter> parameters) {
+    this.parameters = parameters;
+  }
 
-    public String getxAuthType() {
-        return xAuthType;
-    }
+  public String getxAuthType() {
+    return xAuthType;
+  }
 
-    public void setxAuthType(String xAuthType) {
-        this.xAuthType = xAuthType;
-    }
+  public void setxAuthType(String xAuthType) {
+    this.xAuthType = xAuthType;
+  }
 
-    public String getxThrottlingTier() {
-        return xThrottlingTier;
-    }
+  public String getxThrottlingTier() {
+    return xThrottlingTier;
+  }
 
-    public void setxThrottlingTier(String xThrottlingTier) {
-        this.xThrottlingTier = xThrottlingTier;
-    }
+  public void setxThrottlingTier(String xThrottlingTier) {
+    this.xThrottlingTier = xThrottlingTier;
+  }
 }

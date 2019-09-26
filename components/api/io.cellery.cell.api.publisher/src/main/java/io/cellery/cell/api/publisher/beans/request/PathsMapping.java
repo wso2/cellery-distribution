@@ -24,49 +24,47 @@ import io.cellery.cell.api.publisher.utils.Constants;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Class to represent paths map.
- */
+/** Class to represent paths map. */
 public class PathsMapping {
 
-    @JsonProperty(Constants.JsonParamNames.PATHS)
-    private Map<String, PathDefinition> paths = new HashMap<>();
+  @JsonProperty(Constants.JsonParamNames.PATHS)
+  private Map<String, PathDefinition> paths = new HashMap<>();
 
-    @JsonProperty(Constants.JsonParamNames.SWAGGER)
-    private String swagger;
+  @JsonProperty(Constants.JsonParamNames.SWAGGER)
+  private String swagger;
 
-    @JsonProperty(Constants.JsonParamNames.INFO)
-    private InfoDefinition info;
+  @JsonProperty(Constants.JsonParamNames.INFO)
+  private InfoDefinition info;
 
-    public PathsMapping() {
-        swagger = Constants.Utils.SWAGGER_VERSION;
-    }
+  public PathsMapping() {
+    swagger = Constants.Utils.SWAGGER_VERSION;
+  }
 
-    public Map<String, PathDefinition> getPaths() {
-        return paths;
-    }
+  public Map<String, PathDefinition> getPaths() {
+    return paths;
+  }
 
-    public String getSwagger() {
-        return swagger;
-    }
+  public String getSwagger() {
+    return swagger;
+  }
 
-    public void setSwagger(String swagger) {
-        this.swagger = swagger;
-    }
+  public void setSwagger(String swagger) {
+    this.swagger = swagger;
+  }
 
-    public void addPathDefinition(String key, PathDefinition def) {
-        this.paths.put(key, def);
-    }
+  public void addPathDefinition(String key, PathDefinition def) {
+    this.paths.put(key, def);
+  }
 
-    public InfoDefinition getInfo() {
-        return info;
-    }
+  public InfoDefinition getInfo() {
+    return info;
+  }
 
-    public void setInfo(InfoDefinition info) {
-        this.info = info;
-    }
+  public void setInfo(InfoDefinition info) {
+    this.info = info;
+  }
 
-//    public void addInfo(String title, Info info) {
-//        this.info.put(title, version);
-//    }
+  //    public void addInfo(String title, Info info) {
+  //        this.info.put(title, version);
+  //    }
 }

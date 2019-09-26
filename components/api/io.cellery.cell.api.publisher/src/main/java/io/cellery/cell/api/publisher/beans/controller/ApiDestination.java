@@ -21,9 +21,7 @@ package io.cellery.cell.api.publisher.beans.controller;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.cellery.cell.api.publisher.utils.Constants;
 
-/**
- * Class to represent API destination.
- */
+/** Class to represent API destination. */
 public class ApiDestination {
 
   @JsonProperty(Constants.JsonParamNames.HOST)

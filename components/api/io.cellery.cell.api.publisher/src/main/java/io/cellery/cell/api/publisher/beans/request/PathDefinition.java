@@ -22,53 +22,51 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.cellery.cell.api.publisher.utils.Constants;
 
-/**
- * Represent Path definition information.
- */
+/** Represent Path definition information. */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PathDefinition {
 
-    @JsonProperty(Constants.JsonParamNames.GET)
-    private Method get;
+  @JsonProperty(Constants.JsonParamNames.GET)
+  private Method get;
 
-    @JsonProperty(Constants.JsonParamNames.POST)
-    private Method post;
+  @JsonProperty(Constants.JsonParamNames.POST)
+  private Method post;
 
-    @JsonProperty(Constants.JsonParamNames.PUT)
-    private Method put;
+  @JsonProperty(Constants.JsonParamNames.PUT)
+  private Method put;
 
-    @JsonProperty(Constants.JsonParamNames.DELETE)
-    private Method delete;
+  @JsonProperty(Constants.JsonParamNames.DELETE)
+  private Method delete;
 
-    public Method getGet() {
-        return get;
-    }
+  public Method getGet() {
+    return get;
+  }
 
-    public void setGet(Method get) {
-        this.get = get;
-    }
+  public void setGet(Method get) {
+    this.get = get;
+  }
 
-    public Method getPost() {
-        return post;
-    }
+  public Method getPost() {
+    return post;
+  }
 
-    public void setPost(Method post) {
-        this.post = post;
-    }
+  public void setPost(Method post) {
+    this.post = post;
+  }
 
-    public Method getPut() {
-        return put;
-    }
+  public Method getPut() {
+    return put;
+  }
 
-    public void setPut(Method put) {
-        this.put = put;
-    }
+  public void setPut(Method put) {
+    this.put = put;
+  }
 
-    public Method getDelete() {
-        return delete;
-    }
+  public Method getDelete() {
+    return delete;
+  }
 
-    public void setDelete(Method delete) {
-        this.delete = delete;
-    }
+  public void setDelete(Method delete) {
+    this.delete = delete;
+  }
 }
