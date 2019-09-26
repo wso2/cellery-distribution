@@ -74,7 +74,12 @@ public class UpdateManager {
         }
     }
 
-    private static void manageApis() throws APIException {
+  /**
+   * Creation, Update and publish APIs in Global API Manager
+   *
+   *  @throws APIException throw API Exception if an error occurred while managing the API.
+   */
+  private static void manageApis() throws APIException {
         if (log.isDebugEnabled()) {
             log.debug("Managing APIs...");
         }
@@ -101,10 +106,14 @@ public class UpdateManager {
     /**
      * Create Global API Payload
      *
+     * @param api API sent by controller
      * @return JSONArray that contains global API Payload
      * @throws APIException throw API Exception if an error occurred while creating the API.
      */
     private static ApiCreateRequest createGlobalApiPayload(API api) throws APIException {
+        if (log.isDebugEnabled()) {
+            log.debug("Creating Global API payload");
+        }
         ApiCreateRequest globalApiCreateRequest = new ApiCreateRequest();
         globalApiCreateRequest.setName(generateAPIName(api));
         globalApiCreateRequest.setContext(getContext(api));
@@ -123,13 +132,17 @@ public class UpdateManager {
         return globalApiCreateRequest;
     }
 
-    /**
-     * Create Global API.
-     *
-     * @return created API Id.
-     * @throws APIException throw API Exception if an error occurred while creating the API.
-     */
-    private static String createGlobalApi(ApiCreateRequest createApiPayload) throws APIException {
+  /**
+   * Create Global API.
+   *
+   * @param createApiPayload payload of API to be created in Global API manager
+   * @return created API Id.
+   * @throws APIException throw API Exception if an error occurred while creating the API.
+   */
+  private static String createGlobalApi(ApiCreateRequest createApiPayload) throws APIException {
+        if (log.isDebugEnabled()) {
+            log.debug("Creating Global API in Global API Manager");
+        }
         RequestProcessor requestProcessor = new RequestProcessor();
         ObjectMapper objectMapper = new ObjectMapper();
         String apiCreateResponse;
@@ -168,7 +181,7 @@ public class UpdateManager {
      */
     private static void publishGlobalAPI(String id) throws APIException {
         if (log.isDebugEnabled()) {
-            log.debug("Publishing created API in Global API Manager...");
+            log.debug("Publishing created API in Global API Manager");
         }
 
         RequestProcessor requestProcessor = new RequestProcessor();
@@ -184,15 +197,18 @@ public class UpdateManager {
         }
     }
 
-    /**
-     * Create new Global API version
-     *
-     * @return String that contains created API ID
-     * @throws APIException throw API Exception if an error occurred while creating new version of API.
-     */
-    private static String createNewApiVersion(String existingApiId, String version) throws APIException {
+  /**
+   * Create new Global API version
+   *
+   * @param existingApiId Id of already existing API in Global api manager
+   * @param version new version of API
+   * @return String that contains created API ID
+   * @throws APIException throw API Exception if an error occurred while creating new version of API.
+   */
+  private static String createNewApiVersion(String existingApiId, String version)
+      throws APIException {
         if (log.isDebugEnabled()) {
-            log.debug("Creating new api version for existing Api. ID:" + existingApiId);
+            log.debug("Creating new api version for existing API with Id:" + existingApiId);
         }
         RequestProcessor requestProcessor = new RequestProcessor();
         String createApiVersionResponse;
@@ -203,8 +219,6 @@ public class UpdateManager {
                 Constants.Utils.CONTENT_TYPE_APPLICATION_JSON, Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
                 Constants.Utils.BEARER + apimConfig.getApiToken(), Constants.Utils.EMPTY_STRING);
 
-        log.debug("Create new API version response :" + createApiVersionResponse);
-
         if (createApiVersionResponse != null) {
             JSONObject jsonObj = new JSONObject(createApiVersionResponse);
             return jsonObj.getString(Constants.Utils.ID);
@@ -213,13 +227,19 @@ public class UpdateManager {
         }
     }
 
-    /**
-     * Create Global API Update Payload
-     *
-     * @return JSONArray that contains global API update Payload
-     * @throws APIException throw API Exception if an error occurred while updating the API.
-     */
-    private static ApiUpdateRequest createGlobalApiUpdatePayload(API api, String id) throws APIException {
+  /**
+   * Create Global API Update Payload
+   *
+   * @param api API sent by controller
+   * @param id Id of API to be updated with new payload
+   * @return JSONArray that contains global API update Payload
+   * @throws APIException throw API Exception if an error occurred while updating the API.
+   */
+  private static ApiUpdateRequest createGlobalApiUpdatePayload(API api, String id)
+      throws APIException {
+        if (log.isDebugEnabled()) {
+            log.debug("Creating payload for update Global API");
+        }
         ApiUpdateRequest globalApiUpdateRequest = new ApiUpdateRequest();
         globalApiUpdateRequest.setId(id);
         globalApiUpdateRequest.setApiDefinition(getAPIDefinition(api));
@@ -236,13 +256,19 @@ public class UpdateManager {
         return globalApiUpdateRequest;
     }
 
-    /**
-     * Update Global API.
-     *
-     * @return updated API Id.
-     * @throws APIException throw API Exception if an error occurred while updating the API.
-     */
-    private static String updateGlobalAPI(ApiUpdateRequest globalApiUpdatePayload, String id) throws APIException {
+  /**
+   * Update Global API.
+   *
+   * @param globalApiUpdatePayload API payload to be updated
+   * @param id ID of API to be updated
+   * @return updated API Id.
+   * @throws APIException throw API Exception if an error occurred while updating the API.
+   */
+  private static String updateGlobalAPI(ApiUpdateRequest globalApiUpdatePayload, String id)
+      throws APIException {
+        if (log.isDebugEnabled()) {
+            log.debug("Updating Global API in Global API manager");
+        }
         ObjectMapper objectMapper = new ObjectMapper();
         RequestProcessor requestProcessor = new RequestProcessor();
         String apiUpdateResponse;
@@ -274,12 +300,13 @@ public class UpdateManager {
     /**
      * Get Id of API available in the global apim with given given cell name and context
      *
+     * @param api API sent by controller
      * @return Id of an available API
      * @throws APIException throw API Exception if an error occurred while checking APIs availability.
      */
     private static String getExistingApiId(API api) throws APIException {
         if (log.isDebugEnabled()) {
-            log.debug("Getting API Id of an API available in Global API Manager...");
+            log.debug("Getting Id of an API available in Global API Manager");
         }
 
         RequestProcessor requestProcessor = new RequestProcessor();
@@ -298,15 +325,8 @@ public class UpdateManager {
         if (apiRetrieveResponse != null) {
             JSONObject jsonObj = new JSONObject(apiRetrieveResponse);
             int apiCount = jsonObj.getInt(Constants.Utils.COUNT);
-            if (log.isDebugEnabled()) {
-                log.debug("New Api Check Api Count :" + apiCount);
-                log.debug("New Api Check payload :" + jsonObj);
-            }
             if (apiCount > 0) {
                 String id = jsonObj.getJSONArray("list").getJSONObject(0).getString("id");
-                if (log.isDebugEnabled()) {
-                    log.debug("New Api Check Api ID :" + id);
-                }
                 return id;
             }
         } else {
@@ -318,6 +338,7 @@ public class UpdateManager {
     /**
      * Check the API can be published as a new version.
      *
+     * @param api API sent by controller
      * @return true if api is able to be published as a new version.
      * @throws APIException throw API Exception if an error occurred while checking APIs availability.
      */
@@ -340,7 +361,6 @@ public class UpdateManager {
         } catch (UnsupportedEncodingException e) {
             throw new APIException("Error while encoding the query: " + apiRetrieveQuery);
         }
-        log.debug("abelToCreateNewVersion path :" + apiRetrievePath);
         String apiRetrieveResponse = requestProcessor
                 .doGet(apiRetrievePath, Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
                         Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
@@ -349,10 +369,6 @@ public class UpdateManager {
         if (apiRetrieveResponse != null) {
             JSONObject jsonObj = new JSONObject(apiRetrieveResponse);
             int apiCount = jsonObj.getInt(Constants.Utils.COUNT);
-            if (log.isDebugEnabled()) {
-                log.debug("Api versioning Check Api Count :" + apiCount);
-                log.debug("Api versioning Check payload :" + jsonObj.toString());
-            }
             return apiCount == 0;
         } else {
             throw new APIException("Error while retrieving apis from the global API with url " + apiRetrievePath);
@@ -362,6 +378,7 @@ public class UpdateManager {
     /**
      * Create endpoint_config payload required for global API creation payload
      *
+     * @param api API sent by controller
      * @return endpoint payload string
      */
     private static String getGlobalEndpoint(API api) {
@@ -385,7 +402,7 @@ public class UpdateManager {
     /**
      * Create api definition payload required for API creation payload
      *
-     * @param api Api details
+     * @param api API sent by controller
      * @return api definition payload string
      */
     private static String getAPIDefinition(API api) throws APIException {
@@ -461,8 +478,13 @@ public class UpdateManager {
         return apiName.replaceAll("[^a-zA-Z0-9]", "_");
     }
 
-
-    private static String getContext(API api) {
+  /**
+   * Generates API context for global API
+   *
+   * @param api API sent by controller
+   * @return API context
+   */
+  private static String getContext(API api) {
         if (cellConfig.getGlobalContext().equals(Constants.Utils.EMPTY_STRING)) {
             return (cellConfig.getCell() + "/" + api.getContext()).replaceAll("//", "/");
         } else {
@@ -471,7 +493,13 @@ public class UpdateManager {
         }
     }
 
-    private static String getVersion(API api) {
+  /**
+   * Generates API version for global API
+   *
+   * @param api API sent by controller
+   * @return API version
+   */
+  private static String getVersion(API api) {
         if (cellConfig.getVersion().equals(Constants.Utils.EMPTY_STRING)) {
             return api.getVersion();
         } else {
