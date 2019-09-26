@@ -28,7 +28,7 @@ import io.cellery.cell.api.publisher.beans.controller.RestConfig;
 import io.cellery.cell.api.publisher.beans.request.ApiCreateRequest;
 import io.cellery.cell.api.publisher.beans.request.ApiUpdateRequest;
 import io.cellery.cell.api.publisher.beans.request.Endpoint;
-import io.cellery.cell.api.publisher.beans.request.InfoDefenietion;
+import io.cellery.cell.api.publisher.beans.request.InfoDefinition;
 import io.cellery.cell.api.publisher.beans.request.Method;
 import io.cellery.cell.api.publisher.beans.request.Parameter;
 import io.cellery.cell.api.publisher.beans.request.PathDefinition;
@@ -115,6 +115,7 @@ public class UpdateManager {
 
         // Set some additional properties.
         Map<String, String> additionalProperties = new HashMap<>();
+        additionalProperties.put(Constants.Utils.CELL_NAME_PROPERTY, cellConfig.getCell());
         additionalProperties.put(Constants.Utils.CELLNAME_N_CONTEXT_PROPERTY, cellConfig.getCell() +
                 getContext(api).replace("/", "_"));
         globalApiCreateRequest.setAdditionalProperties(additionalProperties);
@@ -196,10 +197,11 @@ public class UpdateManager {
         RequestProcessor requestProcessor = new RequestProcessor();
         String createApiVersionResponse;
         String createApiVersionPath = restConfig.getApimBaseUrl() + Constants.Utils.PATH_PUBLISHER
-                + restConfig.getApiVersion() + Constants.Utils.PATH_CREATE_NEW_VERSION + "apiId=" + existingApiId + "&newVersion=" + version;
-        createApiVersionResponse = requestProcessor.doPost(createApiVersionPath, Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
-                Constants.Utils.CONTENT_TYPE_APPLICATION_JSON, Constants.Utils.BEARER + apimConfig.getApiToken(),
-                Constants.Utils.EMPTY_STRING);
+                + restConfig.getApiVersion() + Constants.Utils.PATH_CREATE_NEW_VERSION + "apiId="
+                + existingApiId + "&newVersion=" + version;
+        createApiVersionResponse = requestProcessor.doPost(createApiVersionPath,
+                Constants.Utils.CONTENT_TYPE_APPLICATION_JSON, Constants.Utils.CONTENT_TYPE_APPLICATION_JSON,
+                Constants.Utils.BEARER + apimConfig.getApiToken(), Constants.Utils.EMPTY_STRING);
 
         log.debug("Create new API version response :" + createApiVersionResponse);
 
@@ -226,6 +228,7 @@ public class UpdateManager {
 
         // Set some additional properties.
         Map<String, String> additionalProperties = new HashMap<>();
+        additionalProperties.put(Constants.Utils.CELL_NAME_PROPERTY, cellConfig.getCell());
         additionalProperties.put(Constants.Utils.CELLNAME_N_CONTEXT_PROPERTY, cellConfig.getCell() +
                 getContext(api).replace("/", "_"));
         globalApiUpdateRequest.setAdditionalProperties(additionalProperties);
@@ -430,7 +433,7 @@ public class UpdateManager {
             }
             apiDefinition.addPathDefinition(allowQueryPath, pathDefinition);
         }
-        InfoDefenietion info = new InfoDefenietion();
+        InfoDefinition info = new InfoDefinition();
         info.setTitle(generateAPIName(api));
         info.setVersion(getVersion(api));
         apiDefinition.setInfo(info);

@@ -36,7 +36,7 @@ public class PathsMapping {
     private String swagger;
 
     @JsonProperty(Constants.JsonParamNames.INFO)
-    private InfoDefenietion info;
+    private InfoDefinition info;
 
     public PathsMapping() {
         swagger = Constants.Utils.SWAGGER_VERSION;
@@ -58,11 +58,11 @@ public class PathsMapping {
         this.paths.put(key, def);
     }
 
-    public InfoDefenietion getInfo() {
+    public InfoDefinition getInfo() {
         return info;
     }
 
-    public void setInfo(InfoDefenietion info) {
+    public void setInfo(InfoDefinition info) {
         this.info = info;
     }
 
