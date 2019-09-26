@@ -17,19 +17,16 @@
  */
 package io.cellery.cell.api.publisher.exceptions;
 
-/**
- * Vick API handler exceptions.
- */
+/** Vick API handler exceptions. */
 public class APIException extends Exception {
 
-    public APIException() {
-    }
+  public APIException() {}
 
-    public APIException(String s) {
-        super(s);
-    }
+  public APIException(String s) {
+    super(s);
+  }
 
-    public APIException(String s, Throwable throwable) {
-        super(s, throwable);
-    }
+  public APIException(String s, Throwable throwable) {
+    super(s, throwable);
+  }
 }

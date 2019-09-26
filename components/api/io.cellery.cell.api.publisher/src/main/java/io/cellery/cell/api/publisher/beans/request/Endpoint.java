@@ -22,46 +22,44 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.cellery.cell.api.publisher.utils.Constants;
 
-/**
- * Represents endpoint information.
- */
+/** Represents endpoint information. */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Endpoint {
 
-    @JsonProperty(Constants.JsonParamNames.PRODUCTION_ENDPOINTS)
-    private ProductionEndpoint productionEndPoint;
+  @JsonProperty(Constants.JsonParamNames.PRODUCTION_ENDPOINTS)
+  private ProductionEndpoint productionEndPoint;
 
-    @JsonProperty(Constants.JsonParamNames.SANDBOX_ENDPOINTS)
-    private SandboxEndpoint sandboxEndPoint;
+  @JsonProperty(Constants.JsonParamNames.SANDBOX_ENDPOINTS)
+  private SandboxEndpoint sandboxEndPoint;
 
-    @JsonProperty(Constants.JsonParamNames.ENDPOINT_TYPE)
-    private String endpointType;
+  @JsonProperty(Constants.JsonParamNames.ENDPOINT_TYPE)
+  private String endpointType;
 
-    public Endpoint() {
-        this.endpointType = "http";
-    }
+  public Endpoint() {
+    this.endpointType = "http";
+  }
 
-    public ProductionEndpoint getProductionEndPoint() {
-        return productionEndPoint;
-    }
+  public ProductionEndpoint getProductionEndPoint() {
+    return productionEndPoint;
+  }
 
-    public void setProductionEndPoint(ProductionEndpoint productionEndPoint) {
-        this.productionEndPoint = productionEndPoint;
-    }
+  public void setProductionEndPoint(ProductionEndpoint productionEndPoint) {
+    this.productionEndPoint = productionEndPoint;
+  }
 
-    public void setEndpointType(String endpointType) {
-        this.endpointType = endpointType;
-    }
+  public String getEndpointType() {
+    return endpointType;
+  }
 
-    public String getEndpointType() {
-        return endpointType;
-    }
+  public void setEndpointType(String endpointType) {
+    this.endpointType = endpointType;
+  }
 
-    public SandboxEndpoint getSandboxEndPoint() {
-        return sandboxEndPoint;
-    }
+  public SandboxEndpoint getSandboxEndPoint() {
+    return sandboxEndPoint;
+  }
 
-    public void setSandboxEndPoint(SandboxEndpoint sandboxEndPoint) {
-        this.sandboxEndPoint = sandboxEndPoint;
-    }
+  public void setSandboxEndPoint(SandboxEndpoint sandboxEndPoint) {
+    this.sandboxEndPoint = sandboxEndPoint;
+  }
 }

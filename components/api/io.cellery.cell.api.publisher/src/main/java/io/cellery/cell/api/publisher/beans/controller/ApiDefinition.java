@@ -21,30 +21,28 @@ package io.cellery.cell.api.publisher.beans.controller;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.cellery.cell.api.publisher.utils.Constants;
 
-/**
- * Class to represent API definition.
- */
+/** Class to represent API definition. */
 public class ApiDefinition {
 
-    @JsonProperty(Constants.JsonParamNames.PATH)
-    private String path;
+  @JsonProperty(Constants.JsonParamNames.PATH)
+  private String path;
 
-    @JsonProperty(Constants.JsonParamNames.METHOD)
-    private String method;
+  @JsonProperty(Constants.JsonParamNames.METHOD)
+  private String method;
 
-    public String getPath() {
-        return path;
-    }
+  public String getPath() {
+    return path;
+  }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
+  public void setPath(String path) {
+    this.path = path;
+  }
 
-    public String getMethod() {
-        return method;
-    }
+  public String getMethod() {
+    return method;
+  }
 
-    public void setMethod(String method) {
-        this.method = method;
-    }
+  public void setMethod(String method) {
+    this.method = method;
+  }
 }

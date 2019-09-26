@@ -22,85 +22,83 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.cellery.cell.api.publisher.utils.Constants;
 import org.json.simple.JSONObject;
 
-/**
- * Rest configuration object.
- */
+/** Rest configuration object. */
 public class RestConfig {
 
-    @JsonProperty(Constants.JsonParamNames.USERNAME)
-    private String username;
+  @JsonProperty(Constants.JsonParamNames.USERNAME)
+  private String username;
 
-    @JsonProperty(Constants.JsonParamNames.PASSWORD)
-    private String password;
+  @JsonProperty(Constants.JsonParamNames.PASSWORD)
+  private String password;
 
-    @JsonProperty(Constants.JsonParamNames.API_VERSION)
-    private String apiVersion;
+  @JsonProperty(Constants.JsonParamNames.API_VERSION)
+  private String apiVersion;
 
-    @JsonProperty(Constants.JsonParamNames.REGISTER_PAYLOAD)
-    private JSONObject registerPayload;
+  @JsonProperty(Constants.JsonParamNames.REGISTER_PAYLOAD)
+  private JSONObject registerPayload;
 
-    @JsonProperty(Constants.JsonParamNames.APIM_BASE_URL)
-    private String apimBaseUrl;
+  @JsonProperty(Constants.JsonParamNames.APIM_BASE_URL)
+  private String apimBaseUrl;
 
-    @JsonProperty(Constants.JsonParamNames.TOKEN_ENDPOINT)
-    private String tokenEndpoint;
+  @JsonProperty(Constants.JsonParamNames.TOKEN_ENDPOINT)
+  private String tokenEndpoint;
 
-    @JsonProperty(Constants.JsonParamNames.TRUST_STORE)
-    private JSONObject trustStore;
+  @JsonProperty(Constants.JsonParamNames.TRUST_STORE)
+  private JSONObject trustStore;
 
-    public String getUsername() {
-        return username;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public String getApiVersion() {
-        return apiVersion;
-    }
+  public String getApiVersion() {
+    return apiVersion;
+  }
 
-    public void setApiVersion(String apiVersion) {
-        this.apiVersion = apiVersion;
-    }
+  public void setApiVersion(String apiVersion) {
+    this.apiVersion = apiVersion;
+  }
 
-    public JSONObject getRegisterPayload() {
-        return registerPayload;
-    }
+  public JSONObject getRegisterPayload() {
+    return registerPayload;
+  }
 
-    public void setRegisterPayload(JSONObject registerPayload) {
-        this.registerPayload = registerPayload;
-    }
+  public void setRegisterPayload(JSONObject registerPayload) {
+    this.registerPayload = registerPayload;
+  }
 
-    public String getApimBaseUrl() {
-        return apimBaseUrl;
-    }
+  public String getApimBaseUrl() {
+    return apimBaseUrl;
+  }
 
-    public void setApimBaseUrl(String apimBaseUrl) {
-        this.apimBaseUrl = apimBaseUrl;
-    }
+  public void setApimBaseUrl(String apimBaseUrl) {
+    this.apimBaseUrl = apimBaseUrl;
+  }
 
-    public String getTokenEndpoint() {
-        return tokenEndpoint;
-    }
+  public String getTokenEndpoint() {
+    return tokenEndpoint;
+  }
 
-    public void setTokenEndpoint(String tokenEndpoint) {
-        this.tokenEndpoint = tokenEndpoint;
-    }
+  public void setTokenEndpoint(String tokenEndpoint) {
+    this.tokenEndpoint = tokenEndpoint;
+  }
 
-    public JSONObject getTrustStore() {
-        return trustStore;
-    }
+  public JSONObject getTrustStore() {
+    return trustStore;
+  }
 
-    public void setTrustStore(JSONObject trustStore) {
-        this.trustStore = trustStore;
-    }
+  public void setTrustStore(JSONObject trustStore) {
+    this.trustStore = trustStore;
+  }
 }

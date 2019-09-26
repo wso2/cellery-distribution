@@ -21,31 +21,28 @@ package io.cellery.cell.api.publisher.beans.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.cellery.cell.api.publisher.utils.Constants;
 
-/**
- * Represents info under PathDefinition
- */
+/** Represents info under PathDefinition */
 public class InfoDefinition {
 
-    @JsonProperty(Constants.JsonParamNames.TITLE)
-    private String title;
+  @JsonProperty(Constants.JsonParamNames.TITLE)
+  private String title;
 
-    @JsonProperty(Constants.JsonParamNames.VERSION)
-    private String version;
+  @JsonProperty(Constants.JsonParamNames.VERSION)
+  private String version;
 
+  public String getTitle() {
+    return title;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public String getVersion() {
+    return version;
+  }
 
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
+  public void setVersion(String version) {
+    this.version = version;
+  }
 }

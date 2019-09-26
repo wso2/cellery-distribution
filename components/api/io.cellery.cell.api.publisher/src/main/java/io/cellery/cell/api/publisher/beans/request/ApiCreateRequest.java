@@ -27,9 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Class to represents information required for API creation.
- */
+/** Class to represents information required for API creation. */
 public class ApiCreateRequest {
 
     @JsonProperty(Constants.JsonParamNames.NAME)

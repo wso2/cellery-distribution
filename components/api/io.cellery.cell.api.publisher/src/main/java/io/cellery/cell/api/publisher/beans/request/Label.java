@@ -23,45 +23,43 @@ import io.cellery.cell.api.publisher.utils.Constants;
 
 import java.util.List;
 
-/**
- * Class to represent label.
- */
+/** Class to represent label. */
 public class Label {
 
-    @JsonProperty(Constants.JsonParamNames.NAME)
-    private String name;
+  @JsonProperty(Constants.JsonParamNames.NAME)
+  private String name;
 
-    @JsonProperty(Constants.JsonParamNames.DESCRIPTION)
-    private String description;
+  @JsonProperty(Constants.JsonParamNames.DESCRIPTION)
+  private String description;
 
-    @JsonProperty(Constants.JsonParamNames.ACCESS_URLS)
-    private List accessUrls;
+  @JsonProperty(Constants.JsonParamNames.ACCESS_URLS)
+  private List accessUrls;
 
-    public Label() {
-        description = "cell label";
-    }
+  public Label() {
+    description = "cell label";
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public List getAccessUrls() {
-        return accessUrls;
-    }
+  public List getAccessUrls() {
+    return accessUrls;
+  }
 
-    public void setAccessUrls(List accessUrls) {
-        this.accessUrls = accessUrls;
-    }
+  public void setAccessUrls(List accessUrls) {
+    this.accessUrls = accessUrls;
+  }
 }

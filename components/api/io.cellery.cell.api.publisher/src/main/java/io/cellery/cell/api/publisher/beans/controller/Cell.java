@@ -23,63 +23,61 @@ import io.cellery.cell.api.publisher.utils.Constants;
 
 import java.util.List;
 
-/**
- * Class to represent Cell
- */
+/** Class to represent Cell */
 public class Cell {
 
-    @JsonProperty(Constants.JsonParamNames.CELL)
-    private String cell;
+  @JsonProperty(Constants.JsonParamNames.CELL)
+  private String cell;
 
-    @JsonProperty(Constants.JsonParamNames.VERSION)
-    private String version;
+  @JsonProperty(Constants.JsonParamNames.VERSION)
+  private String version;
 
-    @JsonProperty(Constants.JsonParamNames.APIS)
-    private List<API> apis;
+  @JsonProperty(Constants.JsonParamNames.APIS)
+  private List<API> apis;
 
-    @JsonProperty(Constants.JsonParamNames.HOSTNAME)
-    private String hostname;
+  @JsonProperty(Constants.JsonParamNames.HOSTNAME)
+  private String hostname;
 
-    @JsonProperty(Constants.JsonParamNames.GLOBAL_CONTEXT)
-    private String globalContext;
+  @JsonProperty(Constants.JsonParamNames.GLOBAL_CONTEXT)
+  private String globalContext;
 
-    public String getCell() {
-        return cell;
-    }
+  public String getCell() {
+    return cell;
+  }
 
-    public void setCell(String cell) {
-        this.cell = cell;
-    }
+  public void setCell(String cell) {
+    this.cell = cell;
+  }
 
-    public String getVersion() {
-        return version;
-    }
+  public String getVersion() {
+    return version;
+  }
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
+  public void setVersion(String version) {
+    this.version = version;
+  }
 
-    public List<API> getApis() {
-        return apis;
-    }
+  public List<API> getApis() {
+    return apis;
+  }
 
-    public void setApis(List<API> apis) {
-        this.apis = apis;
-    }
+  public void setApis(List<API> apis) {
+    this.apis = apis;
+  }
 
-    public String getHostname() {
-        return hostname;
-    }
+  public String getHostname() {
+    return hostname;
+  }
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
+  public void setHostname(String hostname) {
+    this.hostname = hostname;
+  }
 
-    public String getGlobalContext() {
-        return globalContext;
-    }
+  public String getGlobalContext() {
+    return globalContext;
+  }
 
-    public void setGlobalContext(String globalContext) {
-        this.globalContext = globalContext;
-    }
+  public void setGlobalContext(String globalContext) {
+    this.globalContext = globalContext;
+  }
 }

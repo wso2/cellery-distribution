@@ -21,19 +21,17 @@ package io.cellery.cell.api.publisher.beans.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.cellery.cell.api.publisher.utils.Constants;
 
-/**
- * Represents Production endpoint.
- */
+/** Represents Production endpoint. */
 public class ProductionEndpoint {
 
-    @JsonProperty(Constants.JsonParamNames.URL)
-    private String url;
+  @JsonProperty(Constants.JsonParamNames.URL)
+  private String url;
 
-    public String getUrl() {
-        return url;
-    }
+  public String getUrl() {
+    return url;
+  }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+  public void setUrl(String url) {
+    this.url = url;
+  }
 }
