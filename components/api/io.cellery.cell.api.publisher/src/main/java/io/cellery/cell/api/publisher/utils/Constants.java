@@ -111,7 +111,7 @@ public class Constants {
 
         // Config map file paths
         public static final String CELL_CONFIGURATION_FILE_PATH = "/etc/config/api.json";
-        public static final String REST_CONFIGURATION_FILE_PATH = "/etc/config/gw.json";
+        public static final String REST_CONFIGURATION_FILE_PATH = "/etc/config/publisher.json";
 
         // Token constants
         public static final String CLIENT_ID = "clientId";
@@ -137,7 +137,6 @@ public class Constants {
 
         // API Properties
         public static final String CELL_NAME_PROPERTY = "cell_name";
-        public static final String API_CONTEXT_PROPERTY = "api_context";
         public static final String CELLNAME_N_CONTEXT_PROPERTY = "cellncontext";
     }
 }

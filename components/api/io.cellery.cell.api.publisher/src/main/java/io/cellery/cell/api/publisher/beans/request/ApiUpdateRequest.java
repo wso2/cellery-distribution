@@ -27,120 +27,125 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/** Class to represents information required for updating an API. */
 public class ApiUpdateRequest {
 
-    @JsonProperty(Constants.JsonParamNames.ID)
-    private String id;
+  @JsonProperty(Constants.JsonParamNames.ID)
+  private String id;
 
-    @JsonProperty(Constants.JsonParamNames.IS_DEFAULT_VERSION)
-    private Boolean isDefaultVersion;
+  @JsonProperty(Constants.JsonParamNames.IS_DEFAULT_VERSION)
+  private Boolean isDefaultVersion;
 
-    @JsonProperty(Constants.JsonParamNames.TRANSPORT)
-    private List transport;
+  @JsonProperty(Constants.JsonParamNames.TRANSPORT)
+  private List transport;
 
-    @JsonProperty(Constants.JsonParamNames.TIERS)
-    private List tiers;
+  @JsonProperty(Constants.JsonParamNames.TIERS)
+  private List tiers;
 
-    @JsonProperty(Constants.JsonParamNames.GATEWAY_ENVIRONMENTS)
-    private String gatewayEnvironments;
+  @JsonProperty(Constants.JsonParamNames.GATEWAY_ENVIRONMENTS)
+  private String gatewayEnvironments;
 
-    @JsonProperty(Constants.JsonParamNames.VISIBILITY)
-    private String visibility;
+  @JsonProperty(Constants.JsonParamNames.VISIBILITY)
+  private String visibility;
 
-    @JsonProperty(Constants.JsonParamNames.LABELS)
-    private List labels;
+  @JsonProperty(Constants.JsonParamNames.LABELS)
+  private List labels;
 
-    @JsonProperty(Constants.JsonParamNames.API_DEFINITION)
-    private String apiDefinition;
+  @JsonProperty(Constants.JsonParamNames.API_DEFINITION)
+  private String apiDefinition;
 
-    @JsonProperty(Constants.JsonParamNames.ENDPOINT_CONFIG)
-    private String endpointConfig;
+  @JsonProperty(Constants.JsonParamNames.ENDPOINT_CONFIG)
+  private String endpointConfig;
 
-    @JsonProperty(Constants.JsonParamNames.ADDITIONAL_PROPERTIES)
-    private Map<String, String> additionalProperties;
+  @JsonProperty(Constants.JsonParamNames.ADDITIONAL_PROPERTIES)
+  private Map<String, String> additionalProperties;
 
-    public ApiUpdateRequest() {
-        this.isDefaultVersion = true;
-        this.transport = Arrays.asList("http", "https");
-        this.tiers = Collections.singletonList("Unlimited");
-        this.gatewayEnvironments = "";
-        this.visibility = "PUBLIC";
-    }
+  public ApiUpdateRequest() {
+    this.isDefaultVersion = true;
+    this.transport = Arrays.asList("http", "https");
+    this.tiers = Collections.singletonList("Unlimited");
+    this.gatewayEnvironments = "";
+    this.visibility = "PUBLIC";
+  }
 
-    public String getId() { return id; }
+  public String getId() {
+    return id;
+  }
 
-    public void setId(String id) { this.id = id; }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public String getApiDefinition() {
-        return apiDefinition;
-    }
+  public String getApiDefinition() {
+    return apiDefinition;
+  }
 
-    public void setApiDefinition(String apiDefinition) {
-        this.apiDefinition = apiDefinition;
-    }
+  public void setApiDefinition(String apiDefinition) {
+    this.apiDefinition = apiDefinition;
+  }
 
-    @JsonGetter("isDefaultVersion")
-    public Boolean isDefaultVersion() {
-        return isDefaultVersion;
-    }
+  @JsonGetter("isDefaultVersion")
+  public Boolean isDefaultVersion() {
+    return isDefaultVersion;
+  }
 
-    public void setDefaultVersion(Boolean isDefaultVersion) {
-        this.isDefaultVersion = isDefaultVersion;
-    }
+  public void setDefaultVersion(Boolean isDefaultVersion) {
+    this.isDefaultVersion = isDefaultVersion;
+  }
 
-    public List getTransport() {
-        return transport;
-    }
+  public List getTransport() {
+    return transport;
+  }
 
-    public void setTransport(List transport) {
-        this.transport = transport;
-    }
+  public void setTransport(List transport) {
+    this.transport = transport;
+  }
 
-    public List getTiers() {
-        return tiers;
-    }
+  public List getTiers() {
+    return tiers;
+  }
 
-    public void setTiers(List tiers) {
-        this.tiers = tiers;
-    }
+  public void setTiers(List tiers) {
+    this.tiers = tiers;
+  }
 
-    public String getGatewayEnvironments() {
-        return gatewayEnvironments;
-    }
+  public String getGatewayEnvironments() {
+    return gatewayEnvironments;
+  }
 
-    public void setGatewayEnvironments(String gatewayEnvironments) {
-        this.gatewayEnvironments = gatewayEnvironments;
-    }
+  public void setGatewayEnvironments(String gatewayEnvironments) {
+    this.gatewayEnvironments = gatewayEnvironments;
+  }
 
-    public String getVisibility() {
-        return visibility;
-    }
+  public String getVisibility() {
+    return visibility;
+  }
 
-    public void setVisibility(String visibility) {
-        this.visibility = visibility;
-    }
+  public void setVisibility(String visibility) {
+    this.visibility = visibility;
+  }
 
-    public String getEndpointConfig() {
-        return endpointConfig;
-    }
+  public String getEndpointConfig() {
+    return endpointConfig;
+  }
 
-    public void setEndpointConfig(String endpointConfig) {
-        this.endpointConfig = endpointConfig;
-    }
+  public void setEndpointConfig(String endpointConfig) {
+    this.endpointConfig = endpointConfig;
+  }
 
-    public List getLabels() {
-        return labels;
-    }
+  public List getLabels() {
+    return labels;
+  }
 
-    public void setLabels(List labels) {
-        this.labels = labels;
-    }
+  public void setLabels(List labels) {
+    this.labels = labels;
+  }
 
-    public Map<String, String> getAdditionalProperties() {
-        return additionalProperties;
-    }
+  public Map<String, String> getAdditionalProperties() {
+    return additionalProperties;
+  }
 
-    public void setAdditionalProperties(Map<String, String> additionalProperties) {
-        this.additionalProperties = additionalProperties;
-    }
+  public void setAdditionalProperties(Map<String, String> additionalProperties) {
+    this.additionalProperties = additionalProperties;
+  }
 }
