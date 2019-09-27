@@ -32,3 +32,6 @@ spec:
         containers:
         - image: "datawire/telepresence-k8s:0.101"
           name: "telepresence"
+          env: 
+          - name: TELEPRESENCE_NAMESERVER
+            value: 8.8.8.8          
