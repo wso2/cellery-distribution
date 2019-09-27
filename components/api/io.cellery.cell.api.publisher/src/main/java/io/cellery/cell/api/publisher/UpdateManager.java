@@ -558,10 +558,12 @@ public class UpdateManager {
    * @return API version
    */
   private static String getVersion(API api) {
-    if (cellConfig.getVersion().equals(Constants.Utils.EMPTY_STRING)) {
+    if (!cellConfig.getVersion().equals(Constants.Utils.EMPTY_STRING)) {
+      return cellConfig.getVersion();
+    } else if (!api.getVersion().equals(Constants.Utils.EMPTY_STRING)) {
       return api.getVersion();
     } else {
-      return cellConfig.getVersion();
+      return Constants.Utils.DEFAULT_API_VERSION;
     }
   }
 }

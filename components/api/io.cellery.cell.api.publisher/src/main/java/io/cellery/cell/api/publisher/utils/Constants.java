@@ -104,6 +104,7 @@ public class Constants {
     public static final String TOKEN_PAYLOAD =
         "grant_type=password&username=$USER&password=$PASS"
             + "&scope=apim:api_create apim:api_publish apim:label_manage apim:api_view";
+    public static final String DEFAULT_API_VERSION = "0.1";
 
     // Config map file paths
     public static final String CELL_CONFIGURATION_FILE_PATH = "/etc/config/api.json";
