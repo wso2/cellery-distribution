@@ -44,6 +44,8 @@ docker:
 	docker build -t ${DOCKER_REPO}/cell-gateway:${DOCKER_IMAGE_TAG} .
 	cd docker/lightweight-idp; \
 	docker build -t ${DOCKER_REPO}/wso2is-lightweight:${DOCKER_IMAGE_TAG} .
+    cd docker/api-publisher; \
+    docker build -t ${DOCKER_REPO}/api-publisher:${DOCKER_IMAGE_TAG} .
 
 
 .PHONY: docker-push
@@ -52,4 +54,5 @@ docker-push: docker
 	docker push ${DOCKER_REPO}/cell-gateway-init:${DOCKER_IMAGE_TAG}
 	docker push ${DOCKER_REPO}/wso2am:${DOCKER_IMAGE_TAG}
 	docker push ${DOCKER_REPO}/wso2is-lightweight:${DOCKER_IMAGE_TAG}
+	docker push ${DOCKER_REPO}/api-publisher:${DOCKER_IMAGE_TAG}
 
