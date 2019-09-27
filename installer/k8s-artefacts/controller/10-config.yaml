@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
   istio-version: "1.2.2"
-  cell-gateway-config: |
+  api-publisher-config: |
     {
         "username": "admin",
         "password": "admin",
@@ -13,7 +13,7 @@ data:
             "saasApp": true
         },
         "apimBaseUrl": "https://gateway.cellery-system:9443",
-        "tokenEndpoint": "https://gateway.cellery-system:8243/token",
+        "tokenEndpoint": "https://gateway.cellery-system:8243/token"
     }
 
   api-publisher-image: wso2cellery/api-publisher
