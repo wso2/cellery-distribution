@@ -339,27 +339,5 @@ spec:
   ports:
   - number: 443
     name: https
-    protocol: TLS
+    protocol: HTTPS
   resolution: DNS
-
----
-
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
-metadata:
-  name: maven-central
-spec:
-  hosts:
-  - '*.apache.org'
-  tls:
-  - match:
-    - port: 443
-      sni_hosts:
-      - '*.apache.org'
-    route:
-    - destination:
-        host: '*.apache.org'
-        port:
-          number: 443
-      weight: 100
-
