@@ -493,11 +493,25 @@ public class UpdateManager {
           pathDefinition.setGet(method);
           break;
         case "POST":
-          Parameter parameter = new Parameter();
-          parameter.setName(Constants.Utils.BODY);
-          parameter.setIn(Constants.Utils.BODY);
-          method.setParameters(Collections.singletonList(parameter));
+          Parameter postParameter = new Parameter();
+          postParameter.setName(Constants.Utils.BODY);
+          postParameter.setIn(Constants.Utils.BODY);
+          method.setParameters(Collections.singletonList(postParameter));
           pathDefinition.setPost(method);
+          break;
+        case "PUT":
+          Parameter putParameter = new Parameter();
+          putParameter.setName(Constants.Utils.BODY);
+          putParameter.setIn(Constants.Utils.BODY);
+          method.setParameters(Collections.singletonList(putParameter));
+          pathDefinition.setPut(method);
+          break;
+        case "DELETE":
+          Parameter deleteParameter = new Parameter();
+          deleteParameter.setName(Constants.Utils.BODY);
+          deleteParameter.setIn(Constants.Utils.BODY);
+          method.setParameters(Collections.singletonList(deleteParameter));
+          pathDefinition.setDelete(method);
           break;
         default:
           throw new APIException("Method: " + methodStr + " is not implemented");
