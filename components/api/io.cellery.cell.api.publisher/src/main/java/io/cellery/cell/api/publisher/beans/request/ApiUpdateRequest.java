@@ -61,7 +61,7 @@ public class ApiUpdateRequest {
   private Map<String, String> additionalProperties;
 
   public ApiUpdateRequest() {
-    this.isDefaultVersion = true;
+    this.isDefaultVersion = false;
     this.transport = Arrays.asList("http", "https");
     this.tiers = Collections.singletonList("Unlimited");
     this.gatewayEnvironments = "";
