@@ -67,7 +67,7 @@ public class ApiCreateRequest {
     private Map<String, String> additionalProperties;
 
     public ApiCreateRequest() {
-        this.isDefaultVersion = true;
+        this.isDefaultVersion = false;
         this.transport = Arrays.asList("http", "https");
         this.tiers = Collections.singletonList("Unlimited");
         this.gatewayEnvironments = "";
