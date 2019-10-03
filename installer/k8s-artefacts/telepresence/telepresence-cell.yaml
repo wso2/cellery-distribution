@@ -30,7 +30,7 @@ spec:
       type: "Deployment"
       template:
         containers:
-        - image: "datawire/telepresence-k8s:0.101"
+        - image: "datawire/telepresence-k8s:0.102"
           name: "telepresence"
           env: 
           - name: TELEPRESENCE_NAMESERVER
