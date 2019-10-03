@@ -339,19 +339,3 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
-
----
-
-apiVersion: networking.istio.io/v1alpha3
-kind: ServiceEntry
-metadata:
-  name: maven-central
-spec:
-  hosts:
-  - "repo.maven.apache.org"
-  location: MESH_EXTERNAL
-  ports:
-  - number: 443
-    name: https
-    protocol: HTTPS
-  resolution: DNS
