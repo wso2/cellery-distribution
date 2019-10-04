@@ -17,5 +17,5 @@ spec:
     spec:
       containers:
       - name: controller
-        image: wso2cellery/mesh-controller
+        image: wso2cellery/mesh-controller:0.4.1
       serviceAccountName: controller
