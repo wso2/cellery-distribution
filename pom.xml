@@ -280,8 +280,8 @@
 
     <properties>
         <!-- Cellery Dependencies -->
-        <cellery.mesh.obesrvability.version>0.4.1-SNAPSHOT</cellery.mesh.obesrvability.version>
-        <cellery.mesh.security.version>0.4.1-SNAPSHOT</cellery.mesh.security.version>
+        <cellery.mesh.obesrvability.version>0.4.1</cellery.mesh.obesrvability.version>
+        <cellery.mesh.security.version>0.4.0</cellery.mesh.security.version>
         <carbon.identity.oauth2.version>6.0.105</carbon.identity.oauth2.version>
 
         <!-- External Jars for Tracing Utilization -->
