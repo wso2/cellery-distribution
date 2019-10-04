@@ -20,13 +20,13 @@
     <parent>
         <groupId>io.cellery.distribution</groupId>
         <artifactId>io.cellery.distribution.docker.microgateway</artifactId>
-        <version>0.4.1-SNAPSHOT</version>
+        <version>0.4.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>io.cellery.distribution.docker.microgateway.init</artifactId>
-    <version>0.4.1-SNAPSHOT</version>
+    <version>0.4.0</version>
     <name>Cellery Distribution - Dockerfiles - API Manager</name>
     <description>Docker files for Cellery Control Plane API Manager</description>
     <packaging>pom</packaging>
