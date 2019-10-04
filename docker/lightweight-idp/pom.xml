@@ -20,13 +20,13 @@
     <parent>
         <groupId>io.cellery.distribution</groupId>
         <artifactId>io.cellery.distribution.docker</artifactId>
-        <version>0.4.0</version>
+        <version>0.4.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>io.cellery.distribution.docker.lightweight-idp</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1-SNAPSHOT</version>
     <name>Cellery Distribution - Dockerfiles - lightweight IDP</name>
     <description>Docker files for Cellery Control Plane Lightweight IDP</description>
     <packaging>pom</packaging>
