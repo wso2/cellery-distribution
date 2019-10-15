@@ -63,7 +63,7 @@ controller:
   enabled: true
 
 apim:
-  enabled: false
+  enabled: true
   ingress:
     enabled: true
     annotations:
@@ -80,7 +80,7 @@ apim:
       - apim
 
 idp:
-  enabled: true
+  enabled: false
   ingress:
     enabled: true
     annotations:

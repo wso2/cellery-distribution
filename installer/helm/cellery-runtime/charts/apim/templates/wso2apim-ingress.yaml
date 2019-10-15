@@ -33,7 +33,7 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: wso2apim-service
+          serviceName: gateway
           servicePort: 8280
 ---
 apiVersion: extensions/v1beta1
@@ -57,7 +57,7 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: wso2apim-service
+          serviceName: gateway
           servicePort: 9443
 ---
 apiVersion: extensions/v1beta1
@@ -84,5 +84,5 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: wso2apim-service
+          serviceName: gateway
           servicePort: 9443

@@ -12,12 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: extensions/v1beta1
+#Create APIM gateway deployment and the service
+#https://github.com/wso2/kubernetes-apim/blob/master/pattern-1/apim/wso2apim-deployment.yaml
+---
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wso2apim-deployment
+  name: gateway
   namespace : {{ .Values.namespace }}
 spec:
+  selector:
+    matchLabels:
+      deployment: gateway
   replicas: 1
   minReadySeconds: 30
   strategy:
@@ -28,23 +34,24 @@ spec:
   template:
     metadata:
       labels:
-        deployment: wso2apim
+        deployment: gateway
     spec:
       containers:
-      - name: wso2apim
+      - name: gateway
         image: wso2cellery/wso2am
         livenessProbe:
           exec:
             command:
-            - /bin/sh
+            - /bin/bash
             - -c
             - nc -z localhost 9443
-          initialDelaySeconds: 120
+          initialDelaySeconds: 300
           periodSeconds: 10
+          failureThreshold: 3
         readinessProbe:
           exec:
             command:
-              - /bin/sh
+              - /bin/bash
               - -c
               - nc -z localhost 9443
           initialDelaySeconds: 120
@@ -56,6 +63,13 @@ spec:
         imagePullPolicy: Always
         securityContext:
           runAsUser: 802
+        env:
+        - name: ZIPKIN_HOST
+          value: "wso2sp-worker.cellery-system"
+        - name: ZIPKIN_PORT
+          value: "9411"
+        - name: ZIPKIN_API_CONTEXT
+          value: "/api/v1/spans"
         ports:
         -
           containerPort: 8280
