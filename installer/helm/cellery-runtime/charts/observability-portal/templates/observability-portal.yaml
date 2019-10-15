@@ -12,15 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cellery-observability-portal
-  namespace: cellery-system
+  namespace: {{ .Values.namespace }}
   labels:
     app: cellery-observability-portal
     node: cellery-observability-portal
 spec:
+  selector:
+    matchLabels:
+      app: cellery-observability-portal
+      node: cellery-observability-portal
   strategy:
     type: Recreate
   template:
@@ -68,7 +72,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: cellery-observability-portal
-  namespace: cellery-system
+  namespace: {{ .Values.namespace }}
   labels:
     node: cellery-observability-portal
 spec:
@@ -87,7 +91,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: cellery-observability-portal-dashboard-ingress
-  namespace: cellery-system
+  namespace: {{ .Values.namespace }}
   labels:
       node: cellery-observability-portal
   annotations:

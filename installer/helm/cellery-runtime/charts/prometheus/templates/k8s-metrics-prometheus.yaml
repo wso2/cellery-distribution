@@ -1,0 +1,136 @@
+# Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-metrics-prometheus
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: k8s-metrics-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: k8s-metrics-prometheus
+  strategy:
+    type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+      labels:
+        app: k8s-metrics-prometheus
+    spec:
+      containers:
+        - image: prom/prometheus:v2.6.1
+          name: k8s-metrics-prometheus
+          imagePullPolicy: Always
+          args:
+            - --config.file=/etc/config/prometheus.yaml
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: 9090
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: 9090
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          ports:
+            - name: prometheus
+              containerPort: 9090
+          volumeMounts:
+            - name: k8s-metrics-prometheus-conf
+              mountPath: "/etc/config/"
+      serviceAccountName: k8s-metrics-prometheus
+      volumes:
+        - name: k8s-metrics-prometheus-conf
+          configMap:
+            name: k8s-metrics-prometheus-conf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-metrics-prometheus
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: k8s-metrics-prometheus
+spec:
+  selector:
+    app: k8s-metrics-prometheus
+  ports:
+    - name: http-prometheus
+      port: 9090
+      targetPort: 9090
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k8s-metrics-prometheus
+  namespace: {{ .Values.namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: k8s-metrics-prometheus
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+      - nodes/proxy
+      - services
+      - endpoints
+      - pods
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+  - apiGroups:
+      - "extensions"
+    resources:
+      - ingresses/status
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - nonResourceURLs:
+      - "/metrics"
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: k8s-metrics-prometheus
+subjects:
+  - kind: ServiceAccount
+    name: k8s-metrics-prometheus
+    namespace: cellery-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: k8s-metrics-prometheus
