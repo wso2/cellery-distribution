@@ -12,31 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-dependencies:
-- name: mysql
-  version: 0.19.0
-  condition: mysql.enabled
-- name: controller
-  version: 0.1.0
-  condition: controller.enabled
-- name: apim
-  version: 0.1.0
-  condition: apim.enabled
-- name: idp
-  version: 0.1.0
-  condition: idp.enabled
-- name: observability-portal
-  version: 0.1.0
-  condition: observability-portal.enabled
-- name: sp-worker
-  version: 0.1.0
-  condition: sp-worker.enabled
-- name: grafana
-  version: 0.1.0
-  condition: grafana.enabled
-- name: prometheus
-  version: 0.1.0
-  condition: prometheus.enabled
-- name: mixer-adapter
-  version: 0.1.0
-  condition: mixer-adapter.enabled
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-metrics-grafana-dashboards-default
+  namespace : {{ .Values.namespace }}
+data:
+  {{- $file := .Files }}
+  {{- range $path, $byte := .Files.Glob "confs/dashboards-default/*" }}
+  {{- $list := $path | splitList "/"}}
+  {{- $length := len $list }}
+  {{- $last := add $length -1 }}
+  {{ index $list $last }}: |-
+    {{- range $file.Lines $path }}
+    {{ . }}
+    {{- end }}
+  {{- end }}

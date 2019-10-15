@@ -63,7 +63,7 @@ controller:
   enabled: true
 
 apim:
-  enabled: true
+  enabled: false
   ingress:
     enabled: true
     annotations:
@@ -80,7 +80,7 @@ apim:
       - apim
 
 idp:
-  enabled: false
+  enabled: true
   ingress:
     enabled: true
     annotations:
@@ -97,7 +97,18 @@ idp:
       - idp.cellery-system
 
 observability-portal:
-    enabled: true
+  enabled: true
 
 sp-worker:
-    enabled: true
+  enabled: true
+
+grafana:
+  enabled: true
+
+prometheus:
+  enabled: true
+
+mixer-adapter:
+  enabled: true
+
+
