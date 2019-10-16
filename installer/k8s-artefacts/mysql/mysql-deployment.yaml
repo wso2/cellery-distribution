@@ -12,11 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: wso2apim-with-analytics-mysql-deployment
 spec:
+  selector:
+    matchLabels:
+      deployment: wso2apim-with-analytics-mysql
   replicas: 1
   template:
     metadata:
@@ -54,6 +57,11 @@ spec:
         - name: apim-rdbms-persistent-storage
           mountPath: /var/lib/mysql
         args: ["--max-connections", "10000"]
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 45
+          timeoutSeconds: 5
       volumes:
       - name: mysql-dbscripts
         configMap:

@@ -1,0 +1,46 @@
+apiVersion: v1
+data:
+  istio-version: "1.2.2"
+  api-publisher-config: |
+    {
+        "username": "admin",
+        "password": "admin",
+        "apiVersion": "v0.14",
+        "registerPayload": {
+            "clientName": "rest_api_publisher",
+            "owner": "admin",
+            "grantType": "password refresh_token",
+            "saasApp": true
+        },
+        "apimBaseUrl": "https://gateway.cellery-system:9443",
+        "tokenEndpoint": "https://gateway.cellery-system:8243/token"
+    }
+
+  api-publisher-image: wso2cellery/api-publisher
+  oidc-filter-image: wso2cellery/envoy-oidc-filter
+  skip-tls-verification: "true"
+  enable-autoscaling: "true"
+  zipkin-address: wso2sp-worker.cellery-system:9411
+  cell-sts-config: |
+    {
+        "endpoint": "https://gateway.cellery-system:9443/api/identity/cellery-auth/v1.0/sts/token",
+        "username": "admin",
+        "password": "admin",
+        "globalJWKS" : "https://gateway.cellery-system:9443/oauth2/jwks",
+        "enableSignatureValidation" : "true",
+        "enableIssuerValidation" : "true",
+        "enableAudienceValidation" : "true",
+        "enableAuthorization" : "true",
+        "OPAQueryPrefix" : "data/cellery/io"
+    }
+  opa-default-policy: |
+      package cellery.io
+
+      default allow = true
+  cell-sts-image: wso2cellery/cell-sts
+  cell-sts-opa-image: openpolicyagent/opa:0.10.3
+  cell-sts-jwks-image: wso2cellery/jwks-server
+kind: ConfigMap
+metadata:
+  name: cellery-config
+  namespace: cellery-system

@@ -32,6 +32,7 @@ public class Constants {
         public static final String DEFINITION = "definitions";
         public static final String BACKEND = "backend";
         public static final String GLOBAL = "global";
+        public static final String AUTHENTICATE = "authenticate";
         public static final String PATH = "path";
         public static final String METHOD = "method";
         public static final String CELL = "cell";

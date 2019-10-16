@@ -26,7 +26,7 @@
     <groupId>io.cellery.distribution</groupId>
     <artifactId>io.cellery.distribution.parent</artifactId>
     <name>Cellery Distribution</name>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.4.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -117,6 +117,11 @@
             <dependency>
                 <groupId>io.cellery.distribution</groupId>
                 <artifactId>io.cellery.cell.gateway.initializer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.cellery.distribution</groupId>
+                <artifactId>io.cellery.cell.api.publisher</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <!-- End of APIM docker image dependencies -->
@@ -215,7 +220,7 @@
         <repository>
             <id>cellery.mesh.security.repo</id>
             <name>Security Staging Repository</name>
-            <url>https://maven.wso2.org/nexus/content/repositories/iocellerysecurity-1002/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/iocellerysecurity-1020</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -227,7 +232,7 @@
         <repository>
             <id>cellery.mesh.observability.repo</id>
             <name>Observability Staging Repository</name>
-            <url>https://maven.wso2.org/nexus/content/repositories/iocelleryobservability-1002/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/iocelleryobservability-1027</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -275,8 +280,8 @@
 
     <properties>
         <!-- Cellery Dependencies -->
-        <cellery.mesh.obesrvability.version>0.1.0</cellery.mesh.obesrvability.version>
-        <cellery.mesh.security.version>0.1.1-SNAPSHOT</cellery.mesh.security.version>
+        <cellery.mesh.obesrvability.version>0.4.2-SNAPSHOT</cellery.mesh.obesrvability.version>
+        <cellery.mesh.security.version>0.4.1-SNAPSHOT</cellery.mesh.security.version>
         <carbon.identity.oauth2.version>6.0.105</carbon.identity.oauth2.version>
 
         <!-- External Jars for Tracing Utilization -->

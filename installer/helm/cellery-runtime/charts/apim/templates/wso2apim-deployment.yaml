@@ -1,0 +1,130 @@
+# Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: wso2apim-deployment
+  namespace : {{ .Values.namespace }}
+spec:
+  replicas: 1
+  minReadySeconds: 30
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        deployment: wso2apim
+    spec:
+      containers:
+      - name: wso2apim
+        image: wso2cellery/wso2am
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - nc -z localhost 9443
+          initialDelaySeconds: 120
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+              - /bin/sh
+              - -c
+              - nc -z localhost 9443
+          initialDelaySeconds: 120
+          periodSeconds: 10
+        lifecycle:
+          preStop:
+            exec:
+              command:  ['sh', '-c', '${WSO2_SERVER_HOME}/bin/wso2server.sh stop']
+        imagePullPolicy: Always
+        securityContext:
+          runAsUser: 802
+        ports:
+        -
+          containerPort: 8280
+          protocol: "TCP"
+        -
+          containerPort: 8243
+          protocol: "TCP"
+        -
+          containerPort: 9763
+          protocol: "TCP"
+        -
+          containerPort: 9443
+          protocol: "TCP"
+        -
+          containerPort: 5672
+          protocol: "TCP"
+        -
+          containerPort: 9711
+          protocol: "TCP"
+        -
+          containerPort: 9611
+          protocol: "TCP"
+        -
+          containerPort: 7711
+          protocol: "TCP"
+        -
+          containerPort: 7611
+          protocol: "TCP"
+        volumeMounts:
+        {{- if .Values.persistence.enabled }}
+        - name: apim-storage-volume
+          mountPath: /home/wso2carbon/wso2am-2.6.0/repository/deployment/server
+        {{- end }}
+        - name: apim-conf
+          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf
+        - name: apim-conf-datasources
+          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/datasources
+        - name: conf-identity
+          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/identity
+        - name: apim-template
+          mountPath: /home/wso2carbon/wso2-config-volume/repository/resources/api_templates
+        - name: apim-tomcat
+          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/tomcat
+        - name: apim-security
+          mountPath: /home/wso2carbon/wso2-config-volume/repository/conf/security
+      serviceAccountName: "cellerysvc-account"
+      imagePullSecrets:
+      - name: wso2creds
+      volumes:
+      {{- if .Values.persistence.enabled }}
+      - name: apim-storage-volume
+        persistentVolumeClaim:
+          claimName: wso2apim-deployment-volume-claim
+      {{- end }}
+      - name: apim-conf
+        configMap:
+          name: apim-conf
+      - name: apim-conf-datasources
+        configMap:
+          name: apim-conf-datasources
+      - name: conf-identity
+        configMap:
+          name: conf-identity
+      - name: apim-template
+        configMap:
+          name: apim-template
+      - name: apim-tomcat
+        configMap:
+          name: apim-tomcat
+      - name: apim-security
+        configMap:
+          name: apim-security

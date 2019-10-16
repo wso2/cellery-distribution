@@ -73,10 +73,10 @@ import java.util.zip.ZipInputStream;
  */
 public class UpdateManager {
 
+    private static final Logger log = LoggerFactory.getLogger(UpdateManager.class);
     private static Cell cellConfig;
     private static RestConfig restConfig;
     private static APIMConfig apimConfig;
-    private static final Logger log = LoggerFactory.getLogger(UpdateManager.class);
 
     public static void main(String[] args) {
         try {
@@ -248,6 +248,10 @@ public class UpdateManager {
         for (ApiDefinition definition : definitions) {
             PathDefinition pathDefinition;
             Method method = new Method();
+            if (!api.isAuthenticate()) {
+                // Set authenticate none for the resource
+                method.setxAuthType(Constants.JsonParamNames.NONE);
+            }
             String methodStr = definition.getMethod();
             String path = definition.getPath().replaceAll("/$", Constants.Utils.EMPTY_STRING);
 
@@ -278,7 +282,7 @@ public class UpdateManager {
                     pathDefinition.setPost(method);
                     break;
                 default:
-                    throw new APIException("Method: " + methodStr + "is not implemented");
+                    throw new APIException("Method: " + methodStr + " is not implemented");
             }
             apiDefinition.addPathDefinition(allowQueryPath, pathDefinition);
         }

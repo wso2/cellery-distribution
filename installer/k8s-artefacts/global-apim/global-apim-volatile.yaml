@@ -45,15 +45,16 @@ spec:
             - /bin/bash
             - -c
             - nc -z localhost 9443
-          initialDelaySeconds: 150
+          initialDelaySeconds: 300
           periodSeconds: 10
+          failureThreshold: 3
         readinessProbe:
           exec:
             command:
               - /bin/bash
               - -c
               - nc -z localhost 9443
-          initialDelaySeconds: 150
+          initialDelaySeconds: 120
           periodSeconds: 10
         imagePullPolicy: Always
         securityContext:

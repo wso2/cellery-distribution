@@ -17,17 +17,21 @@
 #
 # ------------------------------------------------------------------------
 
+set -e
+
 download_path=${DOWNLOAD_PATH:-tmp-cellery}
-release_version=${RELEASE_VERSION:-master}
+release_version=master
+release_archive_version=master
 
 #Download k8s artifacts
 mkdir ${download_path}
 distribution_url=${GIT_DISTRIBUTION_URL:-https://github.com/wso2-cellery/distribution/archive}
-wget ${distribution_url}/${release_version}.zip -O ${download_path}/${release_version}.zip -a cellery-setup.log
+wget ${distribution_url}/${release_archive_version}.zip -O ${download_path}/${release_version}.zip -a cellery-setup.log
 unzip ${download_path}/${release_version}.zip -d ${download_path}
+sed -i "s#<EnableAdvanceThrottling>.*</EnableAdvanceThrottling>#<EnableAdvanceThrottling>false</EnableAdvanceThrottling>#" ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/api-manager.xml
 
 mesh_observability_url=${GIT_MESH_OBSERVABILITY_URL:-https://github.com/wso2-cellery/mesh-observability/archive}
-wget ${mesh_observability_url}/${release_version}.zip -O ${download_path}/${release_version}.zip -a cellery-setup.log
+wget ${mesh_observability_url}/${release_archive_version}.zip -O ${download_path}/${release_version}.zip -a cellery-setup.log
 unzip ${download_path}/${release_version}.zip -d ${download_path}
 
 #Create folders required by the mysql PVC
@@ -53,6 +57,7 @@ config_params["DATABASE_PASSWORD"]=$db_passwd
 
 for param in "${!config_params[@]}"
 do
+    sed -i "s/$param/${config_params[$param]}/g" ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/datasources/master-datasources.xml
     sed -i "s/$param/${config_params[$param]}/g" ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/conf/datasources/master-datasources.xml
     sed -i "s/$param/${config_params[$param]}/g" ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/sp/conf/deployment.yaml
 done
@@ -76,18 +81,13 @@ kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/istio-gateway.yaml
 #Enabling Istio injection
 kubectl label namespace default istio-injection=enabled
-sleep 60
+sleep 120
+
+#Installing Knative Serving CRD's
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/knative-serving-crds.yaml
+
 #Create Cellery CRDs.
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/01-cluster-role.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/02-service-account.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/03-cluster-role-binding.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/04-crd-cell.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/05-crd-gateway.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/06-crd-token-service.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/07-crd-service.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/08-config.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/09-autoscale-policy.yaml
-kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/10-controller.yaml
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/controller/
 sleep 120
 
 kubectl create configmap mysql-dbscripts --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/mysql/dbscripts/ -n cellery-system
@@ -95,7 +95,7 @@ kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/mysql/mysql-persistent-volume-claim.yaml -n cellery-system
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/mysql/mysql-deployment.yaml -n cellery-system
 #Wait till the mysql deployment availability
-kubectl wait deployment/wso2apim-with-analytics-mysql-deployment --for condition=available --timeout=300s -n cellery-system
+kubectl wait deployment/wso2apim-with-analytics-mysql-deployment --for condition=available --timeout=600s -n cellery-system
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/mysql/mysql-service.yaml -n cellery-system 
 
 #Create apim local volumes and volume claims
@@ -115,7 +115,14 @@ kubectl create configmap apim-security --from-file=${download_path}/distribution
 #Create gateway deployment and the service
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-apim/global-apim.yaml -n cellery-system
 #Wait till the gateway deployment availability
-kubectl wait deployment.apps/gateway --for condition=available --timeout=300s -n cellery-system
+kubectl wait deployment.apps/gateway --for condition=available --timeout=1800s -n cellery-system
+
+#Create the IDP config maps
+kubectl create configmap identity-server-conf --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf -n cellery-system
+kubectl create configmap identity-server-conf-datasources --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/datasources/ -n cellery-system
+kubectl create configmap identity-server-conf-identity --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/identity -n cellery-system
+kubectl create configmap identity-server-tomcat --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/tomcat -n cellery-system
+#kubectl create configmap identity-server-security --from-file=${download_path}/distribution-${release_version}/installer/k8s-artefacts/global-idp/conf/security -n cellery-system
 
 #Observability
 #Create SP worker configmaps
@@ -141,6 +148,9 @@ kubectl create configmap k8s-metrics-grafana-dashboards-default --from-file=${do
 #Create K8s Metrics deployment, service and ingress.
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/prometheus/k8s-metrics-prometheus.yaml -n cellery-system
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/grafana/k8s-metrics-grafana.yaml -n cellery-system
+
+#Create mixer-adapter deployment
+kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/observability/mixer-adapter/mixer-adapter.yaml
 
 #Create ingress-nginx deployment
 kubectl apply -f ${download_path}/distribution-${release_version}/installer/k8s-artefacts/system/mandatory.yaml

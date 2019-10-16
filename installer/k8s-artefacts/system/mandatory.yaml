@@ -77,6 +77,20 @@ metadata:
   labels:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
+data:
+  proxy-set-headers: ingress-nginx/custom-headers
+---
+
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: custom-headers
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+data:
+  x-b3-sampled: "1"   # Used to enforce trace reporting in all the services in the cluster (Observability)
 ---
 
 kind: ConfigMap

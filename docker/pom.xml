@@ -19,18 +19,19 @@
     <parent>
         <groupId>io.cellery.distribution</groupId>
         <artifactId>io.cellery.distribution.parent</artifactId>
-        <version>0.1.1-SNAPSHOT</version>
+        <version>0.4.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>io.cellery.distribution.docker</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.4.2-SNAPSHOT</version>
     <name>Cellery Distribution - Dockerfiles</name>
     <description>Dockerfiles for Cellery</description>
     <packaging>pom</packaging>
 
     <modules>
+        <module>api-publisher</module>
         <module>microgateway</module>
         <module>global-apim</module>
         <module>lightweight-idp</module>
