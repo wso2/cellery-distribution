@@ -230,10 +230,10 @@ metadata:
     nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
 spec:
   rules:
-  - host: wso2sp-observability-api
+  - host: cellery-dashboard
     http:
       paths:
-      - path: /
+      - path: /api/
         backend:
           serviceName: wso2sp-worker
           servicePort: 9123
