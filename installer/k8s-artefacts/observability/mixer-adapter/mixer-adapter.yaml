@@ -293,8 +293,6 @@ kind: ConfigMap
 metadata:
   name: mixer-adapter-conf
   namespace: cellery-system
-  labels:
-    app: mixer-adapter-conf
 data:
   config.json: |
     {
