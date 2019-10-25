@@ -289,6 +289,38 @@ spec:
         - wso2spadapter-metric
 ---
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mixer-adapter-conf
+  namespace: cellery-system
+  labels:
+    app: mixer-adapter-conf
+data:
+  config.json: |
+    {
+      "mixer": {
+        "tls": {
+          "certificate": "",
+          "privateKey": "",
+          "caCertificate": ""
+        }
+      },
+      "spEndpoint": {
+        "url": "http://wso2sp-worker.cellery-system.svc.cluster.local:9091",
+        "sendIntervalSeconds": 60
+      },
+      "store": {
+        "inMemory": {}
+      },
+      "advanced": {
+        "maxRecordsForSingleWrite": 100,
+        "bufferSizeFactor": 100,
+        "bufferTimeoutSeconds": 60
+      }
+    }
+
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: wso2sp-adapter-service
@@ -326,8 +358,16 @@ spec:
         - name: wso2spadapter
           image: wso2cellery/mixer-adapter
           env:
-          - name: SP_SERVER_URL
-            value: "http://wso2sp-worker.cellery-system.svc.cluster.local:9091"
+            - name: CONFIG_FILE_PATH
+              value: "/mnt/conf/config.json"
           imagePullPolicy: Always
           ports:
             - containerPort: 38355
+          volumeMounts:
+            - name: mixer-adapter-conf
+              mountPath: "/mnt/conf"
+      volumes:
+        - name: mixer-adapter-conf
+          configMap:
+            name: mixer-adapter-conf
+---
