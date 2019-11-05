@@ -357,13 +357,13 @@ spec:
           image: wso2cellery/mixer-adapter
           env:
             - name: CONFIG_FILE_PATH
-              value: "/mnt/conf/config.json"
+              value: "/etc/conf/config.json"
           imagePullPolicy: Always
           ports:
             - containerPort: 38355
           volumeMounts:
             - name: mixer-adapter-conf
-              mountPath: "/mnt/conf"
+              mountPath: "/etc/conf"
       volumes:
         - name: mixer-adapter-conf
           configMap:
