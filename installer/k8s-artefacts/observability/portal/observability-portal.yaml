@@ -34,7 +34,7 @@ spec:
         node: cellery-observability-portal
     spec:
       containers:
-      - image: wso2cellery/observability-portal:0.5.0
+      - image: wso2cellery/observability-portal
         name: observability-portal
         imagePullPolicy: Always
         env:
