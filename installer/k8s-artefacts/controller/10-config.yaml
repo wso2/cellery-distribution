@@ -17,7 +17,7 @@ data:
     }
 
   api-publisher-image: wso2cellery/api-publisher
-  oidc-filter-image: wso2cellery/envoy-oidc-filter
+  oidc-filter-image: wso2cellery/envoy-oidc-filter:0.5.0
   skip-tls-verification: "true"
   enable-autoscaling: "true"
   zipkin-address: wso2sp-worker.cellery-system:9411
@@ -37,7 +37,7 @@ data:
       package cellery.io
 
       default allow = true
-  cell-sts-image: wso2cellery/cell-sts
+  cell-sts-image: wso2cellery/cell-sts:0.5.0
   cell-sts-opa-image: openpolicyagent/opa:0.10.3
   cell-sts-jwks-image: wso2cellery/jwks-server
 kind: ConfigMap
