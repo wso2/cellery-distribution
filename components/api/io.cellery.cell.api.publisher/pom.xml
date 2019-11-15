@@ -23,12 +23,12 @@
     <parent>
         <groupId>io.cellery.distribution</groupId>
         <artifactId>io.cellery.distribution.components.api</artifactId>
-        <version>0.4.2-SNAPSHOT</version>
+        <version>0.5.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>io.cellery.cell.api.publisher</artifactId>
-    <version>0.4.2-SNAPSHOT</version>
+    <version>0.5.0</version>
     <name>Cellery Distribution - Components - Api - Cell Api Publisher</name>
     <packaging>jar</packaging>
 
