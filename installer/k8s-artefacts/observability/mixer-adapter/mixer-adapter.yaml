@@ -324,7 +324,7 @@ spec:
     spec:
       containers:
         - name: wso2spadapter
-          image: wso2cellery/mixer-adapter
+          image: wso2cellery/mixer-adapter:0.5.0
           env:
           - name: SP_SERVER_URL
             value: "http://wso2sp-worker.cellery-system.svc.cluster.local:9091"
