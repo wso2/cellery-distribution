@@ -18,7 +18,7 @@
 # ------------------------------------------------------------------------
 #cat cellery-cleanup.sh | bash -s -- kubeadm
 
-#curl https://raw.githubusercontent.com/cellery-io/distribution/master/installer/scripts/cellery-runtime-deployer/cellery-cleanup.sh | bash -s -- kubeadm
+#curl https://raw.githubusercontent.com/wso2/cellery-distribution/master/installer/scripts/cellery-runtime-deployer/cellery-cleanup.sh | bash -s -- kubeadm
 
 iaas=$1
 

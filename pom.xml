@@ -178,9 +178,9 @@
     </build>
 
     <scm>
-        <url>https://github.com/cellery-io/distribution.git</url>
-        <developerConnection>scm:git:https://github.com/cellery-io/distribution.git</developerConnection>
-        <connection>scm:git:https://github.com/cellery-io/distribution.git</connection>
+	    <url>https://github.com/wso2/cellery-distribution.git</url>
+	    <developerConnection>scm:git:https://github.com/wso2/cellery-distribution.git</developerConnection>
+	    <connection>scm:git:https://github.com/wso2/cellery-distribution.git</connection>
         <tag>HEAD</tag>
     </scm>
 
