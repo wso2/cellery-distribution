@@ -16,7 +16,7 @@ curl <cellery-deploy script url> | bash -s -- <k8s provider>
 ```
 
 ```
-curl https://raw.githubusercontent.com/cellery-io/distribution/master/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh | bash -s -- kubeadm
+curl https://raw.githubusercontent.com/wso2/cellery-distribution/master/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh | bash -s -- kubeadm
 
 ```
 
@@ -27,7 +27,7 @@ curl <cellery deploy script url> | bash -s -- <K8s provider> <GCP Project ID> <G
 ```
 
 ```
-curl https://raw.githubusercontent.com/cellery-io/distribution/master/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh | bash -s -- GCP proj-cellery us-west1-c
+curl https://raw.githubusercontent.com/wso2/cellery-distribution/master/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh | bash -s -- GCP proj-cellery us-west1-c
 ```
 
 ### Deploy Cellery into vanilla K8s provider.
@@ -36,5 +36,5 @@ curl <cellery-deploy script url> | bash
 ```
 
 ```
-curl https://raw.githubusercontent.com/cellery-io/distribution/master/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh | bash
+curl https://raw.githubusercontent.com/wso2/cellery-distribution/master/installer/scripts/cellery-runtime-deployer/cellery-deploy.sh | bash
 ```
