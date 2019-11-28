@@ -61,7 +61,7 @@ spec:
           runAsUser: 802
         env:
         - name: ZIPKIN_HOST
-          value: "wso2sp-worker.cellery-system"
+          value: "tracing-agent.cellery-system"
         - name: ZIPKIN_PORT
           value: "9411"
         - name: ZIPKIN_API_CONTEXT
