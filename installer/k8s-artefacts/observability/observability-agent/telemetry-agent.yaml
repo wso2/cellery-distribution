@@ -256,24 +256,26 @@ spec:
   template: metric
   params:
     dimensions:
-      requestID: request.headers["x-request-id"] | ""
-      traceID: request.headers["x-b3-traceid"] | ""
-      spanID: request.headers["x-b3-spanid"] | ""
-      sourceUID: source.uid | ""
-      sourceInstance: "source.labels[\"observability.mesh.cellery.io/instance\"] | \"\""
-      sourceInstanceKind: "source.labels[\"observability.mesh.cellery.io/instance-kind\"] | \"\""
-      sourceComponent: "source.labels[\"observability.mesh.cellery.io/component\"] | source.labels[\"observability.mesh.cellery.io/gateway\"] | \"\""
-      destinationUID: destination.uid | ""
-      destinationInstance: "destination.labels[\"observability.mesh.cellery.io/instance\"] | \"\""
-      destinationInstanceKind: "destination.labels[\"observability.mesh.cellery.io/instance-kind\"] | \"\""
-      destinationComponent: "destination.labels[\"observability.mesh.cellery.io/component\"] | destination.labels[\"observability.mesh.cellery.io/gateway\"] | \"\""
+      requestId: request.headers["x-request-id"] | ""
+      traceId: request.headers["x-b3-traceid"] | ""
+      spanId: request.headers["x-b3-spanid"] | ""
+      sourceNamespace: source.namespace | ""
+      sourceInstance: source.labels["observability.mesh.cellery.io/instance"] | ""
+      sourceInstanceKind: source.labels["observability.mesh.cellery.io/instance-kind"] | ""
+      sourceComponent: source.labels["observability.mesh.cellery.io/component"] | source.labels["observability.mesh.cellery.io/gateway"] | ""
+      sourcePod: source.name | ""
+      destinationNamespace: destination.namespace | ""
+      destinationInstance: destination.labels["observability.mesh.cellery.io/instance"] | ""
+      destinationInstanceKind: destination.labels["observability.mesh.cellery.io/instance-kind"] | ""
+      destinationComponent: destination.labels["observability.mesh.cellery.io/component"] | destination.labels["observability.mesh.cellery.io/gateway"] | ""
+      destinationPod: destination.name | ""
       contextReporterKind: context.reporter.kind | ""
       requestPath: request.path | ""
       requestMethod: request.method | ""
-      requestTotalSize: request.total_size | 0
+      requestSizeBytes: request.total_size | 0
       responseCode: response.code | 0
       responseDurationNanoSec: response.duration
-      responseTotalSize: response.total_size | 0
+      responseSizeBytes: response.total_size | 0
 ---
 
 # rule to dispatch to handler wso2spadapter-handler
