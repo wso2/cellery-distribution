@@ -66,6 +66,12 @@ spec:
           value: "9411"
         - name: ZIPKIN_API_CONTEXT
           value: "/api/v1/spans"
+        - name: CELLERY_TRACING_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: CELLERY_TRACING_SERVICE_NAME
+          value: "global-gateway"
         ports:
         -
           containerPort: 8280
