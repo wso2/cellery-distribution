@@ -220,7 +220,7 @@ spec:
 apiVersion: "config.istio.io/v1alpha2"
 kind: adapter
 metadata:
-  name: wso2spadapter
+  name: telemetry-agent
   namespace: istio-system
 spec:
   description:
@@ -233,12 +233,12 @@ spec:
 apiVersion: "config.istio.io/v1alpha2"
 kind: handler
 metadata:
-  name: wso2spadapter-handler
+  name: telemetry-agent-handler
   namespace: istio-system
 spec:
-  adapter: wso2spadapter
+  adapter: telemetry-agent
   connection:
-    address: "wso2sp-adapter-service.cellery-system.svc.cluster.local:38355"
+    address: "telemetry-agent.cellery-system.svc.cluster.local:9091"
   #    authentication:
   #      mutual:
   #        private_key: "/tmp/grpc-test-key-cert/mixer.key"
@@ -250,7 +250,7 @@ spec:
 apiVersion: "config.istio.io/v1alpha2"
 kind: instance
 metadata:
-  name: wso2spadapter-metric
+  name: telemetry-agent-metric
   namespace: istio-system
 spec:
   template: metric
@@ -280,18 +280,18 @@ spec:
 apiVersion: "config.istio.io/v1alpha2"
 kind: rule
 metadata:
-  name: wso2spadapter-rule
+  name: telemetry-agent-rule
   namespace: istio-system
 spec:
   actions:
-    - handler: wso2spadapter-handler.istio-system
+    - handler: telemetry-agent-handler.istio-system
       instances:
-        - wso2spadapter-metric
+        - telemetry-agent-metric
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mixer-adapter-conf
+  name: telemetry-agent-conf
   namespace: cellery-system
 data:
   config.json: |
@@ -321,51 +321,50 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: wso2sp-adapter-service
+  name: telemetry-agent
   namespace: cellery-system
   labels:
-    app: wso2spadapter
+    app: telemetry-agent
 spec:
   type: ClusterIP
   ports:
     - name: grpc
       protocol: TCP
-      port: 38355
-      targetPort: 38355
+      port: 9091
+      targetPort: 9091
   selector:
-    app: wso2spadapter
+    app: telemetry-agent
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: wso2spadapter
+  name: telemetry-agent
   namespace: cellery-system
   labels:
-    app: wso2spadapter
+    app: telemetry-agent
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: wso2spadapter
+        app: telemetry-agent
       annotations:
         sidecar.istio.io/inject: "false"
         scheduler.alpha.kubernetes.io/critical-pod: ""
     spec:
       containers:
-        - name: wso2spadapter
-          image: wso2cellery/mixer-adapter
+        - name: telemetry-agent
+          image: wso2cellery/telemetry-agent
           env:
             - name: CONFIG_FILE_PATH
               value: "/etc/conf/config.json"
-          imagePullPolicy: Always
           ports:
-            - containerPort: 38355
+            - containerPort: 9091
           volumeMounts:
-            - name: mixer-adapter-conf
+            - name: telemetry-agent-conf
               mountPath: "/etc/conf"
       volumes:
-        - name: mixer-adapter-conf
+        - name: telemetry-agent-conf
           configMap:
-            name: mixer-adapter-conf
+            name: telemetry-agent-conf
 ---

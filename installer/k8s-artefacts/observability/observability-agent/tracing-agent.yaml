@@ -1,0 +1,95 @@
+# Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tracing-agent
+  namespace: cellery-system
+  labels:
+    app: tracing-agent
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9411
+      targetPort: 9411
+  selector:
+    app: tracing-agent
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: tracing-agent
+  namespace: cellery-system
+  labels:
+    app: tracing-agent
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tracing-agent
+      annotations:
+        sidecar.istio.io/inject: "false"
+        scheduler.alpha.kubernetes.io/critical-pod: ""
+    spec:
+      containers:
+        - name: tracing-agent
+          image: wso2cellery/tracing-agent
+          env:
+            - name: CONFIG_FILE_PATH
+              value: "/etc/conf/config.json"
+          ports:
+            - containerPort: 9411
+          volumeMounts:
+            - name: tracing-agent-conf
+              mountPath: "/etc/conf"
+      volumes:
+        - name: tracing-agent-conf
+          configMap:
+            name: tracing-agent-conf
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tracing-agent-conf
+  namespace: cellery-system
+data:
+  config.json: |
+    {
+      "mixer": {
+        "tls": {
+          "certificate": "",
+          "privateKey": "",
+          "caCertificate": ""
+        }
+      },
+      "spEndpoint": {
+        "url": "http://wso2sp-worker.cellery-system.svc.cluster.local:9411",
+        "sendIntervalSeconds": 60
+      },
+      "store": {
+        "inMemory": {}
+      },
+      "advanced": {
+        "maxRecordsForSingleWrite": 100,
+        "bufferSizeFactor": 100,
+        "bufferTimeoutSeconds": 60
+      }
+    }
+
+---
