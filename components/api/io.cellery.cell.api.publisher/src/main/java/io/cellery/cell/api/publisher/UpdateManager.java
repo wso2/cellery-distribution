@@ -50,7 +50,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Class for create APIs in global API Manager. */
+/**
+ * Class for create APIs in global API Manager.
+ */
 public class UpdateManager {
 
   private static final Logger log = LoggerFactory.getLogger(UpdateManager.class);
@@ -437,10 +439,10 @@ public class UpdateManager {
   private static String getGlobalEndpoint(API api) {
     String response = Constants.Utils.EMPTY_STRING;
     ProductionEndpoint productionEndpoint = new ProductionEndpoint();
-    productionEndpoint.setUrl(
-        Constants.Utils.HTTP
-            + (cellConfig.getHostname() + "/" + api.getContext()).replaceAll("//", "/"));
-
+    String url = (Constants.Utils.HTTP + (cellConfig.getHostname() + ":" + api.getDestination().getPort()
+            + "/" + api.getContext()).replaceAll("//", "/"));
+    productionEndpoint.setUrl(url);
+    log.info("Production Endpoint: " + url);
     Endpoint endpoint = new Endpoint();
     endpoint.setProductionEndPoint(productionEndpoint);
 
