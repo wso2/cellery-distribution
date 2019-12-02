@@ -40,3 +40,6 @@ dependencies:
 - name: mixer-adapter
   version: 0.1.0
   condition: mixer-adapter.enabled
+- name: mixer-adapter
+  version: 0.1.0
+  condition: metrics-server.enabled
