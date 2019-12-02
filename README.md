@@ -1,6 +1,6 @@
 Distribution
 ============
-  [![Build Status](https://wso2.org/jenkins/view/cellery/job/cellery/job/distribution/badge/icon)](https://wso2.org/jenkins/view/cellery/job/cellery/job/distribution/)
+  [![Build Status](https://wso2.org/jenkins/view/cellery/job/cellery/job/cellery-distribution/badge/icon)](https://wso2.org/jenkins/view/cellery/job/cellery/job/distribution/)
   [![GitHub (pre-)release](https://img.shields.io/github/release/wso2-cellery/distribution/all.svg)](https://github.com/wso2-cellery/distribution/releases)
   [![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/wso2-cellery/distribution.svg)](https://github.com/wso2-cellery/distribution/releases)
   [![GitHub last commit](https://img.shields.io/github/last-commit/wso2-cellery/distribution.svg)](https://github.com/wso2-cellery/distribution/commits/master)
