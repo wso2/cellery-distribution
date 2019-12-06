@@ -313,6 +313,7 @@ data:
         "inMemory": {}
       },
       "advanced": {
+        "runtimeId": "cellery-default",
         "maxRecordsForSingleWrite": 100,
         "bufferSizeFactor": 100,
         "bufferTimeoutSeconds": 60
@@ -369,4 +370,3 @@ spec:
         - name: telemetry-agent-conf
           configMap:
             name: telemetry-agent-conf
----

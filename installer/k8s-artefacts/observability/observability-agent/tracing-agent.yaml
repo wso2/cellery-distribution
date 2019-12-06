@@ -86,10 +86,9 @@ data:
         "inMemory": {}
       },
       "advanced": {
+        "runtimeId": "cellery-default",
         "maxRecordsForSingleWrite": 100,
         "bufferSizeFactor": 100,
         "bufferTimeoutSeconds": 60
       }
     }
-
----
