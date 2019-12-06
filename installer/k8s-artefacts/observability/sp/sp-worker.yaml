@@ -47,7 +47,7 @@ spec:
             memory: "2Gi"
           requests:
             memory: "2Gi"
-        command: ['sh', '-c', sleep 40 && /home/wso2carbon/init.sh]
+        command: [/home/wso2carbon/init.sh]
         env:
         -
           name: WSO2_SERVER_PROFILE
