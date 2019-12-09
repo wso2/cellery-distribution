@@ -55,8 +55,8 @@ mysql:
     shareLocation: "/data"
 
   localStorage:
-    enabled: true
-    storagePath: "/Users/deep/tmp/cellery_mysql"
+    enabled: false
+    storagePath: "/var/tmp/cellery/mysql"
 
 
 controller:
@@ -64,6 +64,13 @@ controller:
 
 apim:
   enabled: false
+
+   persistence:
+     enabled: true
+     media: "local-filesystem"  #default value "volatile" "local-filesystem" or "nfs"
+     nfsServerIp: 192.168.100.10
+     sharedDeploymentLocation: /var/tmp/cellery/apim_repository_deployment_server
+
   ingress:
     enabled: true
     annotations:
