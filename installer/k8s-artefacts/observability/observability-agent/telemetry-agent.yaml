@@ -269,13 +269,14 @@ spec:
       destinationInstanceKind: destination.labels["observability.mesh.cellery.io/instance-kind"] | ""
       destinationComponent: destination.labels["observability.mesh.cellery.io/component"] | destination.labels["observability.mesh.cellery.io/gateway"] | ""
       destinationPod: destination.name | ""
-      contextReporterKind: context.reporter.kind | ""
       requestPath: request.path | ""
       requestMethod: request.method | ""
       requestSizeBytes: request.total_size | 0
       responseCode: response.code | 0
       responseDurationNanoSec: response.duration
       responseSizeBytes: response.total_size | 0
+      reporterKind: context.reporter.kind | ""
+      reporterUID: context.reporter.uid | ""
 ---
 
 # rule to dispatch to handler wso2spadapter-handler
