@@ -19,29 +19,24 @@ metadata:
   namespace: cellery-system
   labels:
     app: wso2sp-worker
-    node: wso2sp-worker
-    pattern: wso2sp-pattern-distributed
 spec:
   selector:
     matchLabels:
       app: wso2sp-worker
-      node: wso2sp-worker
-      pattern: wso2sp-pattern-distributed
   strategy:
-    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   replicas: 1
   template:
     metadata:
       labels:
         app: wso2sp-worker
-        node: wso2sp-worker
-        pattern: wso2sp-pattern-distributed
     spec:
       containers:
-      -
-        image: wso2cellery/sp-worker
+      - image: wso2cellery/sp-worker
         name: wso2sp-worker
-        imagePullPolicy: Always
         resources:
           limits:
             memory: "2Gi"
@@ -49,69 +44,39 @@ spec:
             memory: "2Gi"
         command: [/home/wso2carbon/init.sh]
         env:
-        -
-          name: WSO2_SERVER_PROFILE
+        - name: WSO2_SERVER_PROFILE
           value: "worker"
-        -
-          name: OFFSET
+        - name: OFFSET
           value: "0"
-        -
-          name: RECEIVER_NODE
+        - name: RECEIVER_NODE
           value: "false"
-        -
-          name: NODE_IP
+        - name: NODE_IP
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-        -
-          name: NODE_PORT
+        - name: NODE_PORT
           value: "9443"
-
         ports:
-        -
-          containerPort: 9091
+        - containerPort: 9091
           protocol: "TCP"
-        -
-          containerPort: 9092
+        - containerPort: 9443
           protocol: "TCP"
-        -
-          containerPort: 9411
+        - containerPort: 9123
           protocol: "TCP"
-        -
-          containerPort: 9443
-          protocol: "TCP"
-        -
-          containerPort: 9090
-          protocol: "TCP"
-        -
-          containerPort: 7611
-          protocol: "TCP"
-        -
-          containerPort: 7711
-          protocol: "TCP"
-        -
-          containerPort: 9611
-          protocol: "TCP"
-        -
-          containerPort: 9711
-          protocol: "TCP"
-        -
-          containerPort: 7443
-          protocol: "TCP"
-        -
-          containerPort: 9123
-          protocol: "TCP"
-
         volumeMounts:
         - name: sp-worker-conf
           mountPath: "/home/wso2carbon/wso2-config-volume/conf/worker/"
         - name: sp-worker-siddhi
           mountPath: "/home/wso2carbon/wso2-artifact-volume/wso2/worker/deployment/siddhi-files/"
-
         livenessProbe:
           tcpSocket:
             port: 9443
-          initialDelaySeconds: 300
+          initialDelaySeconds: 60
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 9443
+          initialDelaySeconds: 60
           periodSeconds: 20
       imagePullSecrets:
       - name: wso2creds
@@ -120,9 +85,6 @@ spec:
       - name: sp-worker-conf
         configMap:
           name: sp-worker-conf
- #     - name: sp-worker-bin
- #       configMap:
- #         name: sp-worker-bin
       - name: sp-worker-siddhi
         configMap:
           name: sp-worker-siddhi
@@ -189,57 +151,14 @@ metadata:
     pattern: wso2sp-pattern-distributed
 spec:
   ports:
-    # ports that this service should serve on
-    -
-      port: 9091
+    - port: 9091
       name: http2
       protocol: TCP
-    -
-      port: 9092
-      name: http
-      protocol: TCP
-    -
-      port: 9411
-      name: zipkin
-      protocol: TCP
-    -
-      port: 9443
-      name: https-mcgw-upload
-      protocol: TCP
-    -
-      port: 9090
-      name: http-mcgw-upload
-      protocol: TCP
-    -
-      port: 7611
-      name: tcp-thrift
-      protocol: TCP
-    -
-      port: 7711
-      name: tcp-ssl-thrift
-      protocol: TCP
-    -
-      port: 9611
-      name: tcp-binary
-      protocol: TCP
-    -
-      port: 9711
-      name: tcp-ssl-binary
-      protocol: TCP
-    -
-      port: 7443
-      name: http-global-gw
-      protocol: TCP
-    -
-      port: 9123
+    - port: 9123
       name: http-observability-api
       protocol: TCP
-
-  # label keys and values that must match in order to receive traffic for this service
   selector:
     app: wso2sp-worker
-    node: wso2sp-worker
-    pattern: wso2sp-pattern-distributed
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
