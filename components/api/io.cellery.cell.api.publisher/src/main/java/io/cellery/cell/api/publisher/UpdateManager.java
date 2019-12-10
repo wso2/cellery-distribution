@@ -125,7 +125,9 @@ public class UpdateManager {
 
     // Set some additional properties.
     Map<String, String> additionalProperties = new HashMap<>();
-    additionalProperties.put(Constants.Utils.CELL_NAME_PROPERTY, cellConfig.getCell());
+    additionalProperties.put(
+        Constants.Utils.CELL_NAME_PROPERTY,
+        cellConfig.getCell() + "." + cellConfig.getHostname().split("\\.")[1]);
     additionalProperties.put(
         Constants.Utils.CELLNAME_N_CONTEXT_PROPERTY,
         cellConfig.getCell() + getContext(api).replace("/", "_"));
@@ -277,7 +279,9 @@ public class UpdateManager {
 
     // Set some additional properties.
     Map<String, String> additionalProperties = new HashMap<>();
-    additionalProperties.put(Constants.Utils.CELL_NAME_PROPERTY, cellConfig.getCell());
+    additionalProperties.put(
+            Constants.Utils.CELL_NAME_PROPERTY,
+            cellConfig.getCell() + "." + cellConfig.getHostname().split("\\.")[1]);
     additionalProperties.put(
         Constants.Utils.CELLNAME_N_CONTEXT_PROPERTY,
         cellConfig.getCell() + getContext(api).replace("/", "_"));
