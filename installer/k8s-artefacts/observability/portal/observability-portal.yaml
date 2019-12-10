@@ -15,53 +15,46 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cellery-observability-portal
+  name: observability-portal
   namespace: cellery-system
   labels:
-    app: cellery-observability-portal
-    node: cellery-observability-portal
+    app: observability-portal
 spec:
   selector:
     matchLabels:
-      app: cellery-observability-portal
-      node: cellery-observability-portal
+      app: observability-portal
   strategy:
-    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   template:
     metadata:
       labels:
-        app: cellery-observability-portal
-        node: cellery-observability-portal
+        app: observability-portal
     spec:
       containers:
       - image: wso2cellery/observability-portal
         name: observability-portal
-        imagePullPolicy: Always
-        env:
-        -
-          name: NODE_ID
-          value: "observability-portal"
-        -
-           name: NODE_IP
-           valueFrom:
-             fieldRef:
-               fieldPath: status.podIP
-
         ports:
-        -
-          containerPort: 3000
+        - containerPort: 3000
           protocol: "TCP"
         volumeMounts:
         - name: observability-portal-config
           mountPath: /portal/config
-
         livenessProbe:
           tcpSocket:
             port: 3000
-          initialDelaySeconds: 300
-          periodSeconds: 20
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
       imagePullSecrets:
-            - name: wso2creds
+      - name: wso2creds
       serviceAccountName: "cellerysvc-account"
       volumes:
       - name: observability-portal-config
@@ -71,29 +64,25 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cellery-observability-portal
+  name: observability-portal
   namespace: cellery-system
   labels:
-    node: cellery-observability-portal
+    app: observability-portal
 spec:
   ports:
-    # ports that this service should serve on
-    -
-      name: 'http'
+    - name: 'http'
       port: 3000
       protocol: TCP
-
-  # label keys and values that must match in order to receive traffic for this service
   selector:
-    node: cellery-observability-portal
+    app: observability-portal
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: cellery-observability-portal-dashboard-ingress
+  name: observability-portal
   namespace: cellery-system
   labels:
-      node: cellery-observability-portal
+      app: observability-portal
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/affinity: "cookie"
@@ -106,5 +95,5 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: cellery-observability-portal
+          serviceName: observability-portal
           servicePort: 3000
