@@ -88,5 +88,5 @@ spec:
     spec:
       containers:
         - name: webhook
-          image: wso2cellery/mesh-webhook:latest
+          image: wso2cellery/mesh-webhook
       serviceAccountName: webhook
