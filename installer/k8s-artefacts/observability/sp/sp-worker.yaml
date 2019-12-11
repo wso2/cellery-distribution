@@ -57,12 +57,16 @@ spec:
         - name: NODE_PORT
           value: "9443"
         ports:
-        - containerPort: 9091
-          protocol: "TCP"
         - containerPort: 9443
-          protocol: "TCP"
+          protocol: TCP
         - containerPort: 9123
-          protocol: "TCP"
+          protocol: TCP
+        - containerPort: 9091
+          protocol: TCP
+        - containerPort: 9411
+          protocol: TCP
+        - containerPort: 9815
+          protocol: TCP
         volumeMounts:
         - name: sp-worker-conf
           mountPath: "/home/wso2carbon/wso2-config-volume/conf/worker/"
@@ -151,11 +155,17 @@ metadata:
     pattern: wso2sp-pattern-distributed
 spec:
   ports:
-    - port: 9091
-      name: http2
-      protocol: TCP
     - port: 9123
-      name: http-observability-api
+      name: http2-observability-api
+      protocol: TCP
+    - port: 9091
+      name: http2-telemetry-receiver
+      protocol: TCP
+    - port: 9411
+      name: http2-tracing-receiver
+      protocol: TCP
+    - port: 9815
+      name: http2-k8s-info-receiver
       protocol: TCP
   selector:
     app: wso2sp-worker
