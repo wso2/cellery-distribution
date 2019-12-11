@@ -39,9 +39,9 @@ spec:
         name: wso2sp-worker
         resources:
           limits:
-            memory: "2Gi"
+            memory: 2Gi
           requests:
-            memory: "2Gi"
+            memory: 2Gi
         command: [/home/wso2carbon/init.sh]
         env:
         - name: WSO2_SERVER_PROFILE
