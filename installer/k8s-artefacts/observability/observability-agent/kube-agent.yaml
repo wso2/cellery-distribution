@@ -1,0 +1,113 @@
+# Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cellery-observability-kube-agent-role
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - mesh.cellery.io
+    resources:
+      - cells
+      - composites
+      - components
+      - gateways
+      - tokenservices
+      - autoscalepolicies
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: observability-kube-agent
+  namespace: cellery-system
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: cellery-observability-kube-agent-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cellery-observability-kube-agent-role
+subjects:
+  - kind: ServiceAccount
+    name: observability-kube-agent
+    namespace: cellery-system
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-agent-conf
+  namespace: cellery-system
+data:
+  config.json: |
+    {
+      "spEndpoint": {
+        "url": "http://wso2sp-worker.cellery-system.svc.cluster.local:9815",
+        "sendIntervalSeconds": 60
+      },
+      "store": {
+        "inMemory": {}
+      },
+      "advanced": {
+        "runtimeId": "cellery-default",
+        "maxRecordsForSingleWrite": 100,
+        "bufferSizeFactor": 100,
+        "bufferTimeoutSeconds": 60
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-agent
+  namespace: cellery-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kube-agent
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+      labels:
+        app: kube-agent
+    spec:
+      containers:
+        - name: kube-agent
+          image: wso2cellery/kube-agent
+          volumeMounts:
+            - name: kube-agent-conf
+              mountPath: "/etc/conf"
+      volumes:
+        - name: kube-agent-conf
+          configMap:
+            name: kube-agent-conf
+      serviceAccountName: observability-kube-agent
