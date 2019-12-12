@@ -86,6 +86,7 @@ data:
         "inMemory": {}
       },
       "advanced": {
+        "accessToken": "YWdlbnQ6YWdlbnQtcGFzcw==",
         "runtimeId": "cellery-default",
         "maxRecordsForSingleWrite": 100,
         "bufferSizeFactor": 100,

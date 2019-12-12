@@ -354,9 +354,9 @@ analytics.solutions:
   APIM-analytics.enabled: false
   EI-analytics.enabled: false
 
-#
-# Cellery Configurations starts here
-#
+# ------------------------------------
+#  Cellery Configurations starts here
+# ------------------------------------
 
 cellery.observability.auth:
   # IdP URL
@@ -368,7 +368,9 @@ cellery.observability.auth:
   # Callback URL used in the authentication UI flows
   portalHomeUrl: http://cellery-dashboard
 
-  # Cellery auth advanced Configurations starts here
+  # --------------------------------------------------
+  #  Cellery auth advanced Configurations starts here
+  # --------------------------------------------------
 
   # Cellery Observability Client ID used in DCR or Client credentials retrieval
   dcrClientId: celleryobs_0001
@@ -381,4 +383,9 @@ cellery.observability.auth:
   # IdP OIDC token endpoint (prefixed with IdP URL when used)
   idpOidcTokenEndpoint: /oauth2/token
   # Auth provider class to be used
-  authProvider: io.cellery.observability.auth.CelleryAuthProvider
+  authProvider: io.cellery.observability.auth.CelleryLocalAuthProvider
+
+  # Default Cellery Local Auth Provider related configurations
+
+  # Token that should is checked for by the Cellery Local Auth Provider
+  defaultLocalAuthProviderToken: YWdlbnQ6YWdlbnQtcGFzcw==
