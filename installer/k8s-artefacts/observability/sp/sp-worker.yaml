@@ -80,8 +80,8 @@ spec:
         readinessProbe:
           tcpSocket:
             port: 9443
-          initialDelaySeconds: 60
-          periodSeconds: 20
+          initialDelaySeconds: 15
+          periodSeconds: 10
       imagePullSecrets:
       - name: wso2creds
       serviceAccountName: "cellery-stream-processor"
