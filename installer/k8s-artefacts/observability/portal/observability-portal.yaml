@@ -62,7 +62,7 @@ spec:
           periodSeconds: 10
       imagePullSecrets:
       - name: wso2creds
-      serviceAccountName: "cellerysvc-account"
+      serviceAccountName: cellerysvc-account
       volumes:
       - name: observability-portal-config
         configMap:

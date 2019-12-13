@@ -368,6 +368,7 @@ spec:
           volumeMounts:
             - name: telemetry-agent-conf
               mountPath: "/etc/conf"
+      serviceAccountName: cellerysvc-account
       volumes:
         - name: telemetry-agent-conf
           configMap:
