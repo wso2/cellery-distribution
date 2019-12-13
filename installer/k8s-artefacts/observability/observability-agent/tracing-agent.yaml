@@ -57,6 +57,7 @@ spec:
           volumeMounts:
             - name: tracing-agent-conf
               mountPath: "/etc/conf"
+      serviceAccountName: cellerysvc-account
       volumes:
         - name: tracing-agent-conf
           configMap:
