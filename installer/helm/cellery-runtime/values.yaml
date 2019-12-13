@@ -19,6 +19,7 @@
 global:
   celleryRuntime:
       db:
+        host: "cellery-runtime-mysql"
         carbon:
           username: "celleryDbUser"
           password: "celleryDBPassword"
