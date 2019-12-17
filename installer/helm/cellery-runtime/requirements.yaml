@@ -25,21 +25,18 @@ dependencies:
 - name: idp
   version: 0.1.0
   condition: idp.enabled
-- name: observability-portal
+- name: observability-agent
   version: 0.1.0
-  condition: observability-portal.enabled
-- name: sp-worker
+  condition: observability-agent.enabled
+- name: sp
   version: 0.1.0
-  condition: sp-worker.enabled
+  condition: sp.enabled
 - name: grafana
   version: 0.1.0
   condition: grafana.enabled
 - name: prometheus
   version: 0.1.0
   condition: prometheus.enabled
-- name: mixer-adapter
+- name: portal
   version: 0.1.0
-  condition: mixer-adapter.enabled
-- name: mixer-adapter
-  version: 0.1.0
-  condition: metrics-server.enabled
+  condition: portal.enabled
