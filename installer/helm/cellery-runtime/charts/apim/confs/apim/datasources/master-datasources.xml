@@ -52,7 +52,7 @@
             </jndiConfig>
             <definition type="RDBMS">
                 <configuration>
-                    <url>jdbc:mysql://{{ .Values.celleryRuntime.db.host }}:3306/WSO2AM_APIMGT_DB?autoReconnect=true&amp;useSSL=false</url>
+                    <url>jdbc:mysql://{{ .Values.global.celleryRuntime.db.host }}:3306/WSO2AM_APIMGT_DB?autoReconnect=true&amp;useSSL=false</url>
                     <username>{{ .Values.global.celleryRuntime.db.carbon.username }}</username>
                     <password>{{ .Values.global.celleryRuntime.db.carbon.password }}</password>
                     <defaultAutoCommit>false</defaultAutoCommit>
@@ -74,7 +74,7 @@
             </jndiConfig>
             <definition type="RDBMS">
                 <configuration>
-                    <url>jdbc:mysql://{{ .Values.celleryRuntime.db.host }}:3306/WSO2AM_COMMON_DB?autoReconnect=true&amp;useSSL=false</url>
+                    <url>jdbc:mysql://{{ .Values.global.celleryRuntime.db.host }}:3306/WSO2AM_COMMON_DB?autoReconnect=true&amp;useSSL=false</url>
                     <username>{{ .Values.global.celleryRuntime.db.carbon.username }}</username>
                     <password>{{ .Values.global.celleryRuntime.db.carbon.password }}</password>
                     <driverClassName>com.mysql.jdbc.Driver</driverClassName>
@@ -95,7 +95,7 @@
             </jndiConfig>
             <definition type="RDBMS">
                 <configuration>
-                    <url>jdbc:mysql://{{ .Values.celleryRuntime.db.host }}:3306/WSO2AM_COMMON_DB?autoReconnect=true&amp;useSSL=false</url>
+                    <url>jdbc:mysql://{{ .Values.global.celleryRuntime.db.host }}:3306/WSO2AM_COMMON_DB?autoReconnect=true&amp;useSSL=false</url>
                     <username>{{ .Values.global.celleryRuntime.db.carbon.username }}</username>
                     <password>{{ .Values.global.celleryRuntime.db.carbon.password }}</password>
                     <driverClassName>com.mysql.jdbc.Driver</driverClassName>

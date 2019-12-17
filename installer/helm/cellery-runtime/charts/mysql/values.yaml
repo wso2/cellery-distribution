@@ -2,7 +2,7 @@
 ## ref: https://hub.docker.com/r/library/mysql/tags/
 ##
 image: "mysql"
-imageTag: "5.7.14"
+imageTag: "5.7.28"
 
 busybox:
   image: "busybox"
@@ -111,6 +111,7 @@ configurationFiles:
   mysql_custom.cnf: |-
     [mysqld]
     max_connections=20000
+    lower_case_table_names=1
 #    ssl-cert=/ssl/mysql-tls.crt
 #    ssl-key=/ssl/mysql-tls.pem
 #  mysql.cnf: |-

@@ -26,21 +26,21 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  {{if eq .Values.persistence.media "nfs" }}
+  {{ if eq .Values.persistence.media "nfs" }}
   nfs:
     server: {{ .Values.persistence.nfsServerIp }}
     path: {{ .Values.persistence.sharedDeploymentLocation }}
-  {else if eq .Values.persistence.media "local-filesystem" }}
+  {{ else if eq .Values.persistence.media "local-filesystem" }}
   storageClassName: local-storage
-    local:
-      path: /mnt/apim_repository_deployment_server
-    nodeAffinity:
-      required:
-        nodeSelectorTerms:
-        - matchExpressions:
-          - key: disk
-            operator: In
-            values:
-            - local
+  local:
+    path: /var/tmp/cellery/apim_repository_deployment_server
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: disk
+          operator: In
+          values:
+          - local
     {{end}}
 {{- end -}}

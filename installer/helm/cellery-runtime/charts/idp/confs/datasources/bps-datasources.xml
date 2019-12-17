@@ -52,9 +52,9 @@
       </jndiConfig>
       <definition type="RDBMS">
         <configuration>
-          <url>jdbc:mysql://wso2is-rdbms-service-mysql:3306/WSO2IS_BPS_DB?autoReconnect=true&amp;useSSL=false</url>
-          <username>wso2carbon</username>
-          <password>wso2carbon</password>
+          <url>jdbc:mysql://{{ .Values.global.celleryRuntime.db.host }}:3306/WSO2IS_BPS_DB?autoReconnect=true&amp;useSSL=false</url>
+          <username>{{ .Values.global.celleryRuntime.db.carbon.username }}</username>
+          <password>{{ .Values.global.celleryRuntime.db.carbon.password }}</password>
           <driverClassName>com.mysql.jdbc.Driver</driverClassName>
           <maxActive>100</maxActive>
           <maxWait>10000</maxWait>

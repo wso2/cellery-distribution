@@ -19,6 +19,7 @@
 global:
   celleryRuntime:
       db:
+        host: "cellery-runtime-mysql"
         carbon:
           username: "celleryDbUser"
           password: "celleryDBPassword"
@@ -55,8 +56,8 @@ mysql:
     shareLocation: "/data"
 
   localStorage:
-    enabled: true
-    storagePath: "/Users/deep/tmp/cellery_mysql"
+    enabled: false
+    storagePath: "/var/tmp/cellery/mysql"
 
 
 controller:
@@ -64,6 +65,13 @@ controller:
 
 apim:
   enabled: false
+
+  persistence:
+    enabled: false
+    media: "local-filesystem"  #default value "volatile" "local-filesystem" or "nfs"
+    nfsServerIp: 192.168.100.10
+    sharedDeploymentLocation: /data
+
   ingress:
     enabled: true
     annotations:
