@@ -19,7 +19,7 @@ metadata:
   namespace : {{ .Values.namespace }}
 data:
   {{- $file := .Files }}
-  {{- range $path, $byte := .Files.Glob "confs/dashboards-default/*" }}
+  {{- range $path, $byte := .Files.Glob "confs/dashboards/default/*" }}
   {{- $list := $path | splitList "/"}}
   {{- $length := len $list }}
   {{- $last := add $length -1 }}
