@@ -36,6 +36,7 @@ spec:
       labels:
         deployment: gateway
     spec:
+      {{- if .Values.persistence.enabled }}
       initContainers:
         - name: chmodfs
           image: busybox
@@ -43,6 +44,7 @@ spec:
           volumeMounts:
             - name: apim-storage-volume
               mountPath: "/home/wso2carbon/wso2am-2.6.0/repository/deployment/server"
+      {{- end }}
       containers:
       - name: gateway
         image: wso2cellery/wso2am
