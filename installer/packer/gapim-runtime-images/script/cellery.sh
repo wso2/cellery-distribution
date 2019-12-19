@@ -20,8 +20,8 @@
 set -e
 
 download_path=${DOWNLOAD_PATH:-tmp-cellery}
-release_version=0.6.0
-release_archive_version=v0.6.0
+release_version=master
+release_archive_version=master
 
 #Download k8s artifacts
 mkdir ${download_path}
