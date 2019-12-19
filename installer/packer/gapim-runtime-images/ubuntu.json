@@ -125,7 +125,7 @@
         "ssh_username": "vagrant",
         "update": "true",
         "vagrantfile_template": "",
-        "version": "0.5.1-SNAPSHOT",
+        "version": "0.6.0",
         "virtualbox_guest_os_type": "Ubuntu_64",
         "vm_name": "cellery-runtime-local"
     }

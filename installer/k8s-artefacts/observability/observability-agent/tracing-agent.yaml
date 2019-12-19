@@ -48,7 +48,7 @@ spec:
     spec:
       containers:
         - name: tracing-agent
-          image: wso2cellery/tracing-agent
+          image: wso2cellery/tracing-agent:0.6.1
           env:
             - name: CONFIG_FILE_PATH
               value: "/etc/conf/config.json"
