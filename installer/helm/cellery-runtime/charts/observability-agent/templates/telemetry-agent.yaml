@@ -13,6 +13,38 @@
 # limitations under the License.
 
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: telemetry-agent-conf
+  namespace: cellery-system
+data:
+  config.json: |
+    {
+      "mixer": {
+        "tls": {
+          "certificate": "",
+          "privateKey": "",
+          "caCertificate": ""
+        }
+      },
+      "spEndpoint": {
+        "url": "http://wso2sp-worker.cellery-system.svc.cluster.local:9091",
+        "sendIntervalSeconds": 60
+      },
+      "store": {
+        "inMemory": {}
+      },
+      "advanced": {
+        "accessToken": "YWdlbnQ6YWdlbnQtcGFzcw==",
+        "runtimeId": "cellery-default",
+        "maxRecordsForSingleWrite": 100,
+        "bufferSizeFactor": 100,
+        "bufferTimeoutSeconds": 60
+      }
+    }
+
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: telemetry-agent
