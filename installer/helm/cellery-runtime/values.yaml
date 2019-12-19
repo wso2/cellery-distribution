@@ -75,27 +75,29 @@ apim:
   ingress:
     enabled: true
     annotations:
-      kubernetes.io/ingress.class: nginx
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-      ingress.kubernetes.io/ssl-redirect: "true"
-      certmanager.k8s.io/cluster-issuer: "letsencrypt-dev"
+      kubernetes.io/ingress.class: "nginx"
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      nginx.ingress.kubernetes.io/affinity: "cookie"
+      nginx.ingress.kubernetes.io/session-cookie-name: "route"
+      nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
     hosts:
-    - host: apim
+    - host: wso2-apim
       paths: ["/"]
     tls:
     - secretName: apim-tls
       hosts:
-      - apim
+      - wso2-apim
 
 idp:
   enabled: false
   ingress:
     enabled: true
     annotations:
-      kubernetes.io/ingress.class: nginx
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-      ingress.kubernetes.io/ssl-redirect: "true"
-      certmanager.k8s.io/cluster-issuer: "letsencrypt-dev"
+      kubernetes.io/ingress.class: "nginx"
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      nginx.ingress.kubernetes.io/affinity: "cookie"
+      nginx.ingress.kubernetes.io/session-cookie-name: "route"
+      nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
     hosts:
     - host: idp.cellery-system
       paths: ["/"]
