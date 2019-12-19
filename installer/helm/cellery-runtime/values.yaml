@@ -30,7 +30,7 @@ global:
           password: "celleryRuntimePassword"
 
 mysql:
-  enabled: true
+  enabled: false
   rootPassword: "mysqlRootPass"
 
   ## Persist data to a persistent volume
@@ -61,7 +61,7 @@ mysql:
 
 
 controller:
-  enabled: true
+  enabled: false
 
 apim:
   enabled: false
@@ -88,7 +88,7 @@ apim:
       - apim
 
 idp:
-  enabled: true
+  enabled: false
   ingress:
     enabled: true
     annotations:
@@ -104,19 +104,17 @@ idp:
       hosts:
       - idp.cellery-system
 
-observability-portal:
-  enabled: true
+observability-agent:
+  enabled: false
 
-sp-worker:
-  enabled: true
+sp:
+  enabled: false
 
 grafana:
-  enabled: true
+  enabled: false
 
 prometheus:
-  enabled: true
+  enabled: false
 
-mixer-adapter:
-  enabled: true
-
-
+portal:
+  enabled: false
