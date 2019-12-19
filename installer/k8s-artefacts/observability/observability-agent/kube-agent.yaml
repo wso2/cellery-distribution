@@ -103,7 +103,7 @@ spec:
     spec:
       containers:
         - name: kube-agent
-          image: wso2cellery/kube-agent
+          image: wso2cellery/kube-agent:0.6.1
           volumeMounts:
             - name: kube-agent-conf
               mountPath: "/etc/conf"
