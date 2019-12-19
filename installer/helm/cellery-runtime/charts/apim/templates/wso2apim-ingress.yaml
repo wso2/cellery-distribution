@@ -26,9 +26,9 @@ metadata:
 spec:
   tls:
   - hosts:
-    - gateway
+    - wso2-apim-gateway
   rules:
-  - host: gateway
+  - host: wso2-apim-gateway
     http:
       paths:
       - path: /
@@ -77,9 +77,9 @@ metadata:
 spec:
   tls:
   - hosts:
-    - apim
+    - wso2-apim
   rules:
-  - host: apim
+  - host: wso2-apim
     http:
       paths:
       - path: /
