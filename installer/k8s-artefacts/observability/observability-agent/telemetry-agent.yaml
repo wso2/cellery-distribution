@@ -359,7 +359,7 @@ spec:
     spec:
       containers:
         - name: telemetry-agent
-          image: wso2cellery/telemetry-agent:0.6.1
+          image: wso2cellery/telemetry-agent
           env:
             - name: CONFIG_FILE_PATH
               value: "/etc/conf/config.json"

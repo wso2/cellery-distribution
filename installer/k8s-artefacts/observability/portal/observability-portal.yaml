@@ -34,7 +34,7 @@ spec:
         app: observability-portal
     spec:
       containers:
-      - image: wso2cellery/observability-portal:0.6.1
+      - image: wso2cellery/observability-portal
         name: observability-portal
         resources:
           limits:

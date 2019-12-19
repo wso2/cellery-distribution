@@ -35,7 +35,7 @@ spec:
         app: wso2sp-worker
     spec:
       containers:
-      - image: wso2cellery/sp-worker:0.6.1
+      - image: wso2cellery/sp-worker
         name: wso2sp-worker
         resources:
           limits:
