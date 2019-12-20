@@ -111,7 +111,7 @@ configurationFiles:
   mysql_custom.cnf: |-
     [mysqld]
     max_connections=20000
-    lower_case_table_names=1
+#    lower_case_table_names=1
 #    ssl-cert=/ssl/mysql-tls.crt
 #    ssl-key=/ssl/mysql-tls.pem
 #  mysql.cnf: |-

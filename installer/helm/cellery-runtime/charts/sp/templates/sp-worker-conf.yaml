@@ -18,4 +18,4 @@ metadata:
   name: sp-worker-conf
   namespace : {{ .Values.namespace }}
 data:
-  master-datasources.xml: {{ tpl (.Files.Get "confs/deployment.yaml") . | quote }}
+  deployment.yaml: {{ tpl (.Files.Get "confs/deployment.yaml") . | quote }}
