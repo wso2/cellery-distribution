@@ -66,6 +66,9 @@ controller:
 apim:
   enabled: false
 
+datasources:
+  enabled: true
+
   deployment:
     enabled: true
 
