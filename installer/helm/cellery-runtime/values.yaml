@@ -66,6 +66,9 @@ controller:
 apim:
   enabled: false
 
+  deployment:
+    enabled: true
+
   persistence:
     enabled: false
     media: "local-filesystem"  #default value "volatile" "local-filesystem" or "nfs"
