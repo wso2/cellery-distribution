@@ -1,3 +1,4 @@
+{{- if .Values.datasources.enabled -}}
 # Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,4 +20,4 @@ metadata:
   namespace : {{ .Values.namespace }}
 data:
   master-datasources.xml: {{ tpl (.Files.Get "confs/apim/datasources/master-datasources.xml") . | quote }}
-
+{{- end -}}

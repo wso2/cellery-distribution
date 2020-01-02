@@ -19,6 +19,11 @@
 namespace: "cellery-system"
 svcaccount: "cellerysvc-account"
 
+datasources:
+  enabled: true
+  
+deployment:
+  enabled: true
 # persistence:
 #   enabled: true
 #   media: default value "volatile" "local-filesystem" or "nfs"
