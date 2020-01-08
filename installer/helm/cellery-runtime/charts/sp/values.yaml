@@ -1,1 +1,5 @@
+datasources:
+  enabled: true
 
+deployment:
+  enabled: true
