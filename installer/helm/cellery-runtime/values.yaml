@@ -121,8 +121,8 @@ sp:
   datasources:
     enabled: true
 
-    deployment:
-      enabled: true
+  deployment:
+    enabled: true
 
 grafana:
   enabled: false
